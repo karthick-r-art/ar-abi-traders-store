@@ -1,0 +1,17 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A.R. Abi Traders">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0E5A3C"/><stop offset="1" stop-color="#0A4630"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="112" height="112" rx="30" fill="url(#bg)"/>
+  <!-- leaf sprig -->
+  <path d="M60 24c11 6 15 17 12 27-9 2-19-3-22-13 3-6 6-10 10-14z" fill="#F2A900"/>
+  <path d="M60 24c-4 8-5 17-1 26" stroke="#0A4630" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- basket / bag body -->
+  <path d="M34 52h52l-5 38a8 8 0 0 1-8 7H47a8 8 0 0 1-8-7l-5-38z" fill="#FBF7EF"/>
+  <path d="M45 52c0-9 6-15 15-15s15 6 15 15" stroke="#FBF7EF" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <!-- weave lines -->
+  <path d="M40 66h40M42 78h36M44 90h32" stroke="#0E5A3C" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+  <circle cx="60" cy="72" r="4.5" fill="#C4361F"/>
+</svg>

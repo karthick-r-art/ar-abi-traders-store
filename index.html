@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A.R. Abi Traders — Online Grocery Store, Cuddalore</title>
+<meta name="description" content="Order groceries online from A.R. Abi Traders, Cuddalore. Rice, oil, spices, snacks & 1800+ daily essentials at honest prices. Cash on delivery. அரிசி, எண்ணெய், மசாலா ஆன்லைனில்.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Mukta+Malar:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- Announcement -->
+<div class="ticker"><div class="wrap">
+  <span id="tick1"></span><span id="tick2"></span>
+</div></div>
+
+<!-- Header -->
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#" aria-label="A.R. Abi Traders home">
+      <img src="assets/img/logo.svg" alt="">
+      <span class="nm">A.R. ABI TRADERS<span id="brandTag" class="ta"></span></span>
+    </a>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="searchInput" type="search" autocomplete="off" aria-label="Search products">
+    </div>
+    <div class="hd-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button data-lang="en">EN</button><button data-lang="ta" class="ta">தமிழ்</button>
+      </div>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle theme"><span id="themeIcon" style="font-size:18px">🌙</span></button>
+      <button class="icon-btn" data-track aria-label="Track my order" title="Track my order">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <span class="cart-count" id="cartCount" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Category rail -->
+<div class="catrail" id="catrail"><div class="scroll" id="rail"></div></div>
+
+<main>
+<!-- ============ SHOP VIEW ============ -->
+<section id="view-shop" class="view active">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="kolam"></div>
+    <div class="wrap">
+      <div>
+        <span class="eyebrow" id="heroEyebrow"></span>
+        <h1 id="heroTitle"></h1>
+        <p class="lede" id="heroLede"></p>
+        <div class="cta">
+          <button class="btn btn-primary" id="btnShop"></button>
+          <a class="btn btn-ghost" id="btnCall" href="tel:+919566561558"></a>
+        </div>
+        <div class="trust">
+          <div><b id="trustProductsN">1800+</b><small id="trustProducts"></small></div>
+          <div><b>50+</b><small id="trustBrands"></small></div>
+          <div><b>⚡</b><small id="trustDelivery"></small></div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="grid4" id="heroTiles"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <section class="block wrap">
+    <div class="head"><div><h2 id="hCats"></h2></div></div>
+    <div class="catgrid" id="cats"></div>
+  </section>
+
+  <!-- Offers -->
+  <section class="block wrap" style="padding-top:8px">
+    <div class="head"><div><h2 id="hOffers"></h2><div class="sub">💥 Best discounts on today's stock</div></div></div>
+    <div class="grid" id="offers"></div>
+  </section>
+
+  <!-- Popular -->
+  <section class="block wrap" style="padding-top:8px">
+    <div class="head"><div><h2 id="hPopular"></h2></div></div>
+    <div class="grid" id="popular"></div>
+  </section>
+
+  <!-- All products -->
+  <section class="block wrap" id="allSection" style="padding-top:8px">
+    <div class="head">
+      <div><h2 id="allTitle"></h2><div class="sub" id="allcount"></div></div>
+    </div>
+    <div class="toolbar">
+      <select class="select" id="sortSel"></select>
+    </div>
+    <div class="grid" id="all"></div>
+  </section>
+</section>
+
+<!-- ============ CHECKOUT VIEW ============ -->
+<section id="view-checkout" class="view">
+  <div class="wrap block">
+    <button class="btn btn-ghost" id="coBack" style="margin-bottom:20px">← <span>Back</span></button>
+    <h2 id="coTitle" style="font-size:30px;margin-bottom:24px"></h2>
+    <div class="co-grid">
+      <div>
+        <h3 id="coDetails" style="font-size:17px;margin-bottom:16px"></h3>
+        <div class="field"><label id="lbl-name" for="f-name"></label><input id="f-name" type="text" autocomplete="name"><div class="err" id="err-name"></div></div>
+        <div class="field"><label id="lbl-mobile" for="f-mobile"></label><input id="f-mobile" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10"><div class="err" id="err-mobile"></div></div>
+        <div class="field"><label id="lbl-address" for="f-address"></label><textarea id="f-address" rows="3" autocomplete="street-address"></textarea><div class="err" id="err-address"></div></div>
+        <div class="field"><label id="lbl-notes" for="f-notes"></label><textarea id="f-notes" rows="2"></textarea></div>
+
+        <h3 id="coPayTitle" style="font-size:17px;margin:22px 0 14px"></h3>
+        <div class="pays">
+          <div class="pay" data-pay="cod">
+            <span class="r"></span><span style="font-size:22px">💵</span>
+            <div><b id="pay-cod-t"></b><small id="pay-cod-s"></small></div>
+          </div>
+          <div class="pay" data-pay="upi">
+            <span class="r"></span><span style="font-size:22px">📱</span>
+            <div><b id="pay-upi-t"></b><small id="pay-upi-s"></small></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="summary" id="coSummary"></div>
+        <button class="btn btn-primary" id="btnPlace" style="width:100%;justify-content:center;margin-top:16px"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONFIRM VIEW ============ -->
+<section id="view-confirm" class="view"><div class="wrap block" id="confirm"></div></section>
+
+<!-- ============ TRACK ORDER VIEW ============ -->
+<section id="view-track" class="view"><div class="wrap block"></div></section>
+</main>
+
+<!-- Footer -->
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <div class="fbrand"><img src="assets/img/logo.svg" alt=""><b>A.R. Abi Traders</b></div>
+      <p id="footAbout"></p>
+    </div>
+    <div>
+      <h4 id="fLinks"></h4>
+      <a href="#view-shop">🏠 Home</a>
+      <a href="#allSection">🛒 All products</a>
+      <a href="#" data-track>📦 Track my order</a>
+      <a href="https://ar-abi-traders-cuddalore.netlify.app/" target="_blank" rel="noopener">📦 Wholesale enquiry</a>
+    </div>
+    <div>
+      <h4 id="fContact"></h4>
+      <p>📍 No.16-A, Angalamman Koil St,<br>Manjakuppam, Cuddalore – 607001</p>
+      <a href="tel:+919566561558">📞 +91 95665 61558</a>
+      <a href="tel:+916381958057">📞 +91 63819 58057</a>
+      <p id="fHours"></p>
+    </div>
+  </div>
+  <div class="copy">© <span id="yr"></span> A.R. Abi Traders · Cuddalore, Tamil Nadu · Demo storefront</div>
+</footer>
+
+<!-- Cart drawer -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart">
+  <div class="dhead"><h3 id="drawerTitle"></h3><button class="icon-btn" data-close-cart aria-label="Close">✕</button></div>
+  <div class="ditems" id="ditems"></div>
+  <div class="dfoot" id="dfoot"></div>
+</aside>
+
+<!-- Product modal -->
+<div class="modal" id="modal">
+  <div class="sheet" style="z-index:1">
+    <button class="mclose" data-close-modal aria-label="Close">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- WhatsApp float -->
+<a class="wa-float" href="https://wa.me/919566561558?text=Hello%20AR%20Abi%20Traders" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <span class="sr" id="waFloatLbl"></span>
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1s-.5-.2-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5L8.9 6.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3A3 3 0 0 0 6 9.1c0 1.3.9 2.6 1.1 2.8a10.7 10.7 0 0 0 4.1 3.6c2 .8 2 .6 2.4.5a2.6 2.6 0 0 0 1.7-1.2c.2-.5.2-.9.1-1zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2z"/></svg>
+</a>
+
+<script type="module" src="assets/js/firebase-init.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/art.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/store.js"></script>
+<script>
+  document.getElementById('yr').textContent=new Date().getFullYear();
+  // hero tiles = top 4 populated categories
+  (function(){
+    const counts={}; (window.PRODUCTS||[]).forEach(p=>counts[p.cat]=(counts[p.cat]||0)+1);
+    const top=Object.entries(counts).filter(([c])=>window.CATMETA[c]).sort((a,b)=>b[1]-a[1]).slice(0,4);
+    const tints=["#0E5A3C","#F2A900","#C4361F","#3E8E6B"];
+    const txt=["#F6EFDD","#20301f","#fff","#fff"];
+    document.getElementById('heroTiles').innerHTML=top.map(([c,n],i)=>{
+      const m=window.CATMETA[c];
+      return `<button class="tile" data-cat="${c}" style="background:${tints[i]};color:${txt[i]}">
+        <span class="big">${m.em}</span><div><b>${c}</b><br><small>${n} items</small></div></button>`;
+    }).join("");
+    document.querySelectorAll('#heroTiles .tile').forEach(el=>el.onclick=()=>{
+      const ev=el.dataset.cat; const btn=document.querySelector(`#rail [data-cat="${ev}"]`); if(btn) btn.click();
+    });
+  })();
+</script>
+</body>
+</html>

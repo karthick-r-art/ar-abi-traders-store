@@ -1,0 +1,4 @@
+node_modules/
+.tmpcheck/
+*.log
+.DS_Store

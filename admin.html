@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — A.R. Abi Traders</title>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Mukta+Malar:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  .admin-wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+  .abar{display:flex;align-items:center;gap:14px;padding:14px 0}
+  .abar .nm{font-family:var(--disp);font-weight:800;font-size:17px}
+  .abar .nm span{display:block;font-size:11px;color:var(--muted);font-weight:500}
+  .pill{margin-left:auto;font-size:12px;font-weight:700;color:var(--green);background:color-mix(in srgb,var(--green) 10%,transparent);padding:6px 12px;border-radius:999px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px}
+  .kpi .k{font-size:12.5px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:7px}
+  .kpi .v{font-family:var(--disp);font-size:30px;font-weight:800;margin-top:8px;letter-spacing:-.02em}
+  .kpi .v small{font-size:14px;color:var(--muted);font-weight:600}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);margin:20px 0;overflow:hidden}
+  .panel .ph{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .panel .ph h3{font-size:16px}
+  .panel .ph .search{max-width:280px;margin-left:auto}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;padding:11px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card)}
+  td{padding:10px 14px;border-bottom:1px solid var(--line-2)}
+  tr:hover td{background:color-mix(in srgb,var(--green) 3%,transparent)}
+  .tscroll{max-height:520px;overflow:auto}
+  .em-tag{width:40px;height:40px;border-radius:10px;display:inline-grid;place-items:center;font-size:18px;overflow:hidden;flex-shrink:0}
+  .em-tag .pill-art{width:88%;height:88%}
+  .in{width:78px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font-size:13px;font-family:inherit}
+  .badge2{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .b-ok{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
+  .b-no{background:color-mix(in srgb,var(--kumkum) 14%,transparent);color:var(--kumkum)}
+  .b-cat{background:var(--line-2);color:var(--muted)}
+  .st-sel{padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font-size:12.5px;font-weight:600}
+  .toolbar2{display:flex;gap:10px;align-items:center;padding:12px 20px;flex-wrap:wrap}
+  .save-note{font-size:12px;color:var(--muted);padding:10px 20px}
+  .no-orders{padding:40px 20px;text-align:center;color:var(--muted)}
+  .logout-btn{margin-left:8px;font-size:12px;font-weight:700;color:var(--muted);background:var(--card);
+    border:1.5px solid var(--line);padding:6px 12px;border-radius:999px;cursor:pointer}
+  .logout-btn:hover{border-color:var(--kumkum);color:var(--kumkum)}
+  .login-overlay{position:fixed;inset:0;background:var(--paper);display:grid;place-items:center;z-index:50;padding:20px}
+  .login-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px 28px;width:100%;max-width:360px}
+  .login-card h2{font-size:22px;margin-bottom:4px}
+  .login-card p.sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+  .login-card .err{color:var(--kumkum);font-size:12.5px;margin-top:10px;display:none}
+  .login-note{font-size:11.5px;color:var(--muted);margin-top:16px;line-height:1.5}
+  .banner{background:color-mix(in srgb,var(--marigold) 14%,transparent);color:var(--ink);
+    border:1px solid color-mix(in srgb,var(--marigold) 40%,transparent);border-radius:var(--r);
+    padding:12px 16px;font-size:12.5px;margin:16px 0;line-height:1.5}
+</style>
+</head>
+<body>
+
+<!-- Login gate (shown only when Firebase is configured and no admin is signed in) -->
+<div class="login-overlay" id="loginOverlay" style="display:none">
+  <div class="login-card">
+    <img src="assets/img/logo.svg" alt="" style="width:40px;margin-bottom:14px">
+    <h2>Admin login</h2>
+    <p class="sub">Sign in to manage orders and confirm customer orders.</p>
+    <div class="field"><label for="lg-email">Email</label><input id="lg-email" type="email" autocomplete="username"></div>
+    <div class="field"><label for="lg-pass">Password</label><input id="lg-pass" type="password" autocomplete="current-password"></div>
+    <button class="btn btn-primary" id="lg-go" style="width:100%;justify-content:center">Log in</button>
+    <p class="err" id="lg-err"></p>
+    <p class="login-note">First time here? Create your login in the Firebase Console → Authentication → Users → Add user.</p>
+  </div>
+</div>
+
+<header class="site"><div class="admin-wrap abar">
+  <img src="assets/img/logo.svg" alt="" style="width:40px">
+  <div class="nm">A.R. Abi Traders<span>Admin Dashboard · Demo</span></div>
+  <a class="pill" href="index.html">← View storefront</a>
+  <button class="logout-btn" id="logoutBtn" style="display:none">Log out</button>
+</div></header>
+
+<div class="admin-wrap" style="padding-top:22px">
+  <div class="banner" id="notConfigured" style="display:none">
+    ⚠️ Firebase isn't connected yet (see <code>assets/js/firebase-init.js</code>), so this admin page and the
+    storefront can't share order data. You're seeing local demo data only, and status changes here
+    won't reach customers. See <code>README.md</code> for the 5-minute setup.
+  </div>
+  <h2 style="font-size:26px">Dashboard</h2>
+  <div class="kpis" id="kpis"></div>
+
+  <!-- Orders -->
+  <div class="panel">
+    <div class="ph"><h3>🧾 Recent Orders</h3><span class="save-note" style="margin-left:auto">Orders placed on the storefront appear here</span></div>
+    <div class="tscroll"><table id="ordersTable">
+      <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
+      <tbody id="ordersBody"></tbody>
+    </table></div>
+    <div class="no-orders" id="noOrders" style="display:none">No orders yet. New orders placed on the storefront will appear here automatically.</div>
+  </div>
+
+  <!-- Products -->
+  <div class="panel">
+    <div class="ph">
+      <h3>📦 Product Management</h3>
+      <div class="search" style="max-width:280px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="pSearch" type="search" placeholder="Search products…" style="padding-left:42px">
+      </div>
+    </div>
+    <div class="toolbar2">
+      <select class="st-sel" id="pCat"></select>
+      <span class="save-note" id="pCount" style="margin-left:auto"></span>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Stock</th><th>Status</th></tr></thead>
+      <tbody id="prodBody"></tbody>
+    </table></div>
+    <div class="save-note">💡 Demo: edit Price / Stock inline — changes are saved to this browser only. In the production app these write to the MySQL database via the Spring Boot API.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module" src="assets/js/firebase-init.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/art.js"></script>
+<script src="assets/js/data.js"></script>
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const P=window.PRODUCTS||[], M=window.CATMETA;
+const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+const store={get(k,d){try{const v=localStorage.getItem("arabi_"+k);return v?JSON.parse(v):d}catch{return d}},
+             set(k,v){try{localStorage.setItem("arabi_"+k,JSON.stringify(v))}catch{}}};
+// live edits overlay
+const edits=store.get("admin_edits",{});
+const val=(p,f)=>edits[p.id]&&edits[p.id][f]!=null?edits[p.id][f]:p[f];
+const avail=p=> (edits[p.id]&&edits[p.id].avail!=null)?edits[p.id].avail : (val(p,'stock')>0);
+
+function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1600);}
+
+/* ============================================================ LOGIN GATE + ORDER SYNC (Firestore) */
+// TEMP DEMO BYPASS — set back to false once the client demo is done, to re-enable the admin login.
+const DEMO_SKIP_LOGIN=false;
+let ordersCache=null;      // filled from Firestore when connected, else null (use localStorage)
+let ordersUnsub=null;
+
+function currentOrders(){ return ordersCache!==null ? ordersCache : store.get("orders",[]); }
+
+function startAdmin(){
+  kpis(); orders(); prodCats(); products();
+}
+
+async function pushOverride(id, fields){
+  if(!(window.ARFire && window.ARFire.ready)) return;
+  const {db,doc,setDoc}=window.ARFire;
+  try{ await setDoc(doc(db,"productOverrides",String(id)), fields, {merge:true}); }
+  catch(e){ console.warn("[A.R. Abi] could not sync product override to Firestore:",e); }
+}
+
+function subscribeOrders(){
+  if(!(window.ARFire && window.ARFire.ready)) return;
+  const {db,collection,query,orderBy,onSnapshot}=window.ARFire;
+  if(ordersUnsub) ordersUnsub();
+  ordersUnsub=onSnapshot(query(collection(db,"orders"),orderBy("at","desc")), snap=>{
+    ordersCache=snap.docs.map(d=>d.data());
+    kpis(); orders();
+  }, err=>console.warn("[A.R. Abi] admin orders listener error:",err));
+}
+
+function initAuthGate(){
+  if(DEMO_SKIP_LOGIN){
+    $("#loginOverlay").style.display="none";
+    startAdmin();
+    return;
+  }
+  if(!(window.ARFire && window.ARFire.ready)){
+    // No Firebase configured — fall back to local-only demo behaviour (previous version of this page).
+    $("#notConfigured").style.display="block";
+    startAdmin();
+    return;
+  }
+  const {auth,onAuthStateChanged,signInWithEmailAndPassword,signOut}=window.ARFire;
+  onAuthStateChanged(auth, user=>{
+    if(user){
+      $("#loginOverlay").style.display="none";
+      $("#logoutBtn").style.display="inline-block";
+      subscribeOrders();
+      startAdmin();
+    }else{
+      $("#loginOverlay").style.display="grid";
+      $("#logoutBtn").style.display="none";
+      if(ordersUnsub){ ordersUnsub(); ordersUnsub=null; }
+      ordersCache=null;
+    }
+  });
+  $("#lg-go").onclick=async()=>{
+    const email=$("#lg-email").value.trim(), pass=$("#lg-pass").value;
+    const err=$("#lg-err"); err.style.display="none";
+    if(!email||!pass){ err.textContent="Enter your email and password."; err.style.display="block"; return; }
+    $("#lg-go").disabled=true; $("#lg-go").textContent="Signing in…";
+    try{ await signInWithEmailAndPassword(auth,email,pass); }
+    catch(e){
+      console.error("[A.R. Abi] login failed:", e.code, e.message);
+      err.textContent=`Login failed — check your email and password. (${e.code||"unknown error"})`;
+      err.style.display="block";
+    }
+    finally{ $("#lg-go").disabled=false; $("#lg-go").textContent="Log in"; }
+  };
+  [$("#lg-email"),$("#lg-pass")].forEach(el=>el.addEventListener("keydown",e=>{ if(e.key==="Enter") $("#lg-go").click(); }));
+  $("#logoutBtn").onclick=()=>signOut(auth);
+}
+let gateStarted=false;
+function safeInitAuthGate(){ if(gateStarted) return; gateStarted=true; initAuthGate(); }
+if(window.ARFire) safeInitAuthGate();
+else window.addEventListener("arfire-ready", safeInitAuthGate, {once:true});
+// Safety net: if the Firebase module never loads (offline, blocked, or opened via file://
+// where ES modules can be restricted), don't leave the dashboard stuck blank forever.
+setTimeout(safeInitAuthGate, 4000);
+
+/* KPIs */
+function kpis(){
+  const orders=currentOrders();
+  const today=new Date().toDateString();
+  const todayN=orders.filter(o=>new Date(o.at).toDateString()===today).length;
+  const pending=orders.filter(o=>!o.status||o.status==="received").length;
+  const revenue=orders.reduce((s,o)=>s+o.total,0);
+  const oos=P.filter(p=>val(p,'stock')<=0).length;
+  const invVal=P.reduce((s,p)=>s+val(p,'price')*val(p,'stock'),0);
+  const cats=new Set(P.map(p=>p.cat)).size;
+  const data=[
+    ["📦","Total Products",P.length.toLocaleString("en-IN"),""],
+    ["🗂️","Categories",cats,""],
+    ["🧾","Total Orders",orders.length,""],
+    ["🌅","Today's Orders",todayN,""],
+    ["⏳","Pending",pending,""],
+    ["💰","Revenue",money(Math.round(revenue)),""],
+    ["🚫","Out of Stock",oos,""],
+    ["🏬","Inventory Value","₹"+(invVal/100000).toFixed(1),"L"],
+  ];
+  $("#kpis").innerHTML=data.map(([e,k,v,s])=>`<div class="kpi"><div class="k">${e} ${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>`).join("");
+}
+
+/* Orders */
+const STATUSES=["received","confirmed","preparing","out","delivered","cancelled"];
+const SLABEL={received:"Order received",confirmed:"Confirmed",preparing:"Preparing",out:"Out for delivery",delivered:"Delivered",cancelled:"Cancelled"};
+function orders(){
+  const os=currentOrders();
+  $("#noOrders").style.display=os.length?"none":"block";
+  $("#ordersBody").innerHTML=os.map(o=>`<tr>
+    <td><b>#${o.num}</b><br><span style="color:var(--muted);font-size:11px">${new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</span></td>
+    <td>${o.name}<br><span style="color:var(--muted);font-size:12px">${o.mobile}</span></td>
+    <td>${o.items.reduce((s,x)=>s+x.q,0)} items</td>
+    <td><b>${money(o.total)}</b></td>
+    <td><span class="badge2 b-cat">${o.pay==="upi"?"UPI":"COD"}</span></td>
+    <td><select class="st-sel" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${(o.status||"received")===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select></td>
+  </tr>`).join("");
+  $$("[data-onum]").forEach(sel=>sel.onchange=async()=>{
+    const num=sel.dataset.onum, status=sel.value;
+    if(ordersCache!==null && window.ARFire && window.ARFire.ready){
+      const {db,doc,updateDoc,serverTimestamp}=window.ARFire;
+      try{
+        await updateDoc(doc(db,"orders",num), {status, statusAt:serverTimestamp()});
+        toast("Order status updated — customer sees it live");
+      }catch(e){ toast("Couldn't update — check your connection"); console.warn(e); }
+    }else{
+      const os=store.get("orders",[]); const i=os.findIndex(o=>o.num===num);
+      if(i>-1){ os[i].status=status; store.set("orders",os); }
+      toast("Order status updated (local demo only)"); kpis();
+    }
+  });
+}
+
+/* Products */
+function prodCats(){
+  const cats=[...new Set(P.map(p=>p.cat))].sort();
+  $("#pCat").innerHTML=`<option value="">All categories</option>`+cats.map(c=>`<option>${c}</option>`).join("");
+}
+function products(){
+  const q=$("#pSearch").value.trim().toLowerCase(), cat=$("#pCat").value;
+  let list=P.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||(p.ta&&p.ta.includes($("#pSearch").value.trim()))));
+  list=list.slice(0,400);
+  $("#pCount").textContent=`Showing ${list.length} of ${P.length} products`;
+  $("#prodBody").innerHTML=list.map(p=>{
+    const [l,d]=M[p.cat].c.split(",");
+    return `<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <span class="em-tag" style="background:${l}">${window.artFor?window.artFor(p.type):M[p.cat].em}</span>
+        <div><b style="font-weight:600">${p.name}</b>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}</div></div></td>
+      <td><span class="badge2 b-cat">${p.cat}</span></td>
+      <td><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></td>
+      <td style="color:var(--muted)">${val(p,'mrp')||"—"}</td>
+      <td><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:66px"></td>
+      <td><button class="badge2 ${avail(p)?'b-ok':'b-no'}" data-toggle="${p.id}">${avail(p)?"● Available":"○ Hidden"}</button></td>
+    </tr>`;
+  }).join("");
+  $$("input[data-id]").forEach(inp=>inp.onchange=async()=>{
+    const id=inp.dataset.id,f=inp.dataset.f,v=parseFloat(inp.value)||0;
+    edits[id]=edits[id]||{}; edits[id][f]=v; store.set("admin_edits",edits); kpis();
+    await pushOverride(id,{[f]:v});
+    toast(`${f==="price"?"Price":"Stock"} updated`);
+  });
+  $$("[data-toggle]").forEach(btn=>btn.onclick=async()=>{
+    const id=btn.dataset.toggle,p=P.find(x=>x.id==id); edits[id]=edits[id]||{};
+    const newAvail=!avail(p); edits[id].avail=newAvail; store.set("admin_edits",edits); products();
+    await pushOverride(id,{avail:newAvail});
+    toast("Availability changed");
+  });
+}
+$("#pSearch").addEventListener("input",()=>products());
+$("#pCat").addEventListener("change",()=>products());
+</script>
+</body>
+</html>
