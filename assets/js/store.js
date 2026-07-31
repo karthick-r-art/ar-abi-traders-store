@@ -9,7 +9,8 @@ const SHOP = {
   freeOver:500, deliveryFee:40,
 };
 
-const S = { cart:{}, lang:"en", theme:"light", cat:"", q:"", sort:"pop", order:null };
+const PAGE_SIZE = 60;
+const S = { cart:{}, lang:"en", theme:"light", cat:"", q:"", sort:"pop", order:null, shown:PAGE_SIZE };
 const $  = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const P  = window.PRODUCTS || [];
@@ -150,10 +151,15 @@ function filtered(){
 }
 function renderAll(){
   const list = filtered();
-  $("#allcount").textContent = `${t('showing')} ${list.length.toLocaleString('en-IN')} ${t('products').toLowerCase()}`;
+  const slice = list.slice(0, S.shown);
+  $("#allcount").textContent = list.length>slice.length
+    ? `${t('showing')} ${slice.length.toLocaleString('en-IN')} ${t('of')} ${list.length.toLocaleString('en-IN')} ${t('products').toLowerCase()}`
+    : `${t('showing')} ${list.length.toLocaleString('en-IN')} ${t('products').toLowerCase()}`;
   const title = S.cat ? catName(S.cat) : (S.q ? `"${S.q}"` : t('all'));
   $("#allTitle").textContent = title;
-  renderGrid(list, $("#all"));
+  renderGrid(slice, $("#all"));
+  const more=$("#loadMore");
+  if(more) more.style.display = list.length>slice.length ? "flex" : "none";
 }
 
 /* ============================================================ CART */
@@ -434,6 +440,7 @@ function applyStaticText(){
   set("#hCats","categories"); set("#hCatsSub","categories");
   set("#hOffers","offers"); set("#hPopular","popular");
   set("#moreOffers","viewall"); set("#morePopular","viewall");
+  set("#btnLoadMore","loadMore");
   set("#drawerTitle","cart");
   set("#coTitle","checkoutTitle"); set("#coDetails","yourDetails"); set("#coPayTitle","payment");
   $("#lbl-name").textContent=t('name'); $("#lbl-mobile").textContent=t('mobile');
@@ -467,8 +474,10 @@ function wireDynamic(){
   $$("[data-close-cart]").forEach(b=>b.onclick=closeCart);
   $$("[data-close-modal]").forEach(b=>b.onclick=closeModal);
   $$("[data-home]").forEach(b=>b.onclick=()=>{ stopTracking(); show("shop"); });
-  $$("[data-cat]").forEach(b=>b.onclick=()=>{ S.cat=b.dataset.cat; S.q=""; $("#searchInput").value="";
+  $$("[data-cat]").forEach(b=>b.onclick=()=>{ S.cat=b.dataset.cat; S.q=""; S.shown=PAGE_SIZE; $("#searchInput").value="";
     renderRail(); renderAll(); show("shop"); $("#allSection").scrollIntoView({behavior:"smooth"}); });
+  const loadMoreBtn=$("#btnLoadMore");
+  if(loadMoreBtn) loadMoreBtn.onclick=()=>{ S.shown+=PAGE_SIZE; renderAll(); };
 }
 function init(){
   // restore state
@@ -486,9 +495,9 @@ function init(){
 
   // search (debounced)
   let dq; $("#searchInput").addEventListener("input",e=>{ clearTimeout(dq);
-    dq=setTimeout(()=>{ S.q=e.target.value.trim(); S.cat=""; renderRail(); renderAll();
+    dq=setTimeout(()=>{ S.q=e.target.value.trim(); S.cat=""; S.shown=PAGE_SIZE; renderRail(); renderAll();
       if(S.q) $("#allSection").scrollIntoView({behavior:"smooth"}); },220); });
-  $("#sortSel").addEventListener("change",e=>{ S.sort=e.target.value; renderAll(); });
+  $("#sortSel").addEventListener("change",e=>{ S.sort=e.target.value; S.shown=PAGE_SIZE; renderAll(); });
 
   // header buttons
   $("#cartBtn").onclick=openCart;
