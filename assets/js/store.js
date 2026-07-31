@@ -479,7 +479,10 @@ function init(){
   $("#trustProductsN").textContent = P.length.toLocaleString("en-IN")+"+";
   applyStaticText();
   renderCategories(); renderRail(); renderFeatured(); renderAll(); refreshCount();
-  subscribeProductOverrides();
+  // Firebase loads async so it never blocks the initial render — attach live
+  // price/stock sync as soon as it's ready, whether that's now or a moment later.
+  if(window.ARFire) subscribeProductOverrides();
+  else window.addEventListener("arfire-ready", subscribeProductOverrides, {once:true});
 
   // search (debounced)
   let dq; $("#searchInput").addEventListener("input",e=>{ clearTimeout(dq);
