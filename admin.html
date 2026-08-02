@@ -131,6 +131,17 @@
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const P=window.PRODUCTS||[], M=window.CATMETA;
 const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+
+/* Cloudinary — free image hosting for real product photos, no card needed.
+   1. Sign up free at https://cloudinary.com
+   2. Dashboard shows your "Cloud name" — paste it below.
+   3. Settings (gear icon, top right) → Upload tab → Upload presets →
+      Add upload preset → set "Signing Mode" to "Unsigned" → Save →
+      paste that preset's name below. */
+const CLOUDINARY_CONFIG = {
+  cloudName: "PASTE_CLOUD_NAME",
+  uploadPreset: "PASTE_UPLOAD_PRESET",
+};
 const store={get(k,d){try{const v=localStorage.getItem("arabi_"+k);return v?JSON.parse(v):d}catch{return d}},
              set(k,v){try{localStorage.setItem("arabi_"+k,JSON.stringify(v))}catch{}}};
 // live edits overlay
@@ -318,14 +329,17 @@ function products(){
   });
   $$("input[type=file][data-photo]").forEach(inp=>inp.onchange=async()=>{
     const id=inp.dataset.photo, file=inp.files[0]; if(!file) return;
-    if(!(window.ARFire && window.ARFire.ready)){ toast("Firebase not connected — can't upload"); return; }
+    if(CLOUDINARY_CONFIG.cloudName.startsWith("PASTE_")){ toast("Cloudinary not configured yet — see admin.html"); return; }
     const btn=$(`[data-photobtn="${id}"]`); btn.classList.add("uploading");
     try{
       const blob=await compressImage(file, 900, 0.82);
-      const {storage,storageRef,uploadBytes,getDownloadURL}=window.ARFire;
-      const ref=storageRef(storage, `products/${id}.jpg`);
-      await uploadBytes(ref, blob, {contentType:"image/jpeg"});
-      const url=await getDownloadURL(ref);
+      const fd=new FormData();
+      fd.append("file", blob, `${id}.jpg`);
+      fd.append("upload_preset", CLOUDINARY_CONFIG.uploadPreset);
+      const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`, {method:"POST", body:fd});
+      if(!res.ok) throw new Error("Cloudinary upload failed: "+res.status);
+      const data=await res.json();
+      const url=data.secure_url;
       edits[id]=edits[id]||{}; edits[id].photo=url; store.set("admin_edits",edits);
       await pushOverride(id, {photo:url});
       products(); toast("Photo uploaded");
