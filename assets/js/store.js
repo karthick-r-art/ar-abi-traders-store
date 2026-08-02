@@ -48,6 +48,7 @@ function applyProductOverrides(map){
     if(o.mrp!=null) p.mrp=o.mrp;
     if(o.stock!=null) p.stock=o.stock;
     if(o.avail===false) p.stock=0;
+    if(o.photo) p.photo=o.photo;
   });
 }
 function subscribeProductOverrides(){
@@ -64,6 +65,7 @@ function subscribeProductOverrides(){
 /* ============================================================ RENDER: product card */
 window.PRODUCT_PHOTOS = window.PRODUCT_PHOTOS || new Set();  // add ids here when real photos exist
 function productImg(p){
+  if(p.photo) return `<img class="pimg" src="${p.photo}" alt="${p.name}" loading="lazy">`;
   if(window.PRODUCT_PHOTOS.has(p.id))
     return `<img class="pimg" src="assets/img/products/${p.id}.jpg" alt="${p.name}" loading="lazy">`;
   return window.artFor ? window.artFor(p.type) : "";

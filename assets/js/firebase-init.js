@@ -32,13 +32,17 @@ import {
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getStorage, ref as storageRef, uploadBytes, getDownloadURL,
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const configured = window.FIREBASE_CONFIG.apiKey && !window.FIREBASE_CONFIG.apiKey.startsWith("PASTE_");
-let app, db, auth;
+let app, db, auth, storage;
 if (configured) {
   app = initializeApp(window.FIREBASE_CONFIG);
   db = getFirestore(app);
   auth = getAuth(app);
+  storage = getStorage(app);
 } else {
   console.warn("[A.R. Abi] Firebase is not configured yet — see assets/js/firebase-init.js. " +
     "Order tracking / admin sync will not work until FIREBASE_CONFIG is filled in.");
@@ -46,8 +50,9 @@ if (configured) {
 
 window.ARFire = {
   ready: configured,
-  db, auth,
+  db, auth, storage,
   collection, doc, setDoc, getDoc, updateDoc, onSnapshot, query, orderBy, where, serverTimestamp, limit,
   signInWithEmailAndPassword, signOut, onAuthStateChanged,
+  storageRef, uploadBytes, getDownloadURL,
 };
 window.dispatchEvent(new Event("arfire-ready"));

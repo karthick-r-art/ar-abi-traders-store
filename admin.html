@@ -42,6 +42,11 @@
   .logout-btn{margin-left:8px;font-size:12px;font-weight:700;color:var(--muted);background:var(--card);
     border:1.5px solid var(--line);padding:6px 12px;border-radius:999px;cursor:pointer}
   .logout-btn:hover{border-color:var(--kumkum);color:var(--kumkum)}
+  .pthumb-btn{width:44px;height:44px;border-radius:10px;border:1.5px dashed var(--line);background:var(--paper);
+    cursor:pointer;overflow:hidden;padding:0;display:grid;place-items:center;font-size:16px;color:var(--muted);flex-shrink:0}
+  .pthumb-btn:hover{border-color:var(--green-300)}
+  .pthumb-btn img{width:100%;height:100%;object-fit:cover}
+  .pthumb-btn.uploading{opacity:.5;pointer-events:none}
   .login-overlay{position:fixed;inset:0;background:var(--paper);display:grid;place-items:center;z-index:50;padding:20px}
   .login-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px 28px;width:100%;max-width:360px}
   .login-card h2{font-size:22px;margin-bottom:4px}
@@ -109,10 +114,10 @@
       <span class="save-note" id="pCount" style="margin-left:auto"></span>
     </div>
     <div class="tscroll"><table>
-      <thead><tr><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Stock</th><th>Status</th></tr></thead>
+      <thead><tr><th>Photo</th><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Stock</th><th>Status</th></tr></thead>
       <tbody id="prodBody"></tbody>
     </table></div>
-    <div class="save-note">💡 Demo: edit Price / Stock inline — changes are saved to this browser only. In the production app these write to the MySQL database via the Spring Boot API.</div>
+    <div class="save-note">💡 Edits here sync live to the storefront. Click a product's photo box to upload a real picture from your phone/computer — it replaces the illustration immediately for customers.</div>
   </div>
 </div>
 
@@ -279,7 +284,12 @@ function products(){
   $("#pCount").textContent=`Showing ${list.length} of ${P.length} products`;
   $("#prodBody").innerHTML=list.map(p=>{
     const [l,d]=M[p.cat].c.split(",");
+    const photo=val(p,'photo');
     return `<tr>
+      <td>
+        <button class="pthumb-btn" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="">`:"📷"}</button>
+        <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
+      </td>
       <td><div style="display:flex;align-items:center;gap:10px">
         <span class="em-tag" style="background:${l}">${window.artFor?window.artFor(p.type):M[p.cat].em}</span>
         <div><b style="font-weight:600">${p.name}</b>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}</div></div></td>
@@ -301,6 +311,41 @@ function products(){
     const newAvail=!avail(p); edits[id].avail=newAvail; store.set("admin_edits",edits); products();
     await pushOverride(id,{avail:newAvail});
     toast("Availability changed");
+  });
+  $$("[data-photobtn]").forEach(btn=>btn.onclick=()=>{
+    const inp=btn.parentElement.querySelector(`input[type=file][data-photo="${btn.dataset.photobtn}"]`);
+    if(inp) inp.click();
+  });
+  $$("input[type=file][data-photo]").forEach(inp=>inp.onchange=async()=>{
+    const id=inp.dataset.photo, file=inp.files[0]; if(!file) return;
+    if(!(window.ARFire && window.ARFire.ready)){ toast("Firebase not connected — can't upload"); return; }
+    const btn=$(`[data-photobtn="${id}"]`); btn.classList.add("uploading");
+    try{
+      const blob=await compressImage(file, 900, 0.82);
+      const {storage,storageRef,uploadBytes,getDownloadURL}=window.ARFire;
+      const ref=storageRef(storage, `products/${id}.jpg`);
+      await uploadBytes(ref, blob, {contentType:"image/jpeg"});
+      const url=await getDownloadURL(ref);
+      edits[id]=edits[id]||{}; edits[id].photo=url; store.set("admin_edits",edits);
+      await pushOverride(id, {photo:url});
+      products(); toast("Photo uploaded");
+    }catch(e){ console.error("[A.R. Abi] photo upload failed:",e); toast("Upload failed — check your connection"); }
+    finally{ btn.classList.remove("uploading"); }
+  });
+}
+function compressImage(file, maxDim, quality){
+  return new Promise((resolve,reject)=>{
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{
+      let {width,height}=img;
+      if(width>height && width>maxDim){ height=Math.round(height*maxDim/width); width=maxDim; }
+      else if(height>maxDim){ width=Math.round(width*maxDim/height); height=maxDim; }
+      const canvas=document.createElement("canvas"); canvas.width=width; canvas.height=height;
+      canvas.getContext("2d").drawImage(img,0,0,width,height);
+      canvas.toBlob(blob=>{ URL.revokeObjectURL(url); blob?resolve(blob):reject(new Error("toBlob failed")); }, "image/jpeg", quality);
+    };
+    img.onerror=()=>{ URL.revokeObjectURL(url); reject(new Error("image load failed")); };
+    img.src=url;
   });
 }
 $("#pSearch").addEventListener("input",()=>products());
