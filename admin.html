@@ -139,8 +139,8 @@ const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");
       Add upload preset → set "Signing Mode" to "Unsigned" → Save →
       paste that preset's name below. */
 const CLOUDINARY_CONFIG = {
-  cloudName: "PASTE_CLOUD_NAME",
-  uploadPreset: "PASTE_UPLOAD_PRESET",
+  cloudName: "rdeiewwc",
+  uploadPreset: "ar_abi_products",
 };
 const store={get(k,d){try{const v=localStorage.getItem("arabi_"+k);return v?JSON.parse(v):d}catch{return d}},
              set(k,v){try{localStorage.setItem("arabi_"+k,JSON.stringify(v))}catch{}}};
