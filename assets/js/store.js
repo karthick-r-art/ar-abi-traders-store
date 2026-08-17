@@ -308,13 +308,13 @@ async function placeOrder(){
   }
 }
 function waMessage(o){
-  let m=`*New Order ${o.num}* — A.R. Abi Traders%0A%0A`;
-  m+=`*Name:* ${o.name}%0A*Mobile:* ${o.mobile}%0A*Address:* ${o.address}%0A`;
-  if(o.notes) m+=`*Note:* ${o.notes}%0A`;
-  m+=`*Payment:* ${o.pay==="upi"?"UPI":"Cash on Delivery"}%0A%0A*Items:*%0A`;
-  o.items.forEach(i=>{ m+=`• ${i.name} ×${i.q} — ₹${i.line}%0A`; });
-  m+=`%0A*Subtotal:* ₹${o.subtotal}%0A*Delivery:* ${o.delivery?"₹"+o.delivery:"FREE"}%0A*Total:* ₹${o.total}`;
-  return m;
+  let m=`*New Order ${o.num}* — A.R. Abi Traders\n\n`;
+  m+=`*Name:* ${o.name}\n*Mobile:* ${o.mobile}\n*Address:* ${o.address}\n`;
+  if(o.notes) m+=`*Note:* ${o.notes}\n`;
+  m+=`*Payment:* ${o.pay==="upi"?"UPI":"Cash on Delivery"}\n\n*Items:*\n`;
+  o.items.forEach(i=>{ m+=`• ${i.name} ×${i.q} — ₹${i.line}\n`; });
+  m+=`\n*Subtotal:* ₹${o.subtotal}\n*Delivery:* ${o.delivery?"₹"+o.delivery:"FREE"}\n*Total:* ₹${o.total}`;
+  return encodeURIComponent(m);
 }
 const STATUS_ORDER=["received","confirmed","preparing","out","delivered"];
 function trackerHTML(o){
@@ -424,6 +424,41 @@ async function doTrackLookup(){
 }
 function openTrack(){ show("track"); renderTrack(); }
 
+/* ============================================================ VOICE SEARCH (mic) */
+let voiceRec=null;
+function initVoiceSearch(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const micBtn = $("#micBtn");
+  if(!SR || !micBtn) return; // unsupported browser — button stays hidden (no .has-mic class added)
+  $(".search").classList.add("has-mic");
+  voiceRec = new SR();
+  voiceRec.continuous = false;
+  voiceRec.interimResults = false;
+  voiceRec.maxAlternatives = 1;
+  let listening = false;
+  micBtn.onclick = () => {
+    if(listening){ voiceRec.stop(); return; }
+    voiceRec.lang = S.lang==="ta" ? "ta-IN" : "en-IN";
+    try{ voiceRec.start(); }catch{ /* already starting */ }
+  };
+  voiceRec.onstart = () => { listening=true; micBtn.classList.add("listening"); };
+  voiceRec.onend = () => { listening=false; micBtn.classList.remove("listening"); };
+  voiceRec.onerror = e => {
+    listening=false; micBtn.classList.remove("listening");
+    if(e.error==="no-speech") toast(t('micNoSpeech'),"🎤");
+    else if(e.error==="not-allowed" || e.error==="service-not-allowed") toast(t('micDenied'),"🎤");
+  };
+  voiceRec.onresult = e => {
+    const text = e.results[0][0].transcript.trim();
+    if(!text) return;
+    $("#searchInput").value = text;
+    S.q = text; S.cat = ""; S.shown = PAGE_SIZE;
+    renderRail(); renderAll();
+    $("#allSection").scrollIntoView({behavior:"smooth"});
+    toast(`${t('micHeard')} "${text}"`,"🎤");
+  };
+}
+
 /* ============================================================ TOAST */
 let toastT;
 function toast(msg,em="✓"){ const el=$("#toast"); el.innerHTML=`<span class="em">${em}</span>${msg}`;
@@ -436,6 +471,7 @@ function applyStaticText(){
   $("#brandTag").textContent=t('tagline');
   $("#tick1").innerHTML=t('ticker1'); $("#tick2").textContent=t('ticker2');
   $("#searchInput").placeholder=t('search');
+  const mic=$("#micBtn"); if(mic){ mic.setAttribute("aria-label",t('micLabel')); mic.title=t('micLabel'); }
   set("#heroEyebrow","heroEyebrow"); $("#heroTitle").innerHTML=`${t('heroTitle')} <em>${t('heroTitleEm')}</em>`;
   set("#heroLede","heroLede"); set("#btnShop","shopNow"); set("#btnCall","callUs");
   set("#trustProducts","products"); set("#trustBrands","brands"); set("#trustDelivery","delivery");
@@ -500,6 +536,7 @@ function init(){
     dq=setTimeout(()=>{ S.q=e.target.value.trim(); S.cat=""; S.shown=PAGE_SIZE; renderRail(); renderAll();
       if(S.q) $("#allSection").scrollIntoView({behavior:"smooth"}); },220); });
   $("#sortSel").addEventListener("change",e=>{ S.sort=e.target.value; S.shown=PAGE_SIZE; renderAll(); });
+  initVoiceSearch();
 
   // header buttons
   $("#cartBtn").onclick=openCart;

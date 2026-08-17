@@ -58,6 +58,15 @@ header.site{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--
   border-radius:999px;font-size:14.5px;color:var(--ink);transition:border-color .15s,box-shadow .15s}
 .search input:focus{outline:none;border-color:var(--green-300);box-shadow:0 0 0 4px color-mix(in srgb,var(--green) 12%,transparent)}
 .search svg{position:absolute;left:15px;width:18px;height:18px;color:var(--muted);pointer-events:none}
+.mic-btn{display:none;position:absolute;right:6px;width:32px;height:32px;border-radius:50%;
+  align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;transition:background .15s,color .15s}
+.mic-btn svg{position:static;width:17px;height:17px;pointer-events:auto}
+.mic-btn:hover{background:var(--line-2);color:var(--ink)}
+.search.has-mic input{padding-right:42px}
+.search.has-mic .mic-btn{display:flex}
+.mic-btn.listening{background:var(--kumkum);color:#fff;animation:micPulse 1.2s ease-in-out infinite}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--kumkum) 40%,transparent)}
+  50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--kumkum) 0%,transparent)}}
 .hd-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
 .icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:var(--ink);
   position:relative;transition:background .15s}
