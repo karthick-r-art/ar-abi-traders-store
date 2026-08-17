@@ -176,11 +176,15 @@ section.block{padding:40px 0}
 .stepper{display:flex;align-items:center;gap:2px;background:var(--green);border-radius:11px;color:#fff}
 .stepper button{width:34px;height:38px;font-size:18px;font-weight:800;color:#fff}
 .stepper span{min-width:22px;text-align:center;font-weight:800;font-size:14px}
-.stepper .qty-val{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;padding:0 2px}
+.qty-val{cursor:pointer;display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border-radius:6px;
+  background:rgba(255,255,255,.28);transition:background .15s}
+.qty-val:hover{background:rgba(255,255,255,.42)}
+.qty-val i{font-style:normal;font-size:10px;opacity:.85}
 .qty-input{width:52px;height:30px;border:none;border-radius:7px;text-align:center;font-weight:800;
   font-size:13px;color:var(--ink);background:#fff;font-family:inherit}
 .qty-input:focus{outline:2px solid var(--marigold);outline-offset:1px}
-.mini .qty-val{cursor:pointer;text-decoration:underline dotted;text-underline-offset:2px}
+.mini .qty-val{background:var(--line-2);color:var(--ink)}
+.mini .qty-val:hover{background:var(--line)}
 .mini .qty-input{width:40px;height:22px;font-size:11px}
 
 /* ---------- Cart drawer & modal ---------- */

@@ -87,7 +87,7 @@ function tile(p, size){
 }
 function qtySpan(p,q,extraAttrs=""){
   return isWeighable(p)
-    ? `<span class="qty-val" data-qty-edit="${p.id}" title="${t('tapToEdit')}" ${extraAttrs}>${fmtQty(q)}</span>`
+    ? `<span class="qty-val" data-qty-edit="${p.id}" title="${t('tapToEdit')}" ${extraAttrs}>${fmtQty(q)}<i>✎</i></span>`
     : `<span ${extraAttrs}>${fmtQty(q)}</span>`;
 }
 function cardCtrl(p){
