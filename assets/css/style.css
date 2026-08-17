@@ -176,6 +176,12 @@ section.block{padding:40px 0}
 .stepper{display:flex;align-items:center;gap:2px;background:var(--green);border-radius:11px;color:#fff}
 .stepper button{width:34px;height:38px;font-size:18px;font-weight:800;color:#fff}
 .stepper span{min-width:22px;text-align:center;font-weight:800;font-size:14px}
+.stepper .qty-val{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;padding:0 2px}
+.qty-input{width:52px;height:30px;border:none;border-radius:7px;text-align:center;font-weight:800;
+  font-size:13px;color:var(--ink);background:#fff;font-family:inherit}
+.qty-input:focus{outline:2px solid var(--marigold);outline-offset:1px}
+.mini .qty-val{cursor:pointer;text-decoration:underline dotted;text-underline-offset:2px}
+.mini .qty-input{width:40px;height:22px;font-size:11px}
 
 /* ---------- Cart drawer & modal ---------- */
 .scrim{position:fixed;inset:0;background:rgba(15,25,18,.5);opacity:0;visibility:hidden;transition:.25s;z-index:60;backdrop-filter:blur(2px)}

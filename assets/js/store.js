@@ -28,6 +28,14 @@ function catBg(c){ const [l,d]=meta(c).c.split(","); return S.theme==="dark"?d:l
 const nameOf = p => S.lang==="ta" && p.ta ? p.ta : p.name;
 const discount = p => p.mrp>p.price ? Math.round((1-p.price/p.mrp)*100) : 0;
 
+/* weight/volume products (rice, oil, dal, spices...) can be bought in decimal quantities
+   (0.5 kg, 0.25 L etc.); piece/pack products (Strip, Box, Bottle...) stay whole-number only */
+const WEIGHT_UNIT_RE = /^\d+(\.\d+)?\s*(kg|g|l|ml)$/i;
+const isWeighable = p => WEIGHT_UNIT_RE.test((p.unit||"").trim());
+const qtyStep = p => isWeighable(p) ? 0.5 : 1;
+const round2 = n => Math.round(n*100)/100;
+const fmtQty = q => String(round2(q));
+
 function desc(p){
   if(S.lang==="ta"){
     return `${p.ta||p.name} — ${catName(p.cat)} வகையைச் சேர்ந்த தரமான பொருள். அளவு: ${p.unit}. A.R. ஆபி ட்ரேடர்ஸில் நேர்மையான விலையில் கிடைக்கிறது.`;
@@ -77,11 +85,16 @@ function tile(p, size){
       ${p.stock<=0?`<span class="oos">${t('outStock')}</span>`:""}
     </div>`;
 }
+function qtySpan(p,q,extraAttrs=""){
+  return isWeighable(p)
+    ? `<span class="qty-val" data-qty-edit="${p.id}" title="${t('tapToEdit')}" ${extraAttrs}>${fmtQty(q)}</span>`
+    : `<span ${extraAttrs}>${fmtQty(q)}</span>`;
+}
 function cardCtrl(p){
   const q = S.cart[p.id]||0;
   if(p.stock<=0) return `<span class="add" style="opacity:.35;pointer-events:none">+</span>`;
   if(q>0) return `<div class="stepper" role="group">
-      <button data-dec="${p.id}" aria-label="decrease">−</button><span>${q}</span>
+      <button data-dec="${p.id}" aria-label="decrease">−</button>${qtySpan(p,q)}
       <button data-inc="${p.id}" aria-label="increase">+</button></div>`;
   return `<button class="add" data-add="${p.id}" aria-label="${t('addCart')}">+</button>`;
 }
@@ -173,11 +186,20 @@ function saveCart(){ store.set("cart",S.cart); refreshCount(); }
 function refreshCount(){ const n=cartQty(); const b=$("#cartCount"); b.textContent=n; b.style.display=n?"grid":"none"; }
 
 function addToCart(id){ const p=P.find(x=>x.id==id); if(!p||p.stock<=0) return;
-  S.cart[id]=Math.min((S.cart[id]||0)+1, p.stock); saveCart(); syncControls(id); renderCart();
+  S.cart[id]=Math.min(round2((S.cart[id]||0)+qtyStep(p)), p.stock); saveCart(); syncControls(id); renderCart();
   toast(`${t('added')} ✓`,"🛒"); }
-function incCart(id){ const p=P.find(x=>x.id==id); S.cart[id]=Math.min((S.cart[id]||0)+1,p.stock); saveCart(); syncControls(id); renderCart(); }
-function decCart(id){ S.cart[id]=(S.cart[id]||0)-1; if(S.cart[id]<=0) delete S.cart[id]; saveCart(); syncControls(id); renderCart(); }
+function incCart(id){ const p=P.find(x=>x.id==id); if(!p) return;
+  S.cart[id]=Math.min(round2((S.cart[id]||0)+qtyStep(p)),p.stock); saveCart(); syncControls(id); renderCart(); }
+function decCart(id){ const p=P.find(x=>x.id==id); if(!p) return;
+  S.cart[id]=round2((S.cart[id]||0)-qtyStep(p)); if(S.cart[id]<=0) delete S.cart[id]; saveCart(); syncControls(id); renderCart(); }
 function removeCart(id){ delete S.cart[id]; saveCart(); syncControls(id); renderCart(); }
+/* direct decimal entry — tap the qty number (weighable products only) */
+function setCartQty(id, qty){
+  const p=P.find(x=>x.id==id); if(!p) return;
+  qty=round2(qty);
+  if(!(qty>0)){ removeCart(id); return; }
+  S.cart[id]=Math.min(qty,p.stock); saveCart(); syncControls(id); renderCart();
+}
 
 /* update just the affected card controls (cheap) without full re-render */
 function syncControls(id){
@@ -205,10 +227,10 @@ function renderCart(){
   box.innerHTML=arr.map(({p,q})=>`<div class="crow">
     <div class="cim" style="background:${catBg(p.cat)}">${productImg(p)}</div>
     <div class="cmeta"><b>${p.name}</b>${p.ta?`<span class="tam">${p.ta}</span>`:""}
-      <span class="p">${money(p.price)} × ${q} = <b style="color:var(--ink)">${money(p.price*q)}</b></span></div>
+      <span class="p">${money(p.price)} × ${fmtQty(q)} = <b style="color:var(--ink)">${money(p.price*q)}</b></span></div>
     <div class="cright">
       <button class="rm" data-rm="${p.id}">${t('remove')}</button>
-      <div class="mini"><button data-dec="${p.id}">−</button><span>${q}</span><button data-inc="${p.id}">+</button></div>
+      <div class="mini"><button data-dec="${p.id}">−</button>${qtySpan(p,q)}<button data-inc="${p.id}">+</button></div>
     </div></div>`).join("");
   const s=subtotal(), d=deliveryFee();
   $("#dfoot").innerHTML=`
@@ -226,7 +248,7 @@ function renderModalCtrl(p){
   const box=$("#modalCtrl"); box.dataset.pid=p.id; const q=S.cart[p.id]||0;
   if(p.stock<=0){ box.innerHTML=`<button class="btn btn-primary" disabled style="opacity:.4;width:100%;justify-content:center">${t('outStock')}</button>`; return; }
   if(q>0){ box.innerHTML=`<div class="stepper" style="height:48px"><button data-dec="${p.id}" style="width:52px">−</button>
-    <span style="min-width:40px;font-size:16px">${q}</span><button data-inc="${p.id}" style="width:52px">+</button></div>
+    ${qtySpan(p,q,'style="min-width:40px;font-size:16px"')}<button data-inc="${p.id}" style="width:52px">+</button></div>
     <button class="btn btn-ghost" data-close-modal>${t('keepShopping')}</button>`; }
   else box.innerHTML=`<button class="btn btn-primary" data-add="${p.id}" style="flex:1;justify-content:center">${t('addCart')} +</button>`;
   wireDynamic();
@@ -269,7 +291,7 @@ function renderCheckout(){
   $("#coSummary").innerHTML=`<h3>${t('orderSummary')}</h3>
     <div style="max-height:230px;overflow-y:auto;margin-bottom:12px">
     ${arr.map(({p,q})=>`<div class="drow" style="align-items:center">
-      <span>${meta(p.cat).em} ${p.name} <b style="color:var(--ink)">×${q}</b></span>
+      <span>${meta(p.cat).em} ${p.name} <b style="color:var(--ink)">×${fmtQty(q)}</b></span>
       <span style="color:var(--ink);font-weight:600">${money(p.price*q)}</span></div>`).join("")}</div>
     <div class="drow"><span>${t('subtotal')}</span><span>${money(s)}</span></div>
     <div class="drow"><span>${t('deliveryFee')}</span><span>${d?money(d):`<b style="color:var(--ok)">${t('free')}</b>`}</span></div>
@@ -312,7 +334,7 @@ function waMessage(o){
   m+=`*Name:* ${o.name}\n*Mobile:* ${o.mobile}\n*Address:* ${o.address}\n`;
   if(o.notes) m+=`*Note:* ${o.notes}\n`;
   m+=`*Payment:* ${o.pay==="upi"?"UPI":"Cash on Delivery"}\n\n*Items:*\n`;
-  o.items.forEach(i=>{ m+=`• ${i.name} ×${i.q} — ₹${i.line}\n`; });
+  o.items.forEach(i=>{ m+=`• ${i.name} ×${fmtQty(i.q)} — ₹${i.line}\n`; });
   m+=`\n*Subtotal:* ₹${o.subtotal}\n*Delivery:* ${o.delivery?"₹"+o.delivery:"FREE"}\n*Total:* ₹${o.total}`;
   return encodeURIComponent(m);
 }
@@ -501,12 +523,34 @@ function setTheme(th){ S.theme=th; store.set("theme",th); document.documentEleme
   $("#themeIcon").textContent = th==="dark"?"☀️":"🌙";
   renderCategories(); renderRail(); renderFeatured(); renderAll(); }
 
+/* tap the qty number on a weighable product to type an exact amount (0.5, 0.75...) */
+function startQtyEdit(el){
+  const id=el.dataset.qtyEdit; const cur=S.cart[id]||0;
+  const input=document.createElement("input");
+  input.type="number"; input.inputMode="decimal"; input.step="0.25"; input.min="0.25";
+  input.value=cur; input.className="qty-input";
+  if(el.getAttribute("style")) input.setAttribute("style",el.getAttribute("style"));
+  el.replaceWith(input); input.focus(); input.select();
+  let cancelled=false;
+  input.addEventListener("keydown",e=>{
+    e.stopPropagation();
+    if(e.key==="Enter"){ e.preventDefault(); input.blur(); }
+    else if(e.key==="Escape"){ cancelled=true; input.blur(); }
+  });
+  input.addEventListener("blur",()=>{
+    if(cancelled){ syncControls(id); renderCart(); return; }
+    const v=parseFloat(input.value);
+    setCartQty(id, isNaN(v)?cur:v);
+  });
+}
+
 /* ============================================================ EVENT WIRING */
 function wireDynamic(){
   $$("[data-add]").forEach(b=>b.onclick=e=>{e.stopPropagation();addToCart(b.dataset.add);});
   $$("[data-inc]").forEach(b=>b.onclick=e=>{e.stopPropagation();incCart(b.dataset.inc);});
   $$("[data-dec]").forEach(b=>b.onclick=e=>{e.stopPropagation();decCart(b.dataset.dec);});
   $$("[data-rm]").forEach(b=>b.onclick=e=>{e.stopPropagation();removeCart(b.dataset.rm);});
+  $$("[data-qty-edit]").forEach(el=>el.onclick=e=>{e.stopPropagation();startQtyEdit(el);});
   $$("[data-open]").forEach(b=>b.onclick=()=>openProduct(b.dataset.open));
   $$("[data-checkout]").forEach(b=>b.onclick=()=>{closeCart();renderCheckout();});
   $$("[data-close-cart]").forEach(b=>b.onclick=closeCart);
