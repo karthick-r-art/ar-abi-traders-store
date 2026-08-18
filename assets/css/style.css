@@ -94,9 +94,16 @@ header.site{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--
 .hero{position:relative;overflow:hidden;background:
   radial-gradient(120% 120% at 90% -10%,color-mix(in srgb,var(--marigold) 18%,transparent),transparent 55%),
   linear-gradient(180deg,color-mix(in srgb,var(--green) 6%,var(--paper)),var(--paper))}
-/* Real shop photo (assets/img/hero-bg.jpg) — shown from tablet width up, where the two-column
-   layout gives it room. A left-to-right scrim keeps the headline legible regardless of the photo,
-   fading out by ~65% width so the photo reads clearly behind the category tiles on the right. */
+/* Real shop photo — a lighter, smaller crop below tablet width (data-cost matters most on the
+   phones most customers actually order from), the full-size one from tablet up. Mobile stacks
+   text above the category card, so the scrim runs top-to-bottom instead of left-to-right. */
+@media(max-width:899px){
+  .hero{--hero-photo:url('../img/hero-bg-mobile.jpg');background:
+    linear-gradient(180deg,var(--paper) 0%,color-mix(in srgb,var(--paper) 58%,transparent) 34%,color-mix(in srgb,var(--paper) 68%,transparent) 58%,var(--paper) 88%),
+    radial-gradient(120% 120% at 90% -10%,color-mix(in srgb,var(--marigold) 10%,transparent),transparent 55%),
+    var(--hero-photo,none) left center/cover no-repeat,
+    linear-gradient(180deg,color-mix(in srgb,var(--green) 6%,var(--paper)),var(--paper))}
+}
 @media(min-width:900px){
   .hero{--hero-photo:url('../img/hero-bg.jpg');background:
     linear-gradient(100deg,var(--paper) 0%,color-mix(in srgb,var(--paper) 82%,transparent) 30%,color-mix(in srgb,var(--paper) 20%,transparent) 55%,transparent 68%),
