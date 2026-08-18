@@ -12,11 +12,14 @@
 <meta property="og:title" content="A.R. Abi Traders — Online Grocery Store, Cuddalore">
 <meta property="og:description" content="Order groceries online from A.R. Abi Traders, Cuddalore. Rice, oil, spices, snacks & 1800+ daily essentials at honest prices. Cash on delivery.">
 <meta property="og:url" content="https://ar-abi-traders-store.vercel.app/">
-<meta property="og:image" content="https://ar-abi-traders-store.vercel.app/assets/img/logo.svg">
+<meta property="og:image" content="https://ar-abi-traders-store.vercel.app/assets/img/hero-bg.jpg">
+<meta property="og:image:width" content="1915">
+<meta property="og:image:height" content="821">
 <meta property="og:locale" content="en_IN">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A.R. Abi Traders — Online Grocery Store, Cuddalore">
 <meta name="twitter:description" content="Order groceries online from A.R. Abi Traders, Cuddalore. 1800+ daily essentials at honest prices.">
+<meta name="twitter:image" content="https://ar-abi-traders-store.vercel.app/assets/img/hero-bg.jpg">
 <meta name="geo.region" content="IN-TN">
 <meta name="geo.placename" content="Cuddalore">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -29,7 +32,10 @@
   "@context": "https://schema.org",
   "@type": "GroceryStore",
   "name": "A.R. Abi Traders",
-  "image": "https://ar-abi-traders-store.vercel.app/assets/img/logo.svg",
+  "image": [
+    "https://ar-abi-traders-store.vercel.app/assets/img/hero-bg.jpg",
+    "https://ar-abi-traders-store.vercel.app/assets/img/shop-front.jpg"
+  ],
   "url": "https://ar-abi-traders-store.vercel.app/",
   "telephone": "+919566561558",
   "priceRange": "₹",
@@ -41,9 +47,61 @@
     "postalCode": "607001",
     "addressCountry": "IN"
   },
+  "areaServed": [
+    { "@type": "City", "name": "Cuddalore" },
+    { "@type": "AdministrativeArea", "name": "Cuddalore District" }
+  ],
   "openingHoursSpecification": [
     { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "09:00", "closes": "22:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Sunday"], "opens": "09:00", "closes": "14:00" }
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Grocery categories",
+    "itemListElement": [
+      { "@type": "OfferCatalog", "name": "Rice & Atta" },
+      { "@type": "OfferCatalog", "name": "Oils" },
+      { "@type": "OfferCatalog", "name": "Dal & Pulses" },
+      { "@type": "OfferCatalog", "name": "Masala & Spices" },
+      { "@type": "OfferCatalog", "name": "Dairy & Ghee" },
+      { "@type": "OfferCatalog", "name": "Snacks & Biscuits" },
+      { "@type": "OfferCatalog", "name": "Beverages" },
+      { "@type": "OfferCatalog", "name": "Home Care" },
+      { "@type": "OfferCatalog", "name": "Personal Care" }
+    ]
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does A.R. Abi Traders deliver in Cuddalore?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — we deliver the same day across Cuddalore, including Manjakuppam and nearby areas. Delivery is free on orders above ₹500, and a small ₹40 fee applies below that." }
+    },
+    {
+      "@type": "Question",
+      "name": "What are your store timings?",
+      "acceptedAnswer": { "@type": "Answer", "text": "We're open Monday to Saturday, 9am to 10pm, and Sunday 9am to 2pm." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I pay cash on delivery?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — Cash on Delivery is available, along with UPI / GPay / PhonePe." }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is the shop located?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No.16-A, Angalamman Koil Street, Manjakuppam, Cuddalore – 607001. Call us anytime at +91 95665 61558." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I order in Tamil?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — switch the language toggle to தமிழ் anywhere on the site, or just use the voice search button to search by speaking." }
+    }
   ]
 }
 </script>
@@ -169,6 +227,18 @@
     <div class="grid" id="all"></div>
     <div style="display:none;justify-content:center;margin-top:20px" id="loadMore">
       <button class="btn btn-ghost" id="btnLoadMore"></button>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="block wrap" aria-label="Frequently asked questions">
+    <div class="head"><div><h2 id="hFaq"></h2></div></div>
+    <div class="faq-list">
+      <details class="faq-item"><summary id="faqQ1"></summary><p id="faqA1"></p></details>
+      <details class="faq-item"><summary id="faqQ2"></summary><p id="faqA2"></p></details>
+      <details class="faq-item"><summary id="faqQ3"></summary><p id="faqA3"></p></details>
+      <details class="faq-item"><summary id="faqQ4"></summary><p id="faqA4"></p></details>
+      <details class="faq-item"><summary id="faqQ5"></summary><p id="faqA5"></p></details>
     </div>
   </section>
 </section>

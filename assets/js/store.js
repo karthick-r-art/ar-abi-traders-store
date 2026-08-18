@@ -516,6 +516,8 @@ function applyStaticText(){
   // footer
   $("#footAbout").textContent=t('footAbout'); set("#fLinks","quickLinks"); set("#fContact","contact");
   $("#fHours").textContent=t('hours');
+  set("#hFaq","faqTitle");
+  [1,2,3,4,5].forEach(n=>{ set(`#faqQ${n}`,`faqQ${n}`); set(`#faqA${n}`,`faqA${n}`); });
   $$(".lang-toggle button").forEach(b=>b.classList.toggle("on",b.dataset.lang===S.lang));
 }
 function setLang(l){ S.lang=l; store.set("lang",l); applyStaticText(); renderCategories(); renderRail(); renderFeatured(); renderAll(); }

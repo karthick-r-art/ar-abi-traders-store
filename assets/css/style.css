@@ -199,6 +199,17 @@ header.site{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--
   .hw-num{left:calc(50% + 26px)}
 }
 
+/* ---------- FAQ ---------- */
+.faq-list{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.faq-item{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:2px 18px;transition:border-color .15s}
+.faq-item:hover{border-color:var(--green-300)}
+.faq-item summary{cursor:pointer;padding:15px 0;font-weight:700;font-size:14.5px;list-style:none;
+  display:flex;align-items:center;justify-content:space-between;gap:12px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";font-size:20px;font-weight:400;color:var(--green);flex-shrink:0;transition:transform .2s}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item p{margin:0 0 16px;color:var(--muted);font-size:13.5px;line-height:1.6}
+
 /* ---------- Section ---------- */
 section.block{padding:40px 0}
 .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px}
