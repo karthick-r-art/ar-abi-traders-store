@@ -48,6 +48,7 @@
     cursor:pointer;overflow:hidden;padding:0;display:grid;place-items:center;font-size:16px;color:var(--muted);flex-shrink:0}
   .pthumb-btn:hover{border-color:var(--green-300)}
   .pthumb-btn img{width:100%;height:100%;object-fit:cover}
+  .pthumb-btn .pill-art{width:78%;height:78%}
   .pthumb-btn.uploading{opacity:.5;pointer-events:none}
   .login-overlay{position:fixed;inset:0;background:var(--paper);display:grid;place-items:center;z-index:50;padding:20px}
   .login-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px 28px;width:100%;max-width:360px}
@@ -59,6 +60,21 @@
     border:1px solid color-mix(in srgb,var(--marigold) 40%,transparent);border-radius:var(--r);
     padding:12px 16px;font-size:12.5px;margin:16px 0;line-height:1.5}
 
+  /* ---- Mobile card views (replace tables under 760px so nothing needs sideways scrolling) ---- */
+  .cards-view{display:none;padding:12px;gap:10px}
+  .ocard,.pcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+  .ocard+.ocard,.pcard+.pcard{margin-top:10px}
+  .ocard .oc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .ocard .oc-num{font-weight:800;font-family:var(--disp)}
+  .ocard .oc-date{color:var(--muted);font-size:11px}
+  .ocard .oc-row{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-size:13px}
+  .ocard .oc-row span:first-child{color:var(--muted)}
+  .ocard .st-sel{width:100%;margin-top:10px}
+  .pcard{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .pcard .pc-head{display:flex;align-items:center;gap:10px;flex:1 1 100%}
+  .pcard .pc-head b{font-weight:600;font-size:13.5px}
+  .pcard .pc-fields{display:flex;flex-wrap:wrap;gap:8px;flex:1 1 100%;align-items:center}
+  .pcard .pc-fields label{font-size:10.5px;color:var(--muted);display:block;margin-bottom:3px}
   @media(max-width:760px){
     .admin-wrap{padding:0 14px}
     .abar{flex-wrap:wrap;row-gap:8px}
@@ -69,6 +85,8 @@
     .kpi{padding:14px}
     .kpi .v{font-size:24px}
     .toolbar2{padding:10px 14px}
+    .tbl-view{display:none}
+    .cards-view{display:block}
   }
   @media(max-width:420px){
     .abar .nm span{font-size:10px}
@@ -112,10 +130,11 @@
   <!-- Orders -->
   <div class="panel">
     <div class="ph"><h3>🧾 Recent Orders</h3><span class="save-note" style="margin-left:auto">Orders placed on the storefront appear here</span></div>
-    <div class="tscroll"><table id="ordersTable">
+    <div class="tscroll tbl-view"><table id="ordersTable">
       <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
       <tbody id="ordersBody"></tbody>
     </table></div>
+    <div class="cards-view" id="ordersCards"></div>
     <div class="no-orders" id="noOrders" style="display:none">No orders yet. New orders placed on the storefront will appear here automatically.</div>
   </div>
 
@@ -132,10 +151,11 @@
       <select class="st-sel" id="pCat"></select>
       <span class="save-note" id="pCount" style="margin-left:auto"></span>
     </div>
-    <div class="tscroll"><table>
+    <div class="tscroll tbl-view"><table>
       <thead><tr><th>Photo</th><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Stock</th><th>Status</th></tr></thead>
       <tbody id="prodBody"></tbody>
     </table></div>
+    <div class="cards-view" id="prodCards"></div>
     <div class="save-note">💡 Edits here sync live to the storefront. Click a product's photo box to upload a real picture from your phone/computer — it replaces the illustration immediately for customers.</div>
   </div>
 </div>
@@ -275,6 +295,18 @@ function kpis(){
 /* Orders */
 const STATUSES=["received","confirmed","preparing","out","delivered","cancelled"];
 const SLABEL={received:"Order received",confirmed:"Confirmed",preparing:"Preparing",out:"Out for delivery",delivered:"Delivered",cancelled:"Cancelled"};
+function orderCardHTML(o){
+  return `<div class="ocard">
+    <div class="oc-top">
+      <div><div class="oc-num">#${o.num}</div><div class="oc-date">${new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</div></div>
+      <span class="badge2 b-cat">${o.pay==="upi"?"UPI":"COD"}</span>
+    </div>
+    <div class="oc-row"><span>Customer</span><span>${o.name} · ${o.mobile}</span></div>
+    <div class="oc-row"><span>Items</span><span>${o.items.reduce((s,x)=>s+x.q,0)} items</span></div>
+    <div class="oc-row"><span>Total</span><span><b>${money(o.total)}</b></span></div>
+    <select class="st-sel" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${(o.status||"received")===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select>
+  </div>`;
+}
 function orders(){
   const os=currentOrders();
   $("#noOrders").style.display=os.length?"none":"block";
@@ -286,6 +318,7 @@ function orders(){
     <td><span class="badge2 b-cat">${o.pay==="upi"?"UPI":"COD"}</span></td>
     <td><select class="st-sel" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${(o.status||"received")===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select></td>
   </tr>`).join("");
+  $("#ordersCards").innerHTML=os.map(orderCardHTML).join("");
   $$("[data-onum]").forEach(sel=>sel.onchange=async()=>{
     const num=sel.dataset.onum, status=sel.value;
     if(ordersCache!==null && window.ARFire && window.ARFire.ready){
@@ -297,7 +330,7 @@ function orders(){
     }else{
       const os=store.get("orders",[]); const i=os.findIndex(o=>o.num===num);
       if(i>-1){ os[i].status=status; store.set("orders",os); }
-      toast("Order status updated (local demo only)"); kpis();
+      toast("Order status updated (local demo only)"); kpis(); orders();
     }
   });
 }
@@ -306,6 +339,26 @@ function orders(){
 function prodCats(){
   const cats=[...new Set(P.map(p=>p.cat))].sort();
   $("#pCat").innerHTML=`<option value="">All categories</option>`+cats.map(c=>`<option>${c}</option>`).join("");
+}
+function productCardHTML(p){
+  const [l]=M[p.cat].c.split(",");
+  const photo=val(p,'photo');
+  return `<div class="pcard">
+    <div class="pc-head">
+      <button class="pthumb-btn" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="">`:(window.artFor?window.artFor(p.type):M[p.cat].em)}</button>
+      <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
+      <div style="flex:1;min-width:0">
+        <b>${p.name}</b>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}
+        <div style="margin-top:4px"><span class="badge2 b-cat">${p.cat}</span></div>
+      </div>
+      <button class="badge2 ${avail(p)?'b-ok':'b-no'}" data-toggle="${p.id}" style="flex-shrink:0">${avail(p)?"● Available":"○ Hidden"}</button>
+    </div>
+    <div class="pc-fields">
+      <div><label>Price ₹</label><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></div>
+      <div><label>MRP ₹</label><span style="color:var(--muted);font-size:13px">${val(p,'mrp')||"—"}</span></div>
+      <div><label>Stock</label><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:66px"></div>
+    </div>
+  </div>`;
 }
 function products(){
   const q=$("#pSearch").value.trim().toLowerCase(), cat=$("#pCat").value;
@@ -330,6 +383,7 @@ function products(){
       <td><button class="badge2 ${avail(p)?'b-ok':'b-no'}" data-toggle="${p.id}">${avail(p)?"● Available":"○ Hidden"}</button></td>
     </tr>`;
   }).join("");
+  $("#prodCards").innerHTML=list.map(productCardHTML).join("");
   $$("input[data-id]").forEach(inp=>inp.onchange=async()=>{
     const id=inp.dataset.id,f=inp.dataset.f,v=parseFloat(inp.value)||0;
     edits[id]=edits[id]||{}; edits[id][f]=v; store.set("admin_edits",edits); kpis();
