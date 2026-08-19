@@ -87,7 +87,7 @@ function tile(p, size){
 }
 function qtySpan(p,q,extraAttrs=""){
   return isWeighable(p)
-    ? `<span class="qty-val" data-qty-edit="${p.id}" title="${t('tapToEdit')}" ${extraAttrs}>${fmtQty(q)}<i>✎</i></span>`
+    ? `<span class="qty-val" data-qty-edit="${p.id}" title="${t('tapToEdit')}" ${extraAttrs}>${fmtQty(q)}<i>${window.icon('pencil')}</i></span>`
     : `<span ${extraAttrs}>${fmtQty(q)}</span>`;
 }
 function cardCtrl(p){
@@ -114,7 +114,7 @@ function productCard(p){
   </article>`;
 }
 function renderGrid(list, el){
-  if(!list.length){ el.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="big">🔍</div>
+  if(!list.length){ el.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="big">${window.icon('search')}</div>
     <h3>${t('noResults')}</h3><p>${t('noResultsSub')}</p></div>`; wireDynamic(); return; }
   el.innerHTML = list.map(productCard).join("");
   wireDynamic();
@@ -127,7 +127,7 @@ function renderCategories(){
   const order = Object.keys(CATMETA).filter(c=>counts[c]);
   $("#cats").innerHTML = order.map(c=>`
     <button class="catcard" data-cat="${c}" style="background:${catBg(c)}">
-      <span class="cem">${meta(c).em}</span>
+      <span class="cem">${window.catIcon(c)}</span>
       <b>${catName(c)}</b><small>${counts[c]} ${t('items')}</small>
     </button>`).join("");
   wireDynamic();
@@ -136,8 +136,8 @@ function renderRail(){
   const counts = {};
   P.forEach(p=>counts[p.cat]=(counts[p.cat]||0)+1);
   const order = Object.keys(CATMETA).filter(c=>counts[c]);
-  $("#rail").innerHTML = `<button class="chip ${S.cat===''?'on':''}" data-cat=""><span class="em">🏠</span>${t('all')}</button>`+
-    order.map(c=>`<button class="chip ${S.cat===c?'on':''}" data-cat="${c}"><span class="em">${meta(c).em}</span>${catName(c)}</button>`).join("");
+  $("#rail").innerHTML = `<button class="chip ${S.cat===''?'on':''}" data-cat=""><span class="em">${window.icon('home')}</span>${t('all')}</button>`+
+    order.map(c=>`<button class="chip ${S.cat===c?'on':''}" data-cat="${c}"><span class="em">${window.catIcon(c)}</span>${catName(c)}</button>`).join("");
   wireDynamic();
 }
 
@@ -187,7 +187,7 @@ function refreshCount(){ const n=cartQty(); const b=$("#cartCount"); b.textConte
 
 function addToCart(id){ const p=P.find(x=>x.id==id); if(!p||p.stock<=0) return;
   S.cart[id]=Math.min(round2((S.cart[id]||0)+qtyStep(p)), p.stock); saveCart(); syncControls(id); renderCart();
-  toast(`${t('added')} ✓`,"🛒"); }
+  toast(t('added'),window.icon('cart')); }
 function incCart(id){ const p=P.find(x=>x.id==id); if(!p) return;
   S.cart[id]=Math.min(round2((S.cart[id]||0)+qtyStep(p)),p.stock); saveCart(); syncControls(id); renderCart(); }
 function decCart(id){ const p=P.find(x=>x.id==id); if(!p) return;
@@ -219,7 +219,7 @@ function syncControls(id){
 
 function renderCart(){
   const arr=cartArr(), box=$("#ditems");
-  if(!arr.length){ box.innerHTML=`<div class="empty"><div class="big">🧺</div><h3>${t('emptyCart')}</h3>
+  if(!arr.length){ box.innerHTML=`<div class="empty"><div class="big">${window.icon('basket')}</div><h3>${t('emptyCart')}</h3>
     <p>${t('emptyCartSub')}</p><button class="btn btn-primary" data-close-cart style="margin-top:16px">${t('startShop')}</button></div>`;
     $("#dfoot").style.display="none"; wireDynamic(); return; }
   $("#dfoot").style.display="block";
@@ -290,7 +290,7 @@ function renderCheckout(){
   $("#coSummary").innerHTML=`<h3>${t('orderSummary')}</h3>
     <div style="max-height:230px;overflow-y:auto;margin-bottom:12px">
     ${arr.map(({p,q})=>`<div class="drow" style="align-items:center">
-      <span>${meta(p.cat).em} ${p.name} <b style="color:var(--ink)">×${fmtQty(q)}</b></span>
+      <span style="display:inline-flex;align-items:center;gap:6px">${window.catIcon(p.cat)} ${p.name} <b style="color:var(--ink)">×${fmtQty(q)}</b></span>
       <span style="color:var(--ink);font-weight:600">${money(p.price*q)}</span></div>`).join("")}</div>
     <div class="drow"><span>${t('subtotal')}</span><span>${money(s)}</span></div>
     <div class="drow"><span>${t('deliveryFee')}</span><span>${d?money(d):`<b style="color:var(--ok)">${t('free')}</b>`}</span></div>
@@ -362,7 +362,7 @@ function stopTracking(){ if(S.unsub){ S.unsub(); S.unsub=null; } }
 function renderConfirm(o){
   stopTracking();
   $("#confirm").innerHTML=`<div class="track">
-    <p style="color:var(--muted);margin:0 0 2px">${t('orderThanks')}, <b style="color:var(--ink)">${o.name}</b> 🙏</p>
+    <p style="color:var(--muted);margin:0 0 2px">${t('orderThanks')}, <b style="color:var(--ink)">${o.name}</b> ${window.icon('praying')}</p>
     <p style="color:var(--muted);font-size:13px;margin-bottom:14px">${t('orderNum')} <b style="color:var(--green)">#${o.num}</b></p>
     <div id="trackBody"></div>
     <p style="color:var(--muted);max-width:42ch;margin:14px auto 0">${t('orderMsg')}</p>
@@ -466,8 +466,8 @@ function initVoiceSearch(){
   voiceRec.onend = () => { listening=false; micBtn.classList.remove("listening"); };
   voiceRec.onerror = e => {
     listening=false; micBtn.classList.remove("listening");
-    if(e.error==="no-speech") toast(t('micNoSpeech'),"🎤");
-    else if(e.error==="not-allowed" || e.error==="service-not-allowed") toast(t('micDenied'),"🎤");
+    if(e.error==="no-speech") toast(t('micNoSpeech'),window.icon('mic'));
+    else if(e.error==="not-allowed" || e.error==="service-not-allowed") toast(t('micDenied'),window.icon('mic'));
   };
   voiceRec.onresult = e => {
     const text = e.results[0][0].transcript.trim();
@@ -476,7 +476,7 @@ function initVoiceSearch(){
     S.q = text; S.cat = ""; S.shown = PAGE_SIZE;
     renderRail(); renderAll();
     $("#allSection").scrollIntoView({behavior:"smooth"});
-    toast(`${t('micHeard')} "${text}"`,"🎤");
+    toast(`${t('micHeard')} "${text}"`,window.icon('mic'));
   };
 }
 
@@ -522,7 +522,7 @@ function applyStaticText(){
 }
 function setLang(l){ S.lang=l; store.set("lang",l); applyStaticText(); renderCategories(); renderRail(); renderFeatured(); renderAll(); }
 function setTheme(th){ S.theme=th; store.set("theme",th); document.documentElement.setAttribute("data-theme",th);
-  $("#themeIcon").textContent = th==="dark"?"☀️":"🌙";
+  $("#themeIcon").innerHTML = th==="dark"?window.icon('sun'):window.icon('moon');
   renderCategories(); renderRail(); renderFeatured(); renderAll(); }
 
 /* tap the qty number on a weighable product to type an exact amount (0.5, 0.75...) */
@@ -567,7 +567,7 @@ function init(){
   // restore state
   S.cart=store.get("cart",{}); S.lang=store.get("lang","en"); S.theme=store.get("theme","light");
   document.documentElement.setAttribute("data-theme",S.theme);
-  $("#themeIcon").textContent=S.theme==="dark"?"☀️":"🌙";
+  $("#themeIcon").innerHTML=S.theme==="dark"?window.icon('sun'):window.icon('moon');
   // header trust numbers
   $("#trustProductsN").textContent = P.length.toLocaleString("en-IN")+"+";
   applyStaticText();

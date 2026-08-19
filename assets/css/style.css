@@ -72,6 +72,7 @@ header.site{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--
   position:relative;transition:background .15s}
 .icon-btn:hover{background:var(--line-2)}
 .icon-btn svg{width:21px;height:21px}
+.ico-svg{width:1em;height:1em;flex-shrink:0;vertical-align:-0.14em;display:inline-block}
 .lang-toggle{display:flex;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;font-size:12.5px;font-weight:600}
 .lang-toggle button{padding:8px 12px;color:var(--muted)}
 .lang-toggle button.on{background:var(--green);color:#fff}
@@ -162,7 +163,8 @@ header.site{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--
 @keyframes driftA{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-48px,40px) scale(1.18)}}
 @keyframes driftB{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(42px,-34px) scale(1.22)}}
 @keyframes driftC{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-36px,-38px) scale(.88)}}
-.hero-fx .ico{position:absolute;font-size:34px;opacity:.4;filter:saturate(.9) drop-shadow(0 4px 8px rgba(0,0,0,.08));animation:bob 4s ease-in-out infinite}
+.hero-fx .ico{position:absolute;font-size:34px;opacity:.4;filter:saturate(.9) drop-shadow(0 4px 8px rgba(0,0,0,.08));animation:bob 4s ease-in-out infinite;color:var(--green)}
+.hero-fx .ico svg{width:1em;height:1em;display:block}
 .hero-fx .i1{top:14%;left:6%;font-size:42px;animation-duration:4.5s}
 .hero-fx .i2{top:66%;left:14%;animation-duration:3.6s;animation-delay:.6s}
 .hero-fx .i3{top:22%;right:8%;animation-duration:4.2s;animation-delay:1.1s}
