@@ -5,7 +5,7 @@ const SHOP = {
   name:"A.R. ABI Traders",
   phone:"+919566561558", phone2:"+916381958057",
   wa:"919566561558",
-  addr:"No.16-A, Angalamman Koil Street, Manjakuppam, Cuddalore – 607001",
+  addr:"No.54/41C, Angalamman Koil Street, Manjakuppam, Cuddalore – 607001",
   freeOver:500, deliveryFee:40,
 };
 

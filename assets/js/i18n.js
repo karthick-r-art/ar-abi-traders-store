@@ -80,7 +80,7 @@ window.I18N = {
     faqQ3:"Can I pay cash on delivery?",
     faqA3:"Yes — Cash on Delivery is available, along with UPI / GPay / PhonePe.",
     faqQ4:"Where is the shop located?",
-    faqA4:"No.16-A, Angalamman Koil Street, Manjakuppam, Cuddalore – 607001. Call us anytime at +91 95665 61558.",
+    faqA4:"No.54/41C, Angalamman Koil Street, Manjakuppam, Cuddalore – 607001. Call us anytime at +91 95665 61558.",
     faqQ5:"Can I order in Tamil?",
     faqA5:"Yes — switch the language toggle to தமிழ் anywhere on the site, or just use the voice search button to search by speaking.",
   },
@@ -147,7 +147,7 @@ window.I18N = {
     faqQ3:"டெலிவரியில் பணம் செலுத்தலாமா?",
     faqA3:"ஆம் — டெலிவரியில் ரொக்கம் செலுத்தலாம், UPI / GPay / PhonePe மூலமும் செலுத்தலாம்.",
     faqQ4:"கடை எங்கே உள்ளது?",
-    faqA4:"எண்.16-A, அங்கலம்மன் கோயில் தெரு, மஞ்சக்குப்பம், கடலூர் – 607001. எப்போது வேண்டுமானாலும் +91 95665 61558 என்ற எண்ணில் அழையுங்கள்.",
+    faqA4:"எண்.54/41C, அங்கலம்மன் கோயில் தெரு, மஞ்சக்குப்பம், கடலூர் – 607001. எப்போது வேண்டுமானாலும் +91 95665 61558 என்ற எண்ணில் அழையுங்கள்.",
     faqQ5:"தமிழில் ஆர்டர் செய்யலாமா?",
     faqA5:"ஆம் — தளத்தில் எங்கும் உள்ள மொழி பொத்தானை தமிழ் என மாற்றவும், அல்லது குரல் தேடல் பொத்தானைப் பயன்படுத்தி பேசி தேடலாம்.",
   }
