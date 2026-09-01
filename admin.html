@@ -10,42 +10,115 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Mukta+Malar:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
-  .admin-wrap{max-width:1200px;margin:0 auto;padding:0 20px}
-  .abar{display:flex;align-items:center;gap:14px;padding:14px 0}
-  .abar .nm{font-family:var(--disp);font-weight:800;font-size:17px}
-  .abar .nm span{display:block;font-size:11px;color:var(--muted);font-weight:500}
-  .pill{margin-left:auto;font-size:12px;font-weight:700;color:var(--green);background:color-mix(in srgb,var(--green) 10%,transparent);padding:6px 12px;border-radius:999px}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0}
-  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px}
-  .kpi .k{font-size:12.5px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:7px}
-  .kpi .v{font-family:var(--disp);font-size:30px;font-weight:800;margin-top:8px;letter-spacing:-.02em}
+  :root{
+    --adm-bg:#F1F4F8; --adm-card:#FFFFFF; --adm-border:#E6EAF1; --adm-border-soft:#EEF1F6;
+    --adm-soft:#8993A4; --sidebar-w:252px;
+  }
+  body{background:var(--adm-bg)}
+  a,button{-webkit-tap-highlight-color:transparent}
+
+  /* ---------- Shell / sidebar ---------- */
+  .admin-shell{display:flex;min-height:100vh}
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--adm-card);border-right:1px solid var(--adm-border);
+    display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:41;transition:transform .25s cubic-bezier(.4,0,.2,1)}
+  .side-brand{display:flex;align-items:center;gap:11px;padding:20px 18px;border-bottom:1px solid var(--adm-border-soft)}
+  .side-brand img{width:40px;flex-shrink:0}
+  .side-brand .nm{font-family:var(--disp);font-weight:800;font-size:14.5px;line-height:1.25}
+  .side-brand .nm span{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+  .side-close{display:none;margin-left:auto;width:30px;height:30px;border-radius:8px;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0}
+  .side-close svg{width:16px;height:16px}
+  .side-nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px}
+  .side-cap{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--adm-soft);padding:14px 12px 6px}
+  .side-link{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;font-size:13.5px;
+    font-weight:700;color:var(--muted);text-align:left;width:100%;transition:background .15s,color .15s}
+  .side-link svg{width:18px;height:18px;flex-shrink:0}
+  .side-link:hover{background:var(--adm-bg);color:var(--ink)}
+  .side-link.active{background:color-mix(in srgb,var(--green) 11%,transparent);color:var(--green)}
+  .side-link .cnt{margin-left:auto;font-size:11px;font-weight:800;background:var(--adm-bg);color:var(--adm-soft);
+    padding:2px 8px;border-radius:999px;min-width:20px;text-align:center}
+  .side-link.active .cnt{background:var(--green);color:#fff}
+  .side-foot{margin-top:auto;padding:14px 12px;border-top:1px solid var(--adm-border-soft);display:flex;flex-direction:column;gap:2px}
+  .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(15,25,18,.5);opacity:0;visibility:hidden;
+    transition:.25s;z-index:40;backdrop-filter:blur(1px)}
+  .sidebar-scrim.show{opacity:1;visibility:visible}
+
+  .admin-main{flex:1;margin-left:var(--sidebar-w);min-width:0;display:flex;flex-direction:column}
+  .topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--adm-bg) 82%,transparent);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--adm-border);display:flex;align-items:center;
+    gap:14px;padding:18px 30px}
+  .topbar h1{font-size:20px;font-family:var(--disp);line-height:1.2}
+  .topbar .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .hamburger{display:none;width:38px;height:38px;border-radius:10px;background:var(--adm-card);
+    border:1px solid var(--adm-border);align-items:center;justify-content:center;flex-shrink:0;color:var(--ink)}
+  .hamburger svg{width:19px;height:19px}
+  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--muted);
+    background:var(--adm-card);border:1px solid var(--adm-border);padding:7px 12px;border-radius:999px}
+  .live-dot i{width:8px;height:8px;border-radius:50%;background:var(--adm-soft);flex-shrink:0}
+  .live-dot.on i{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 20%,transparent)}
+  .admin-content{padding:26px 30px 70px;max-width:1360px;width:100%}
+  .page-section{display:none}
+  .page-section.active{display:block;animation:pageIn .35s cubic-bezier(.16,1,.3,1)}
+  @keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---------- KPI tiles ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:26px}
+  .kpi{background:var(--adm-card);border:1px solid var(--adm-border);border-radius:16px;padding:20px;
+    display:flex;flex-direction:column;gap:16px;transition:transform .18s,box-shadow .18s,border-color .18s}
+  .kpi[data-kpi]{cursor:pointer}
+  .kpi[data-kpi]:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(20,30,55,.09);border-color:transparent}
+  .kpi-top{display:flex;align-items:flex-start;justify-content:space-between}
+  .kpi .kicon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex-shrink:0}
+  .kpi .kicon svg{width:20px;height:20px}
+  .kpi .hint{font-size:11px;font-weight:800;color:var(--green);opacity:0;transition:opacity .15s;display:flex;align-items:center;gap:2px}
+  .kpi[data-kpi]:hover .hint{opacity:1}
+  .kpi .k{font-size:12.5px;color:var(--adm-soft);font-weight:700}
+  .kpi .v{font-family:var(--disp);font-size:27px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-top:3px}
   .kpi .v small{font-size:14px;color:var(--muted);font-weight:600}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);margin:20px 0;overflow:hidden}
-  .panel .ph{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
-  .panel .ph h3{font-size:16px}
+  .load-dots{display:inline-flex;gap:3px;vertical-align:middle}
+  .load-dots i{width:6px;height:6px;border-radius:50%;background:var(--line);animation:dotPulse 1.1s ease-in-out infinite}
+  .load-dots i:nth-child(2){animation-delay:.15s}.load-dots i:nth-child(3){animation-delay:.3s}
+  @keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+
+  /* ---------- Panels / tables ---------- */
+  .panel{background:var(--adm-card);border:1px solid var(--adm-border);border-radius:16px;margin:0 0 22px;
+    overflow:hidden;box-shadow:0 1px 3px rgba(20,30,55,.04)}
+  .panel .ph{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--adm-border-soft);flex-wrap:wrap}
+  .panel .ph h3{font-size:15.5px}
+  .panel .ph .sub{font-size:12px;color:var(--muted);margin-top:2px}
   .panel .ph .search{max-width:280px;margin-left:auto}
   table{width:100%;border-collapse:collapse;font-size:13.5px}
-  th{text-align:left;padding:11px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card)}
-  td{padding:10px 14px;border-bottom:1px solid var(--line-2)}
-  tr:hover td{background:color-mix(in srgb,var(--green) 3%,transparent)}
-  .tscroll{max-height:520px;overflow:auto;-webkit-overflow-scrolling:touch}
+  th{text-align:left;padding:12px 16px;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--adm-soft);border-bottom:1px solid var(--adm-border);position:sticky;top:0;background:var(--adm-card)}
+  td{padding:11px 16px;border-bottom:1px solid var(--adm-border-soft)}
+  tr:hover td{background:var(--adm-bg)}
+  .tscroll{max-height:560px;overflow:auto;-webkit-overflow-scrolling:touch}
   table{min-width:640px}
   .st-sel{max-width:100%}
   .em-tag{width:40px;height:40px;border-radius:10px;display:inline-grid;place-items:center;font-size:18px;overflow:hidden;flex-shrink:0}
   .em-tag .pill-art{width:88%;height:88%}
-  .in{width:78px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font-size:13px;font-family:inherit}
+  .in{width:78px;padding:7px 8px;border:1.5px solid var(--adm-border);border-radius:8px;background:var(--adm-bg);
+    color:var(--ink);font-size:13px;font-family:inherit;transition:border-color .15s,background .15s}
+  .in:focus{outline:none;border-color:var(--green-300);background:var(--card)}
   .badge2{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
   .b-ok{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
   .b-no{background:color-mix(in srgb,var(--kumkum) 14%,transparent);color:var(--kumkum)}
-  .b-cat{background:var(--line-2);color:var(--muted)}
-  .st-sel{padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font-size:12.5px;font-weight:600}
-  .toolbar2{display:flex;gap:10px;align-items:center;padding:12px 20px;flex-wrap:wrap}
-  .save-note{font-size:12px;color:var(--muted);padding:10px 20px}
-  .no-orders{padding:40px 20px;text-align:center;color:var(--muted)}
-  .logout-btn{margin-left:8px;font-size:12px;font-weight:700;color:var(--muted);background:var(--card);
-    border:1.5px solid var(--line);padding:6px 12px;border-radius:999px;cursor:pointer}
+  .b-cat{background:var(--adm-bg);color:var(--muted)}
+  .st-sel{padding:7px 10px;border:1.5px solid var(--adm-border);border-radius:8px;background:var(--adm-bg);
+    color:var(--ink);font-size:12.5px;font-weight:700;transition:border-color .15s,color .15s}
+  .st-sel[data-status="received"]{border-color:#94A3B8;color:#475569}
+  .st-sel[data-status="confirmed"]{border-color:#60A5FA;color:#2563EB}
+  .st-sel[data-status="preparing"]{border-color:#FBBF24;color:#B45309}
+  .st-sel[data-status="out"]{border-color:#A78BFA;color:#7C3AED}
+  .st-sel[data-status="delivered"]{border-color:#34D399;color:#059669}
+  .st-sel[data-status="cancelled"]{border-color:#F87171;color:#DC2626}
+  .toolbar2{display:flex;gap:10px;align-items:center;padding:14px 22px;flex-wrap:wrap;background:var(--adm-bg);border-bottom:1px solid var(--adm-border-soft)}
+  .save-note{font-size:12px;color:var(--muted);padding:10px 22px}
+  .no-orders{padding:44px 20px;text-align:center;color:var(--muted);font-size:13.5px}
+  .logout-btn{font-size:12.5px;font-weight:700;color:var(--muted);background:var(--adm-card);
+    border:1.5px solid var(--adm-border);padding:8px 14px;border-radius:999px;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;gap:7px}
   .logout-btn:hover{border-color:var(--kumkum);color:var(--kumkum)}
-  .pthumb-btn{width:44px;height:44px;border-radius:10px;border:1.5px dashed var(--line);background:var(--paper);
+  .pthumb-btn{width:44px;height:44px;border-radius:10px;border:1.5px dashed var(--adm-border);background:var(--adm-bg);
     cursor:pointer;overflow:hidden;padding:0;display:grid;place-items:center;font-size:16px;color:var(--muted);flex-shrink:0}
   .pthumb-btn:hover{border-color:var(--green-300)}
   .pthumb-btn img{width:100%;height:100%;object-fit:cover}
@@ -59,11 +132,11 @@
   .login-note{font-size:11.5px;color:var(--muted);margin-top:16px;line-height:1.5}
   .banner{background:color-mix(in srgb,var(--marigold) 14%,transparent);color:var(--ink);
     border:1px solid color-mix(in srgb,var(--marigold) 40%,transparent);border-radius:var(--r);
-    padding:12px 16px;font-size:12.5px;margin:16px 0;line-height:1.5}
+    padding:12px 16px;font-size:12.5px;margin-bottom:20px;line-height:1.5}
 
   /* ---- Mobile card views (replace tables under 760px so nothing needs sideways scrolling) ---- */
   .cards-view{display:none;padding:12px;gap:10px}
-  .ocard,.pcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+  .ocard,.pcard{background:var(--adm-bg);border:1px solid var(--adm-border);border-radius:var(--r);padding:14px}
   .ocard+.ocard,.pcard+.pcard{margin-top:10px}
   .ocard .oc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
   .ocard .oc-num{font-weight:800;font-family:var(--disp)}
@@ -76,23 +149,30 @@
   .pcard .pc-head b{font-weight:600;font-size:13.5px}
   .pcard .pc-fields{display:flex;flex-wrap:wrap;gap:8px;flex:1 1 100%;align-items:center}
   .pcard .pc-fields label{font-size:10.5px;color:var(--muted);display:block;margin-bottom:3px}
+
+  /* ---- skeleton shimmer (shares .skeleton/.spinner defined in style.css) ---- */
+  .kpi.skeleton .kicon,.kpi.skeleton .k,.kpi.skeleton .v{visibility:hidden}
+
+  @media(max-width:900px){
+    .sidebar{transform:translateX(-100%);box-shadow:0 0 0 rgba(0,0,0,0)}
+    .sidebar.open{transform:translateX(0);box-shadow:var(--shadow-lg)}
+    .sidebar-scrim{display:block}
+    .side-close{display:flex}
+    .admin-main{margin-left:0}
+    .hamburger{display:flex}
+    .topbar{padding:14px 16px}
+    .admin-content{padding:18px 16px 50px}
+    .live-dot span{display:none}
+  }
   @media(max-width:760px){
-    .admin-wrap{padding:0 14px}
-    .abar{flex-wrap:wrap;row-gap:8px}
-    .abar .nm{font-size:15px}
     .panel .ph{flex-wrap:wrap;padding:14px}
     .panel .ph .search{max-width:none;flex:1 1 100%;margin-left:0}
-    .kpis{grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px}
-    .kpi{padding:14px}
-    .kpi .v{font-size:24px}
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+    .kpi{padding:14px;gap:10px}
+    .kpi .v{font-size:22px}
     .toolbar2{padding:10px 14px}
     .tbl-view{display:none}
     .cards-view{display:block}
-  }
-  @media(max-width:420px){
-    .abar .nm span{font-size:10px}
-    .pill{font-size:11px;padding:6px 10px}
-    .logout-btn{font-size:11px;padding:6px 10px}
   }
 </style>
 </head>
@@ -120,62 +200,128 @@
   </div>
 </div>
 
-<header class="site"><div class="admin-wrap abar">
-  <img src="assets/img/logo.png" alt="" style="width:58px">
-  <div class="nm">A.R. Abi Traders<span>Admin Dashboard · Demo</span></div>
-  <a class="pill" href="index.html">← View storefront</a>
-  <button class="logout-btn" id="logoutBtn" style="display:none">Log out</button>
-</div></header>
+<div class="admin-shell">
+  <div class="sidebar-scrim" id="sidebarScrim"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand">
+      <img src="assets/img/logo.png" alt="">
+      <div class="nm">A.R. Abi Traders<span>Admin Dashboard</span></div>
+      <button class="side-close" id="sideClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <nav class="side-nav">
+      <button class="side-link" data-section="dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5V21H3z"/><path d="M9 21v-8h6v8"/></svg>
+        Dashboard
+      </button>
+      <button class="side-link" data-section="orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2.5-1.6L13 21l-2.5-1.6L8 21l-2-1.6z"/><path d="M9 8h6M9 12h6"/></svg>
+        Orders <span class="cnt" id="navOrdersCnt" style="display:none"></span>
+      </button>
+      <button class="side-link" data-section="products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>
+        Products
+      </button>
+      <div class="side-cap">Shortcuts</div>
+      <a class="side-link" href="index.html" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"/></svg>
+        View storefront
+      </a>
+    </nav>
+    <div class="side-foot">
+      <button class="logout-btn" id="logoutBtn" style="display:none">
+        <svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Log out
+      </button>
+    </div>
+  </aside>
 
-<div class="admin-wrap" style="padding-top:22px">
-  <div class="banner" id="notConfigured" style="display:none">
-    <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3h7L21 8.5v7L15.5 21h-7L3 15.5v-7z"/><path d="M12 8v5"/><circle cx="12" cy="16.3" r=".2" fill="currentColor" stroke="none"/></svg>Firebase isn't connected yet (see <code>assets/js/firebase-init.js</code>), so this admin page and the
-    storefront can't share order data. You're seeing local demo data only, and status changes here
-    won't reach customers. See <code>README.md</code> for the 5-minute setup.
-  </div>
-  <h2 style="font-size:26px">Dashboard</h2>
-  <div class="kpis" id="kpis"></div>
-
-  <!-- Orders -->
-  <div class="panel">
-    <div class="ph"><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2.5-1.6L13 21l-2.5-1.6L8 21l-2-1.6z"/><path d="M9 8h6M9 12h6"/></svg>Recent Orders</h3><span class="save-note" style="margin-left:auto">Orders placed on the storefront appear here</span></div>
-    <div class="tscroll tbl-view"><table id="ordersTable">
-      <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
-      <tbody id="ordersBody"></tbody>
-    </table></div>
-    <div class="cards-view" id="ordersCards"></div>
-    <div class="no-orders" id="noOrders" style="display:none">No orders yet. New orders placed on the storefront will appear here automatically.</div>
-  </div>
-
-  <!-- Products -->
-  <div class="panel" id="productsPanel">
-    <div class="ph">
-      <h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>Product Management</h3>
-      <div class="search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="pSearch" type="search" placeholder="Search products…" style="padding-left:42px">
+  <div class="admin-main">
+    <div class="topbar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="sub" id="pageSub">Overview of your store, right now</div>
+      </div>
+      <div class="topbar-right">
+        <span class="live-dot" id="liveDot"><i></i><span>Connecting…</span></span>
       </div>
     </div>
-    <div class="toolbar2">
-      <select class="st-sel" id="pCat"></select>
-      <select class="st-sel" id="pStock">
-        <option value="">All stock</option>
-        <option value="out">Out of stock only</option>
-        <option value="in">In stock only</option>
-      </select>
-      <span class="save-note" id="pCount" style="margin-left:auto"></span>
+
+    <div class="admin-content">
+      <div class="banner" id="notConfigured" style="display:none">
+        <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3h7L21 8.5v7L15.5 21h-7L3 15.5v-7z"/><path d="M12 8v5"/><circle cx="12" cy="16.3" r=".2" fill="currentColor" stroke="none"/></svg>Firebase isn't connected yet (see <code>assets/js/firebase-init.js</code>), so this admin page and the
+        storefront can't share order data. You're seeing local demo data only, and status changes here
+        won't reach customers. See <code>README.md</code> for the 5-minute setup.
+      </div>
+
+      <!-- Dashboard -->
+      <section class="page-section active" data-page="dash">
+        <div class="kpis" id="kpis">
+          <div class="kpi skeleton" style="min-height:104px"></div><div class="kpi skeleton" style="min-height:104px"></div>
+          <div class="kpi skeleton" style="min-height:104px"></div><div class="kpi skeleton" style="min-height:104px"></div>
+        </div>
+      </section>
+
+      <!-- Orders -->
+      <section class="page-section" data-page="orders">
+        <div class="panel">
+          <div class="ph">
+            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2.5-1.6L13 21l-2.5-1.6L8 21l-2-1.6z"/><path d="M9 8h6M9 12h6"/></svg>Orders</h3><div class="sub">Orders placed on the storefront appear here in real time</div></div>
+          </div>
+          <div class="toolbar2">
+            <select class="st-sel" id="oStatus"></select>
+            <select class="st-sel" id="oScope">
+              <option value="">All time</option>
+              <option value="today">Today only</option>
+            </select>
+            <span class="save-note" id="oCount" style="margin-left:auto"></span>
+          </div>
+          <div class="tscroll tbl-view"><table id="ordersTable">
+            <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
+            <tbody id="ordersBody"></tbody>
+          </table></div>
+          <div class="cards-view" id="ordersCards"></div>
+          <div class="no-orders" id="noOrders" style="display:none">Loading orders…</div>
+        </div>
+      </section>
+
+      <!-- Products -->
+      <section class="page-section" data-page="products">
+        <div class="panel" id="productsPanel">
+          <div class="ph">
+            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>Product Management</h3><div class="sub">Edits here sync live to the storefront</div></div>
+            <div class="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="pSearch" type="search" placeholder="Search products…" style="padding-left:42px">
+            </div>
+          </div>
+          <div class="toolbar2">
+            <select class="st-sel" id="pCat"></select>
+            <select class="st-sel" id="pStock">
+              <option value="">All stock</option>
+              <option value="out">Out of stock only</option>
+              <option value="in">In stock only</option>
+            </select>
+            <span class="save-note" id="pCount" style="margin-left:auto"></span>
+          </div>
+          <div class="tscroll tbl-view"><table>
+            <thead><tr><th>Photo</th><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Stock</th><th>Status</th></tr></thead>
+            <tbody id="prodBody"></tbody>
+          </table></div>
+          <div class="cards-view" id="prodCards"></div>
+          <div id="pPagination" style="display:none;align-items:center;justify-content:center;gap:14px;padding:16px 20px;border-top:1px solid var(--adm-border-soft)">
+            <button class="btn btn-ghost" id="pPrevBtn">← Previous</button>
+            <span class="save-note" id="pPageInfo" style="padding:0"></span>
+            <button class="btn btn-ghost" id="pNextBtn">Next →</button>
+          </div>
+          <div class="save-note"><svg class="ico-svg" style="margin-right:4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9v.2h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3z"/></svg>Click a product's photo box to upload a real picture from your phone/computer — it replaces the illustration immediately for customers.</div>
+        </div>
+      </section>
     </div>
-    <div class="tscroll tbl-view"><table>
-      <thead><tr><th>Photo</th><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Stock</th><th>Status</th></tr></thead>
-      <tbody id="prodBody"></tbody>
-    </table></div>
-    <div class="cards-view" id="prodCards"></div>
-    <div id="pPagination" style="display:none;align-items:center;justify-content:center;gap:14px;padding:16px 20px;border-top:1px solid var(--line)">
-      <button class="btn btn-ghost" id="pPrevBtn">← Previous</button>
-      <span class="save-note" id="pPageInfo" style="padding:0"></span>
-      <button class="btn btn-ghost" id="pNextBtn">Next →</button>
-    </div>
-    <div class="save-note"><svg class="ico-svg" style="margin-right:4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9v.2h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3z"/></svg>Edits here sync live to the storefront. Click a product's photo box to upload a real picture from your phone/computer — it replaces the illustration immediately for customers.</div>
   </div>
 </div>
 
@@ -210,6 +356,35 @@ const avail=p=> (edits[p.id]&&edits[p.id].avail!=null)?edits[p.id].avail : (val(
 
 function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1600);}
 
+/* ============================================================ NAVIGATION (sidebar / page tabs) */
+const PAGE_META={
+  dash:{title:"Dashboard",sub:"Overview of your store, right now"},
+  orders:{title:"Orders",sub:"Confirm, prepare and dispatch customer orders"},
+  products:{title:"Products",sub:"Prices, stock and photos — synced live to the storefront"},
+};
+function showPage(page){
+  $$(".page-section").forEach(s=>s.classList.toggle("active",s.dataset.page===page));
+  $$(".side-link[data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===page));
+  $("#pageTitle").textContent=PAGE_META[page].title;
+  $("#pageSub").textContent=PAGE_META[page].sub;
+  closeSidebar();
+  $(".admin-content").scrollIntoView({behavior:"instant",block:"start"});
+}
+function openSidebar(){ $("#sidebar").classList.add("open"); $("#sidebarScrim").classList.add("show"); document.body.style.overflow="hidden"; }
+function closeSidebar(){ $("#sidebar").classList.remove("open"); $("#sidebarScrim").classList.remove("show"); document.body.style.overflow=""; }
+$$(".side-link[data-section]").forEach(b=>b.onclick=()=>showPage(b.dataset.section));
+$("#hamburger").onclick=openSidebar;
+$("#sideClose").onclick=closeSidebar;
+$("#sidebarScrim").onclick=closeSidebar;
+
+function routeKpi(target){
+  if(target==="products"){ showPage("products"); }
+  else if(target==="products-oos"){ showPage("products"); $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodPage=1; products(); }
+  else if(target==="orders"){ showPage("orders"); $("#oStatus").value=""; $("#oScope").value=""; orders(); }
+  else if(target==="orders-today"){ showPage("orders"); $("#oStatus").value=""; $("#oScope").value="today"; orders(); }
+  else if(target==="orders-pending"){ showPage("orders"); $("#oStatus").value="received"; $("#oScope").value=""; orders(); }
+}
+
 /* ============================================================ LOGIN GATE + ORDER SYNC (Firestore) */
 // TEMP DEMO BYPASS — set back to false once the client demo is done, to re-enable the admin login.
 const DEMO_SKIP_LOGIN=false;
@@ -230,6 +405,12 @@ async function pushOverride(id, fields){
   catch(e){ console.warn("[A.R. Abi] could not sync product override to Firestore:",e); }
 }
 
+function setLive(on,label){
+  const el=$("#liveDot"); if(!el) return;
+  el.classList.toggle("on",!!on);
+  el.querySelector("span").textContent=label;
+}
+
 function subscribeOrders(){
   if(!(window.ARFire && window.ARFire.ready)) return;
   const {db,collection,query,orderBy,onSnapshot}=window.ARFire;
@@ -237,15 +418,16 @@ function subscribeOrders(){
   ordersUnsub=onSnapshot(query(collection(db,"orders"),orderBy("at","desc")), snap=>{
     ordersCache=snap.docs.map(d=>d.data());
     ordersLoaded=true;
+    setLive(true,"Live");
     kpis(); orders();
-  }, err=>{ console.warn("[A.R. Abi] admin orders listener error:",err); ordersLoaded=true; orders(); });
+  }, err=>{ console.warn("[A.R. Abi] admin orders listener error:",err); ordersLoaded=true; setLive(false,"Offline"); orders(); });
 }
 
 function initAuthGate(){
   if(DEMO_SKIP_LOGIN){
     $("#bootLoading").style.display="none";
     $("#loginOverlay").style.display="none";
-    ordersLoaded=true;
+    ordersLoaded=true; setLive(false,"Local demo");
     startAdmin();
     return;
   }
@@ -253,7 +435,7 @@ function initAuthGate(){
     // No Firebase configured — fall back to local-only demo behaviour (previous version of this page).
     $("#bootLoading").style.display="none";
     $("#notConfigured").style.display="block";
-    ordersLoaded=true;
+    ordersLoaded=true; setLive(false,"Local demo");
     startAdmin();
     return;
   }
@@ -262,7 +444,7 @@ function initAuthGate(){
     $("#bootLoading").style.display="none";
     if(user){
       $("#loginOverlay").style.display="none";
-      $("#logoutBtn").style.display="inline-block";
+      $("#logoutBtn").style.display="flex";
       subscribeOrders();
       startAdmin();
     }else{
@@ -296,37 +478,50 @@ else window.addEventListener("arfire-ready", safeInitAuthGate, {once:true});
 // where ES modules can be restricted), don't leave the dashboard stuck blank forever.
 setTimeout(safeInitAuthGate, 4000);
 
-/* KPIs */
+/* ============================================================ KPIs */
 function kpis(){
   const orders=currentOrders();
-  const today=new Date().toDateString();
-  const todayN=orders.filter(o=>new Date(o.at).toDateString()===today).length;
-  const pending=orders.filter(o=>!o.status||o.status==="received").length;
-  const revenue=orders.reduce((s,o)=>s+o.total,0);
   const oos=P.filter(p=>val(p,'stock')<=0).length;
   const invVal=P.reduce((s,p)=>s+val(p,'price')*val(p,'stock'),0);
   const cats=new Set(P.map(p=>p.cat)).size;
+  const dots=`<span class="load-dots"><i></i><i></i><i></i></span>`;
+  let todayN=dots, pending=dots, totalOrders=dots, revenue=dots;
+  if(ordersLoaded){
+    const today=new Date().toDateString();
+    todayN=orders.filter(o=>new Date(o.at).toDateString()===today).length;
+    pending=orders.filter(o=>!o.status||o.status==="received").length;
+    totalOrders=orders.length;
+    revenue=money(Math.round(orders.reduce((s,o)=>s+o.total,0)));
+  }
+  const ic=(hex)=>`background:color-mix(in srgb,${hex} 14%,transparent);color:${hex}`;
   const data=[
-    [window.icon('boxes'),"Total Products",P.length.toLocaleString("en-IN"),"",""],
-    [window.icon('folder'),"Categories",cats,"",""],
-    [window.icon('receipt'),"Total Orders",orders.length,"",""],
-    [window.icon('sunrise'),"Today's Orders",todayN,"",""],
-    [window.icon('hourglass'),"Pending",pending,"",""],
-    [window.icon('coins'),"Revenue",money(Math.round(revenue)),"",""],
-    [window.icon('alertOct'),"Out of Stock",oos,"","oos"],
-    [window.icon('warehouse'),"Inventory Value","₹"+(invVal/100000).toFixed(1),"L",""],
+    ["#0E7A54",window.icon('boxes'),"Total Products",P.length.toLocaleString("en-IN"),"","products"],
+    ["#6D5BD0",window.icon('folder'),"Categories",cats,"","products"],
+    ["#2563EB",window.icon('receipt'),"Total Orders",totalOrders,"","orders"],
+    ["#9333EA",window.icon('sunrise'),"Today's Orders",todayN,"","orders-today"],
+    ["#D97706",window.icon('hourglass'),"Pending",pending,"","orders-pending"],
+    ["#059669",window.icon('coins'),"Revenue",revenue,"","orders"],
+    ["#DC2626",window.icon('alertOct'),"Out of Stock",oos,"","products-oos"],
+    ["#0891B2",window.icon('warehouse'),"Inventory Value","₹"+(invVal/100000).toFixed(1),"L","products"],
   ];
-  $("#kpis").innerHTML=data.map(([e,k,v,s,click])=>`<div class="kpi"${click?` data-kpi="${click}" style="cursor:pointer" title="Click to see the exact list of products"`:""}><div class="k">${e} ${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>`).join("");
-  $("[data-kpi='oos']")?.addEventListener("click",()=>{
-    $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodPage=1; products();
-    $("#productsPanel")?.scrollIntoView({behavior:"smooth",block:"start"});
-  });
+  $("#kpis").innerHTML=data.map(([hex,icon,k,v,s,click])=>`
+    <div class="kpi" data-kpi="${click}" title="Click to view">
+      <div class="kpi-top"><div class="kicon" style="${ic(hex)}">${icon}</div><span class="hint">View →</span></div>
+      <div><div class="k">${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>
+    </div>`).join("");
+  $$(".kpi[data-kpi]").forEach(el=>el.onclick=()=>routeKpi(el.dataset.kpi));
+  const pendingN=ordersLoaded?orders.filter(o=>!o.status||o.status==="received").length:0;
+  const navCnt=$("#navOrdersCnt");
+  if(ordersLoaded && pendingN>0){ navCnt.style.display="inline-block"; navCnt.textContent=pendingN; }
+  else navCnt.style.display="none";
 }
 
-/* Orders */
+/* ============================================================ Orders */
 const STATUSES=["received","confirmed","preparing","out","delivered","cancelled"];
 const SLABEL={received:"Order received",confirmed:"Confirmed",preparing:"Preparing",out:"Out for delivery",delivered:"Delivered",cancelled:"Cancelled"};
+$("#oStatus").innerHTML=`<option value="">All statuses</option>`+STATUSES.map(s=>`<option value="${s}">${SLABEL[s]}</option>`).join("");
 function orderCardHTML(o){
+  const st=o.status||"received";
   return `<div class="ocard">
     <div class="oc-top">
       <div><div class="oc-num">#${o.num}</div><div class="oc-date">${new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</div></div>
@@ -335,26 +530,30 @@ function orderCardHTML(o){
     <div class="oc-row"><span>Customer</span><span>${o.name} · ${o.mobile}</span></div>
     <div class="oc-row"><span>Items</span><span>${o.items.reduce((s,x)=>s+x.q,0)} items</span></div>
     <div class="oc-row"><span>Total</span><span><b>${money(o.total)}</b></span></div>
-    <select class="st-sel" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${(o.status||"received")===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select>
+    <select class="st-sel" data-status="${st}" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${st===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select>
   </div>`;
 }
 function orders(){
-  const os=currentOrders();
-  if(!ordersLoaded){
-    $("#noOrders").textContent="Loading orders…";
-    $("#noOrders").style.display="block";
-  }else{
-    $("#noOrders").textContent="No orders yet. New orders placed on the storefront will appear here automatically.";
-    $("#noOrders").style.display=os.length?"none":"block";
-  }
-  $("#ordersBody").innerHTML=os.map(o=>`<tr>
+  const all=currentOrders();
+  const statusF=$("#oStatus").value, scopeF=$("#oScope").value;
+  let os=all;
+  if(statusF) os=os.filter(o=>(o.status||"received")===statusF);
+  if(scopeF==="today"){ const today=new Date().toDateString(); os=os.filter(o=>new Date(o.at).toDateString()===today); }
+
+  if(!ordersLoaded){ $("#noOrders").textContent="Loading orders…"; $("#noOrders").style.display="block"; }
+  else if(!all.length){ $("#noOrders").textContent="No orders yet. New orders placed on the storefront will appear here automatically."; $("#noOrders").style.display="block"; }
+  else if(!os.length){ $("#noOrders").textContent="No orders match this filter."; $("#noOrders").style.display="block"; }
+  else{ $("#noOrders").style.display="none"; }
+  $("#oCount").textContent = ordersLoaded && all.length ? `Showing ${os.length} of ${all.length} orders` : "";
+
+  $("#ordersBody").innerHTML=os.map(o=>{ const st=o.status||"received"; return `<tr>
     <td><b>#${o.num}</b><br><span style="color:var(--muted);font-size:11px">${new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</span></td>
     <td>${o.name}<br><span style="color:var(--muted);font-size:12px">${o.mobile}</span></td>
     <td>${o.items.reduce((s,x)=>s+x.q,0)} items</td>
     <td><b>${money(o.total)}</b></td>
     <td><span class="badge2 b-cat">${o.pay==="upi"?"UPI":"COD"}</span></td>
-    <td><select class="st-sel" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${(o.status||"received")===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select></td>
-  </tr>`).join("");
+    <td><select class="st-sel" data-status="${st}" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${st===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select></td>
+  </tr>`; }).join("");
   $("#ordersCards").innerHTML=os.map(orderCardHTML).join("");
   $$("[data-onum]").forEach(sel=>sel.onchange=async()=>{
     const num=sel.dataset.onum, status=sel.value;
@@ -371,8 +570,10 @@ function orders(){
     }
   });
 }
+$("#oStatus").addEventListener("change",orders);
+$("#oScope").addEventListener("change",orders);
 
-/* Products */
+/* ============================================================ Products */
 function prodCats(){
   const cats=[...new Set(P.map(p=>p.cat))].sort();
   $("#pCat").innerHTML=`<option value="">All categories</option>`+cats.map(c=>`<option>${c}</option>`).join("");
