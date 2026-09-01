@@ -162,8 +162,10 @@
       <tbody id="prodBody"></tbody>
     </table></div>
     <div class="cards-view" id="prodCards"></div>
-    <div id="pLoadMore" style="display:none;justify-content:center;padding:14px 20px">
-      <button class="btn btn-ghost" id="pLoadMoreBtn" style="width:100%;justify-content:center"></button>
+    <div id="pPagination" style="display:none;align-items:center;justify-content:center;gap:14px;padding:16px 20px;border-top:1px solid var(--line)">
+      <button class="btn btn-ghost" id="pPrevBtn">← Previous</button>
+      <span class="save-note" id="pPageInfo" style="padding:0"></span>
+      <button class="btn btn-ghost" id="pNextBtn">Next →</button>
     </div>
     <div class="save-note"><svg class="ico-svg" style="margin-right:4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9v.2h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3z"/></svg>Edits here sync live to the storefront. Click a product's photo box to upload a real picture from your phone/computer — it replaces the illustration immediately for customers.</div>
   </div>
@@ -301,7 +303,7 @@ function kpis(){
   ];
   $("#kpis").innerHTML=data.map(([e,k,v,s,click])=>`<div class="kpi"${click?` data-kpi="${click}" style="cursor:pointer" title="Click to see the exact list of products"`:""}><div class="k">${e} ${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>`).join("");
   $("[data-kpi='oos']")?.addEventListener("click",()=>{
-    $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodRenderLimit=PROD_PAGE; products();
+    $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodPage=1; products();
     $("#productsPanel")?.scrollIntoView({behavior:"smooth",block:"start"});
   });
 }
@@ -374,20 +376,26 @@ function productCardHTML(p){
     </div>
   </div>`;
 }
-let prodRenderLimit=400;
-const PROD_PAGE=400;
+let prodPage=1;
+const PROD_PAGE_SIZE=100;
 function products(){
   const q=$("#pSearch").value.trim().toLowerCase(), cat=$("#pCat").value, stockF=$("#pStock").value;
   let list=P.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||(p.ta&&p.ta.includes($("#pSearch").value.trim())))
     &&(!stockF||(stockF==="out"?val(p,'stock')<=0:val(p,'stock')>0)));
   const matched=list.length;
-  list=list.slice(0,prodRenderLimit);
-  $("#pCount").textContent=matched>list.length
-    ? `Showing ${list.length} of ${matched} matching products`
-    : (matched<P.length ? `Showing all ${matched} matching products` : `Showing all ${P.length} products`);
-  const remaining=matched-list.length;
-  $("#pLoadMore").style.display=remaining>0?"flex":"none";
-  if(remaining>0) $("#pLoadMoreBtn").textContent=`Load ${Math.min(PROD_PAGE,remaining)} more (${remaining} left)`;
+  const totalPages=Math.max(1,Math.ceil(matched/PROD_PAGE_SIZE));
+  if(prodPage>totalPages) prodPage=totalPages;
+  if(prodPage<1) prodPage=1;
+  const startIdx=(prodPage-1)*PROD_PAGE_SIZE;
+  list=list.slice(startIdx,startIdx+PROD_PAGE_SIZE);
+  const rangeEnd=startIdx+list.length;
+  $("#pCount").textContent=matched
+    ? `Showing ${matched?startIdx+1:0}–${rangeEnd} of ${matched}${matched<P.length?` matching (${P.length} total)`:" products"}`
+    : "No products match";
+  $("#pPageInfo").textContent=`Page ${prodPage} of ${totalPages}`;
+  $("#pPrevBtn").disabled=prodPage<=1;
+  $("#pNextBtn").disabled=prodPage>=totalPages;
+  $("#pPagination").style.display=totalPages>1?"flex":"none";
   $("#prodBody").innerHTML=list.map(p=>{
     const [l,d]=M[p.cat].c.split(",");
     const photo=val(p,'photo');
@@ -458,10 +466,11 @@ function compressImage(file, maxDim, quality){
     img.src=url;
   });
 }
-$("#pSearch").addEventListener("input",()=>{prodRenderLimit=PROD_PAGE; products();});
-$("#pCat").addEventListener("change",()=>{prodRenderLimit=PROD_PAGE; products();});
-$("#pStock").addEventListener("change",()=>{prodRenderLimit=PROD_PAGE; products();});
-$("#pLoadMoreBtn").addEventListener("click",()=>{prodRenderLimit+=PROD_PAGE; products();});
+$("#pSearch").addEventListener("input",()=>{prodPage=1; products();});
+$("#pCat").addEventListener("change",()=>{prodPage=1; products();});
+$("#pStock").addEventListener("change",()=>{prodPage=1; products();});
+$("#pPrevBtn").addEventListener("click",()=>{prodPage--; products(); $("#productsPanel").scrollIntoView({behavior:"smooth",block:"start"});});
+$("#pNextBtn").addEventListener("click",()=>{prodPage++; products(); $("#productsPanel").scrollIntoView({behavior:"smooth",block:"start"});});
 </script>
 </body>
 </html>
