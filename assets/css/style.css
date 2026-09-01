@@ -50,7 +50,7 @@ header.site{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--
   backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;gap:16px;padding:11px 0}
 .brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
-.brand img{height:44px;width:auto;filter:drop-shadow(0 2px 6px rgba(14,90,60,.25))}
+.brand img{height:54px;width:auto;filter:drop-shadow(0 2px 6px rgba(14,90,60,.25))}
 .brand .nm{font-family:var(--disp);font-weight:800;font-size:18px;line-height:1;letter-spacing:-.02em}
 .brand .nm span{display:block;font-family:var(--tam);font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.01em;margin-top:3px}
 .search{flex:1;max-width:560px;position:relative;display:flex;align-items:center}
@@ -388,7 +388,7 @@ footer.site h4{font-family:var(--disp);color:#fff;font-size:16px;margin-bottom:1
 footer.site a,footer.site p{color:#CBD9CB;font-size:13.5px;line-height:1.9;display:block}
 footer.site a:hover{color:var(--marigold)}
 footer .fbrand{display:flex;gap:12px;align-items:center;margin-bottom:14px}
-footer .fbrand img{width:46px}
+footer .fbrand img{width:56px}
 footer .fbrand b{font-family:var(--disp);color:#fff;font-size:18px}
 .copy{border-top:1px solid rgba(255,255,255,.12);text-align:center;padding:16px;font-size:12.5px;color:#9FB39F}
 
@@ -417,7 +417,7 @@ footer .fbrand b{font-family:var(--disp);color:#fff;font-size:18px}
 }
 @media(max-width:400px){
   .brand{flex-shrink:1;min-width:0}
-  .brand img{height:36px;width:auto}
+  .brand img{height:44px;width:auto}
   .brand .nm{font-size:14px}
   .brand .nm span{font-size:10px}
   .bar{gap:10px}
