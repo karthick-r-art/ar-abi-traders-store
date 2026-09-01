@@ -72,17 +72,18 @@ function subscribeProductOverrides(){
 
 /* ============================================================ RENDER: product card */
 window.PRODUCT_PHOTOS = window.PRODUCT_PHOTOS || new Set();  // add ids here when real photos exist
+window.imgFallback = (el, type) => { el.outerHTML = window.artFor ? window.artFor(type) : ""; };
 function productImg(p){
-  if(p.photo) return `<img class="pimg" src="${p.photo}" alt="${p.name}" loading="lazy">`;
+  if(p.photo) return `<img class="pimg" src="${p.photo}" alt="${p.name}" loading="lazy" onerror="window.imgFallback(this,'${p.type}')">`;
   if(window.PRODUCT_PHOTOS.has(p.id))
-    return `<img class="pimg" src="assets/img/products/${p.id}.jpg" alt="${p.name}" loading="lazy">`;
+    return `<img class="pimg" src="assets/img/products/${p.id}.jpg" alt="${p.name}" loading="lazy" onerror="window.imgFallback(this,'${p.type}')">`;
   return window.artFor ? window.artFor(p.type) : "";
 }
 function tile(p, size){
   return `<div class="thumb" style="background:${catBg(p.cat)}" data-open="${p.id}">
       ${discount(p)?`<span class="badge">${discount(p)}% ${t('off')}</span>`:""}
       ${productImg(p)}
-      ${p.stock<=0?`<span class="oos">${t('outStock')}</span>`:""}
+      ${!inStock(p)?`<span class="oos">${t('outStock')}</span>`:""}
     </div>`;
 }
 function qtySpan(p,q,extraAttrs=""){
@@ -92,7 +93,7 @@ function qtySpan(p,q,extraAttrs=""){
 }
 function cardCtrl(p){
   const q = S.cart[p.id]||0;
-  if(p.stock<=0) return `<span class="add" style="opacity:.35;pointer-events:none">+</span>`;
+  if(!inStock(p)) return `<span class="add" style="opacity:.35;pointer-events:none">+</span>`;
   if(q>0) return `<div class="stepper" role="group">
       <button data-dec="${p.id}" aria-label="decrease">−</button>${qtySpan(p,q)}
       <button data-inc="${p.id}" aria-label="increase">+</button></div>`;
@@ -185,7 +186,7 @@ function deliveryFee(){ const s=subtotal(); return s>0 && s<SHOP.freeOver ? SHOP
 function saveCart(){ store.set("cart",S.cart); refreshCount(); }
 function refreshCount(){ const n=cartQty(); const b=$("#cartCount"); b.textContent=n; b.style.display=n?"grid":"none"; }
 
-function addToCart(id){ const p=P.find(x=>x.id==id); if(!p||p.stock<=0) return;
+function addToCart(id){ const p=P.find(x=>x.id==id); if(!p||!inStock(p)) return;
   S.cart[id]=Math.min(round2((S.cart[id]||0)+qtyStep(p)), p.stock); saveCart(); syncControls(id); renderCart();
   toast(t('added'),window.icon('cart')); }
 function incCart(id){ const p=P.find(x=>x.id==id); if(!p) return;
@@ -245,7 +246,7 @@ function closeCart(){ $("#scrim").classList.remove("show"); $("#drawer").classLi
 /* ============================================================ PRODUCT MODAL */
 function renderModalCtrl(p){
   const box=$("#modalCtrl"); box.dataset.pid=p.id; const q=S.cart[p.id]||0;
-  if(p.stock<=0){ box.innerHTML=`<button class="btn btn-primary" disabled style="opacity:.4;width:100%;justify-content:center">${t('outStock')}</button>`; return; }
+  if(!inStock(p)){ box.innerHTML=`<button class="btn btn-primary" disabled style="opacity:.4;width:100%;justify-content:center">${t('outStock')}</button>`; return; }
   if(q>0){ box.innerHTML=`<div class="stepper" style="height:48px"><button data-dec="${p.id}" style="width:52px">−</button>
     ${qtySpan(p,q,'style="min-width:40px;font-size:16px"')}<button data-inc="${p.id}" style="width:52px">+</button></div>
     <button class="btn btn-ghost" data-close-modal>${t('keepShopping')}</button>`; }
@@ -266,7 +267,7 @@ function openProduct(id){
           ${p.mrp>p.price?`<span class="was">${money(p.mrp)}</span><span class="off">${off}% ${t('off')}</span>`:""}</div>
         <div class="metarow">
           <div><b>${p.unit}</b><span>${t('unit')}</span></div>
-          <div><b class="${p.stock>0?'stock-ok':'stock-no'}">${p.stock>0?`${t('inStock')}`:t('outStock')}</b><span>${p.stock>0?`${p.stock} ${t('left')}`:'—'}</span></div>
+          <div><b class="${inStock(p)?'stock-ok':'stock-no'}">${inStock(p)?`${t('inStock')}`:t('outStock')}</b><span>${inStock(p)?`${p.stock} ${t('left')}`:'—'}</span></div>
         </div>
         <p class="desc">${desc(p)}</p>
         <div id="modalCtrl" style="display:flex;gap:10px;margin-top:8px"></div>
@@ -309,7 +310,7 @@ function validCheckout(){
 async function placeOrder(){
   if(!validCheckout()) return;
   const arr=cartArr(), s=subtotal(), d=deliveryFee();
-  const num = "AB"+Date.now().toString().slice(-6);
+  const num = "AB"+Date.now().toString().slice(-6)+Math.floor(10+Math.random()*90);
   const order = {
     num, at:Date.now(), status:"received",
     name:$("#f-name").value.trim(), mobile:$("#f-mobile").value.trim(),

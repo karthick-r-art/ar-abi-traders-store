@@ -162,6 +162,9 @@
       <tbody id="prodBody"></tbody>
     </table></div>
     <div class="cards-view" id="prodCards"></div>
+    <div id="pLoadMore" style="display:none;justify-content:center;padding:14px 20px">
+      <button class="btn btn-ghost" id="pLoadMoreBtn" style="width:100%;justify-content:center"></button>
+    </div>
     <div class="save-note"><svg class="ico-svg" style="margin-right:4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9v.2h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3z"/></svg>Edits here sync live to the storefront. Click a product's photo box to upload a real picture from your phone/computer — it replaces the illustration immediately for customers.</div>
   </div>
 </div>
@@ -298,7 +301,7 @@ function kpis(){
   ];
   $("#kpis").innerHTML=data.map(([e,k,v,s,click])=>`<div class="kpi"${click?` data-kpi="${click}" style="cursor:pointer" title="Click to see the exact list of products"`:""}><div class="k">${e} ${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>`).join("");
   $("[data-kpi='oos']")?.addEventListener("click",()=>{
-    $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; products();
+    $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodRenderLimit=PROD_PAGE; products();
     $("#productsPanel")?.scrollIntoView({behavior:"smooth",block:"start"});
   });
 }
@@ -356,7 +359,7 @@ function productCardHTML(p){
   const photo=val(p,'photo');
   return `<div class="pcard">
     <div class="pc-head">
-      <button class="pthumb-btn" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
+      <button class="pthumb-btn" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
       <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
       <div style="flex:1;min-width:0">
         <b>${p.name}</b>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}
@@ -371,18 +374,26 @@ function productCardHTML(p){
     </div>
   </div>`;
 }
+let prodRenderLimit=400;
+const PROD_PAGE=400;
 function products(){
   const q=$("#pSearch").value.trim().toLowerCase(), cat=$("#pCat").value, stockF=$("#pStock").value;
   let list=P.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||(p.ta&&p.ta.includes($("#pSearch").value.trim())))
     &&(!stockF||(stockF==="out"?val(p,'stock')<=0:val(p,'stock')>0)));
-  list=list.slice(0,400);
-  $("#pCount").textContent=`Showing ${list.length} of ${P.length} products`;
+  const matched=list.length;
+  list=list.slice(0,prodRenderLimit);
+  $("#pCount").textContent=matched>list.length
+    ? `Showing ${list.length} of ${matched} matching products`
+    : (matched<P.length ? `Showing all ${matched} matching products` : `Showing all ${P.length} products`);
+  const remaining=matched-list.length;
+  $("#pLoadMore").style.display=remaining>0?"flex":"none";
+  if(remaining>0) $("#pLoadMoreBtn").textContent=`Load ${Math.min(PROD_PAGE,remaining)} more (${remaining} left)`;
   $("#prodBody").innerHTML=list.map(p=>{
     const [l,d]=M[p.cat].c.split(",");
     const photo=val(p,'photo');
     return `<tr>
       <td>
-        <button class="pthumb-btn" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
+        <button class="pthumb-btn" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
         <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
       </td>
       <td><div style="display:flex;align-items:center;gap:10px">
@@ -447,9 +458,10 @@ function compressImage(file, maxDim, quality){
     img.src=url;
   });
 }
-$("#pSearch").addEventListener("input",()=>products());
-$("#pCat").addEventListener("change",()=>products());
-$("#pStock").addEventListener("change",()=>products());
+$("#pSearch").addEventListener("input",()=>{prodRenderLimit=PROD_PAGE; products();});
+$("#pCat").addEventListener("change",()=>{prodRenderLimit=PROD_PAGE; products();});
+$("#pStock").addEventListener("change",()=>{prodRenderLimit=PROD_PAGE; products();});
+$("#pLoadMoreBtn").addEventListener("click",()=>{prodRenderLimit+=PROD_PAGE; products();});
 </script>
 </body>
 </html>
