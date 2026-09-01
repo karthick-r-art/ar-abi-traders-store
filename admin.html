@@ -140,7 +140,7 @@
   </div>
 
   <!-- Products -->
-  <div class="panel">
+  <div class="panel" id="productsPanel">
     <div class="ph">
       <h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>Product Management</h3>
       <div class="search">
@@ -150,6 +150,11 @@
     </div>
     <div class="toolbar2">
       <select class="st-sel" id="pCat"></select>
+      <select class="st-sel" id="pStock">
+        <option value="">All stock</option>
+        <option value="out">Out of stock only</option>
+        <option value="in">In stock only</option>
+      </select>
       <span class="save-note" id="pCount" style="margin-left:auto"></span>
     </div>
     <div class="tscroll tbl-view"><table>
@@ -282,16 +287,20 @@ function kpis(){
   const invVal=P.reduce((s,p)=>s+val(p,'price')*val(p,'stock'),0);
   const cats=new Set(P.map(p=>p.cat)).size;
   const data=[
-    [window.icon('boxes'),"Total Products",P.length.toLocaleString("en-IN"),""],
-    [window.icon('folder'),"Categories",cats,""],
-    [window.icon('receipt'),"Total Orders",orders.length,""],
-    [window.icon('sunrise'),"Today's Orders",todayN,""],
-    [window.icon('hourglass'),"Pending",pending,""],
-    [window.icon('coins'),"Revenue",money(Math.round(revenue)),""],
-    [window.icon('alertOct'),"Out of Stock",oos,""],
-    [window.icon('warehouse'),"Inventory Value","₹"+(invVal/100000).toFixed(1),"L"],
+    [window.icon('boxes'),"Total Products",P.length.toLocaleString("en-IN"),"",""],
+    [window.icon('folder'),"Categories",cats,"",""],
+    [window.icon('receipt'),"Total Orders",orders.length,"",""],
+    [window.icon('sunrise'),"Today's Orders",todayN,"",""],
+    [window.icon('hourglass'),"Pending",pending,"",""],
+    [window.icon('coins'),"Revenue",money(Math.round(revenue)),"",""],
+    [window.icon('alertOct'),"Out of Stock",oos,"","oos"],
+    [window.icon('warehouse'),"Inventory Value","₹"+(invVal/100000).toFixed(1),"L",""],
   ];
-  $("#kpis").innerHTML=data.map(([e,k,v,s])=>`<div class="kpi"><div class="k">${e} ${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>`).join("");
+  $("#kpis").innerHTML=data.map(([e,k,v,s,click])=>`<div class="kpi"${click?` data-kpi="${click}" style="cursor:pointer" title="Click to see the exact list of products"`:""}><div class="k">${e} ${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>`).join("");
+  $("[data-kpi='oos']")?.addEventListener("click",()=>{
+    $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; products();
+    $("#productsPanel")?.scrollIntoView({behavior:"smooth",block:"start"});
+  });
 }
 
 /* Orders */
@@ -363,8 +372,9 @@ function productCardHTML(p){
   </div>`;
 }
 function products(){
-  const q=$("#pSearch").value.trim().toLowerCase(), cat=$("#pCat").value;
-  let list=P.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||(p.ta&&p.ta.includes($("#pSearch").value.trim()))));
+  const q=$("#pSearch").value.trim().toLowerCase(), cat=$("#pCat").value, stockF=$("#pStock").value;
+  let list=P.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||(p.ta&&p.ta.includes($("#pSearch").value.trim())))
+    &&(!stockF||(stockF==="out"?val(p,'stock')<=0:val(p,'stock')>0)));
   list=list.slice(0,400);
   $("#pCount").textContent=`Showing ${list.length} of ${P.length} products`;
   $("#prodBody").innerHTML=list.map(p=>{
@@ -439,6 +449,7 @@ function compressImage(file, maxDim, quality){
 }
 $("#pSearch").addEventListener("input",()=>products());
 $("#pCat").addEventListener("change",()=>products());
+$("#pStock").addEventListener("change",()=>products());
 </script>
 </body>
 </html>
