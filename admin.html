@@ -98,6 +98,14 @@
 </head>
 <body>
 
+<!-- Boot loading (covers the brief gap while Firebase determines the sign-in state) -->
+<div class="login-overlay" id="bootLoading">
+  <div style="text-align:center">
+    <div class="spinner"></div>
+    <p style="margin-top:14px;color:var(--muted);font-size:13px">Loading dashboard…</p>
+  </div>
+</div>
+
 <!-- Login gate (shown only when Firebase is configured and no admin is signed in) -->
 <div class="login-overlay" id="loginOverlay" style="display:none">
   <div class="login-card">
@@ -207,6 +215,7 @@ function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");se
 const DEMO_SKIP_LOGIN=false;
 let ordersCache=null;      // filled from Firestore when connected, else null (use localStorage)
 let ordersUnsub=null;
+let ordersLoaded=false;    // false until we have a definitive answer (first Firestore snapshot, or confirmed local-only mode) — avoids a "No orders yet" flash while still waiting on the network
 
 function currentOrders(){ return ordersCache!==null ? ordersCache : store.get("orders",[]); }
 
@@ -227,24 +236,30 @@ function subscribeOrders(){
   if(ordersUnsub) ordersUnsub();
   ordersUnsub=onSnapshot(query(collection(db,"orders"),orderBy("at","desc")), snap=>{
     ordersCache=snap.docs.map(d=>d.data());
+    ordersLoaded=true;
     kpis(); orders();
-  }, err=>console.warn("[A.R. Abi] admin orders listener error:",err));
+  }, err=>{ console.warn("[A.R. Abi] admin orders listener error:",err); ordersLoaded=true; orders(); });
 }
 
 function initAuthGate(){
   if(DEMO_SKIP_LOGIN){
+    $("#bootLoading").style.display="none";
     $("#loginOverlay").style.display="none";
+    ordersLoaded=true;
     startAdmin();
     return;
   }
   if(!(window.ARFire && window.ARFire.ready)){
     // No Firebase configured — fall back to local-only demo behaviour (previous version of this page).
+    $("#bootLoading").style.display="none";
     $("#notConfigured").style.display="block";
+    ordersLoaded=true;
     startAdmin();
     return;
   }
   const {auth,onAuthStateChanged,signInWithEmailAndPassword,signOut}=window.ARFire;
   onAuthStateChanged(auth, user=>{
+    $("#bootLoading").style.display="none";
     if(user){
       $("#loginOverlay").style.display="none";
       $("#logoutBtn").style.display="inline-block";
@@ -325,7 +340,13 @@ function orderCardHTML(o){
 }
 function orders(){
   const os=currentOrders();
-  $("#noOrders").style.display=os.length?"none":"block";
+  if(!ordersLoaded){
+    $("#noOrders").textContent="Loading orders…";
+    $("#noOrders").style.display="block";
+  }else{
+    $("#noOrders").textContent="No orders yet. New orders placed on the storefront will appear here automatically.";
+    $("#noOrders").style.display=os.length?"none":"block";
+  }
   $("#ordersBody").innerHTML=os.map(o=>`<tr>
     <td><b>#${o.num}</b><br><span style="color:var(--muted);font-size:11px">${new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</span></td>
     <td>${o.name}<br><span style="color:var(--muted);font-size:12px">${o.mobile}</span></td>
