@@ -59,7 +59,18 @@
   .live-dot{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--muted);
     background:var(--adm-card);border:1px solid var(--adm-border);padding:7px 12px;border-radius:999px}
   .live-dot i{width:8px;height:8px;border-radius:50%;background:var(--adm-soft);flex-shrink:0}
-  .live-dot.on i{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 20%,transparent)}
+  .live-dot.on i{background:var(--ok);box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 45%,transparent);animation:livePulse 1.8s ease-in-out infinite}
+  @keyframes livePulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 45%,transparent)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--ok) 0%,transparent)}}
+
+  /* ---------- Ticker (marquee) ---------- */
+  .admin-ticker{background:linear-gradient(90deg,var(--green-700),var(--green));color:#F6EFDD;
+    overflow:hidden;white-space:nowrap;padding:8px 0}
+  .ticker-track{display:flex;width:max-content;animation:tickerScroll 26s linear infinite}
+  .ticker-track .seg{display:flex;align-items:center;flex-shrink:0;font-size:12px;font-weight:700;letter-spacing:.02em}
+  .ticker-track .seg b{color:var(--marigold);font-weight:800;margin:0 2px}
+  .ticker-track .seg em{font-style:normal;opacity:.55;margin:0 22px}
+  @keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .admin-ticker:hover .ticker-track{animation-play-state:paused}
   .admin-content{padding:26px 30px 70px;max-width:1360px;width:100%}
   .page-section{display:none}
   .page-section.active{display:block;animation:pageIn .35s cubic-bezier(.16,1,.3,1)}
@@ -289,6 +300,13 @@
       </div>
       <div class="topbar-right">
         <span class="live-dot" id="liveDot"><i></i><span>Connecting…</span></span>
+      </div>
+    </div>
+
+    <div class="admin-ticker">
+      <div class="ticker-track">
+        <div class="seg">★<em>•</em><b>A.R. Abi Traders</b> Admin Dashboard<em>•</em>Manage orders, products and stock in real time<em>•</em>Cuddalore's trusted grocery store since 2007<em>•</em></div>
+        <div class="seg">★<em>•</em><b>A.R. Abi Traders</b> Admin Dashboard<em>•</em>Manage orders, products and stock in real time<em>•</em>Cuddalore's trusted grocery store since 2007<em>•</em></div>
       </div>
     </div>
 
