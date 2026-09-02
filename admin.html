@@ -19,36 +19,36 @@
 
   /* ---------- Shell / sidebar ---------- */
   .admin-shell{display:flex;min-height:100vh}
-  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:linear-gradient(185deg,#0C4A32,#082E20);
-    border-right:1px solid #06251A;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;
-    z-index:41;transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:2px 0 24px rgba(6,25,18,.12)}
-  .side-brand{display:flex;align-items:center;gap:11px;padding:22px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
-  .side-brand img{width:40px;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
-  .side-brand .nm{font-family:var(--disp);font-weight:800;font-size:14.5px;line-height:1.25;color:#fff}
-  .side-brand .nm span{display:block;font-size:11px;color:#9FC2AE;font-weight:600;margin-top:2px}
-  .side-close{display:none;margin-left:auto;width:30px;height:30px;border-radius:8px;align-items:center;justify-content:center;color:#B9D6C5;flex-shrink:0}
-  .side-close:hover{background:rgba(255,255,255,.08)}
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:#FFFFFF;
+    border-right:1px solid var(--adm-border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;
+    z-index:41;transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:2px 0 24px rgba(20,30,55,.04)}
+  .side-brand{display:flex;align-items:center;gap:12px;padding:22px 18px;border-bottom:1px solid var(--adm-border-soft)}
+  .side-brand img{width:44px;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(14,90,60,.18))}
+  .side-brand .nm{font-family:var(--disp);font-weight:800;font-size:14.5px;line-height:1.25;color:var(--ink)}
+  .side-brand .nm span{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+  .side-close{display:none;margin-left:auto;width:30px;height:30px;border-radius:8px;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0}
+  .side-close:hover{background:var(--adm-bg)}
   .side-close svg{width:16px;height:16px}
   .side-nav{padding:16px 14px;display:flex;flex-direction:column;gap:3px}
-  .side-cap{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#6FA084;padding:16px 12px 6px}
+  .side-cap{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--adm-soft);padding:16px 12px 6px}
   .side-link{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:10px;font-size:13.5px;
-    font-weight:700;color:#BFDCCC;text-align:left;width:100%;transition:background .15s,color .15s;position:relative}
-  .side-link svg{width:18px;height:18px;flex-shrink:0;opacity:.85}
-  .side-link:hover{background:rgba(255,255,255,.07);color:#fff}
-  .side-link.active{background:rgba(255,255,255,.12);color:#fff}
-  .side-link.active::before{content:"";position:absolute;left:-14px;top:8px;bottom:8px;width:3px;border-radius:0 4px 4px 0;background:var(--marigold)}
-  .side-link.active svg{opacity:1;color:var(--marigold)}
-  .side-link .cnt{margin-left:auto;font-size:11px;font-weight:800;background:rgba(255,255,255,.14);color:#fff;
+    font-weight:700;color:var(--muted);text-align:left;width:100%;transition:background .15s,color .15s;position:relative}
+  .side-link svg{width:18px;height:18px;flex-shrink:0;opacity:.8}
+  .side-link:hover{background:var(--adm-bg);color:var(--ink)}
+  .side-link.active{background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green)}
+  .side-link.active::before{content:"";position:absolute;left:-14px;top:8px;bottom:8px;width:3px;border-radius:0 4px 4px 0;background:var(--green)}
+  .side-link.active svg{opacity:1;color:var(--green)}
+  .side-link .cnt{margin-left:auto;font-size:11px;font-weight:800;background:var(--adm-bg);color:var(--adm-soft);
     padding:2px 8px;border-radius:999px;min-width:20px;text-align:center}
-  .side-link.active .cnt{background:var(--marigold);color:#20301f}
-  .side-foot{margin-top:auto;padding:16px 14px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:2px}
-  .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(6,15,10,.55);opacity:0;visibility:hidden;
+  .side-link.active .cnt{background:var(--green);color:#fff}
+  .side-foot{margin-top:auto;padding:16px 14px;border-top:1px solid var(--adm-border-soft);display:flex;flex-direction:column;gap:2px}
+  .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(15,25,18,.5);opacity:0;visibility:hidden;
     transition:.25s;z-index:40;backdrop-filter:blur(1px)}
   .sidebar-scrim.show{opacity:1;visibility:visible}
 
   .admin-main{flex:1;margin-left:var(--sidebar-w);min-width:0;display:flex;flex-direction:column}
-  .topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--adm-bg) 82%,transparent);
-    backdrop-filter:blur(10px);border-bottom:1px solid var(--adm-border);display:flex;align-items:center;
+  .topbar{position:sticky;top:0;z-index:30;background:var(--adm-card);
+    border-bottom:1px solid var(--adm-border);display:flex;align-items:center;
     gap:14px;padding:18px 30px}
   .topbar h1{font-size:20px;font-family:var(--disp);line-height:1.2}
   .topbar .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
@@ -90,13 +90,20 @@
   .chart-body{padding:20px 22px 22px;min-height:170px}
   .chart-empty{display:flex;align-items:center;justify-content:center;min-height:150px;color:var(--adm-soft);
     font-size:13px;text-align:center;flex-direction:column;gap:10px}
-  .trend-bar{transition:opacity .15s}
-  .trend-bar:hover{opacity:.75}
+  .trend-bar{transition:opacity .15s,transform .15s;transform-origin:bottom;cursor:pointer}
+  .trend-bar:hover{opacity:.8;transform:scaleY(1.02)}
   .trend-legend{display:flex;gap:18px;margin-top:4px;font-size:11.5px;color:var(--muted)}
   .trend-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-  .stack-bar{display:flex;height:24px;border-radius:8px;overflow:hidden;background:var(--adm-bg);gap:2px}
-  .stack-seg{transition:opacity .15s;cursor:default}
-  .stack-seg:hover{opacity:.78}
+  .stack-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:var(--adm-bg);gap:2px}
+  .stack-seg{transition:opacity .15s,flex-grow .5s cubic-bezier(.16,1,.3,1);cursor:pointer;min-width:3px;
+    animation:segGrow .5s cubic-bezier(.16,1,.3,1)}
+  .stack-seg:hover{opacity:.8}
+  @keyframes segGrow{from{flex-grow:0}}
+  .chart-tip{position:fixed;z-index:80;background:var(--ink);color:#fff;font-size:12px;font-weight:700;
+    padding:7px 11px;border-radius:9px;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.22);
+    opacity:0;visibility:hidden;transition:opacity .1s;pointer-events:none;transform:translate(-50%,-100%)}
+  .chart-tip.show{opacity:1;visibility:visible}
+  .chart-tip small{display:block;font-weight:600;color:#D8DEE8;font-size:10.5px;margin-top:1px}
   .stack-legend{display:flex;flex-wrap:wrap;gap:12px 18px;margin-top:18px}
   .stack-leg{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted)}
   .stack-leg i{width:10px;height:10px;border-radius:3px;flex-shrink:0}
@@ -149,9 +156,9 @@
   .toolbar2{display:flex;gap:10px;align-items:center;padding:14px 22px;flex-wrap:wrap;background:var(--adm-bg);border-bottom:1px solid var(--adm-border-soft)}
   .save-note{font-size:12px;color:var(--muted);padding:10px 22px}
   .no-orders{padding:44px 20px;text-align:center;color:var(--muted);font-size:13.5px}
-  .logout-btn{font-size:12.5px;font-weight:700;color:#BFDCCC;background:rgba(255,255,255,.06);
-    border:1.5px solid rgba(255,255,255,.12);padding:10px 14px;border-radius:10px;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;gap:7px;transition:background .15s,color .15s,border-color .15s}
-  .logout-btn:hover{border-color:var(--kumkum);color:#fff;background:color-mix(in srgb,var(--kumkum) 35%,transparent)}
+  .logout-btn{font-size:12.5px;font-weight:700;color:var(--muted);background:var(--adm-bg);
+    border:1.5px solid var(--adm-border);padding:10px 14px;border-radius:10px;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;gap:7px;transition:background .15s,color .15s,border-color .15s}
+  .logout-btn:hover{border-color:var(--kumkum);color:var(--kumkum);background:color-mix(in srgb,var(--kumkum) 8%,transparent)}
   .pthumb-btn{width:44px;height:44px;border-radius:10px;border:1.5px dashed var(--adm-border);background:var(--adm-bg);
     cursor:pointer;overflow:hidden;padding:0;display:grid;place-items:center;font-size:16px;color:var(--muted);flex-shrink:0}
   .pthumb-btn:hover{border-color:var(--green-300)}
@@ -324,10 +331,9 @@
           </div>
           <div class="toolbar2">
             <select class="st-sel" id="oStatus"></select>
-            <select class="st-sel" id="oScope">
-              <option value="">All time</option>
-              <option value="today">Today only</option>
-            </select>
+            <input type="date" class="st-sel" id="oDate" title="Show orders from this date">
+            <button class="btn btn-ghost" id="oToday" style="padding:7px 14px;font-size:12.5px;font-weight:700">Today</button>
+            <button class="btn btn-ghost" id="oClearDate" style="padding:7px 14px;font-size:12.5px;font-weight:700;display:none">✕ Clear date</button>
             <span class="save-note" id="oCount" style="margin-left:auto"></span>
           </div>
           <div class="tscroll tbl-view"><table id="ordersTable">
@@ -376,6 +382,7 @@
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="chart-tip" id="chartTip"></div>
 
 <script type="module" src="assets/js/firebase-init.js"></script>
 <script src="assets/js/i18n.js"></script>
@@ -386,6 +393,7 @@
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const P=window.PRODUCTS||[], M=window.CATMETA;
 const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+const isoDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 
 /* Cloudinary — free image hosting for real product photos, no card needed.
    1. Sign up free at https://cloudinary.com
@@ -430,9 +438,9 @@ $("#sidebarScrim").onclick=closeSidebar;
 function routeKpi(target){
   if(target==="products"){ showPage("products"); }
   else if(target==="products-oos"){ showPage("products"); $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodPage=1; products(); }
-  else if(target==="orders"){ showPage("orders"); $("#oStatus").value=""; $("#oScope").value=""; orders(); }
-  else if(target==="orders-today"){ showPage("orders"); $("#oStatus").value=""; $("#oScope").value="today"; orders(); }
-  else if(target==="orders-pending"){ showPage("orders"); $("#oStatus").value="received"; $("#oScope").value=""; orders(); }
+  else if(target==="orders"){ showPage("orders"); $("#oStatus").value=""; $("#oDate").value=""; orders(); }
+  else if(target==="orders-today"){ showPage("orders"); $("#oStatus").value=""; $("#oDate").value=isoDate(new Date()); orders(); }
+  else if(target==="orders-pending"){ showPage("orders"); $("#oStatus").value="received"; $("#oDate").value=""; orders(); }
 }
 
 /* ============================================================ LOGIN GATE + ORDER SYNC (Firestore) */
@@ -555,7 +563,7 @@ function kpis(){
     ["#0891B2",window.icon('warehouse'),"Inventory Value","₹"+(invVal/100000).toFixed(1),"L","products"],
   ];
   $("#kpis").innerHTML=data.map(([hex,icon,k,v,s,click])=>`
-    <div class="kpi" data-kpi="${click}" title="Click to view">
+    <div class="kpi" data-kpi="${click}" style="border-top:3px solid ${hex}" title="Click to view">
       <div class="kpi-top"><div class="kicon" style="${ic(hex)}">${icon}</div><span class="hint">View →</span></div>
       <div><div class="k">${k}</div><div class="v">${v}${s?` <small>${s}</small>`:""}</div></div>
     </div>`).join("");
@@ -585,10 +593,11 @@ function orderCardHTML(o){
 }
 function orders(){
   const all=currentOrders();
-  const statusF=$("#oStatus").value, scopeF=$("#oScope").value;
+  const statusF=$("#oStatus").value, dateF=$("#oDate").value;
   let os=all;
   if(statusF) os=os.filter(o=>(o.status||"received")===statusF);
-  if(scopeF==="today"){ const today=new Date().toDateString(); os=os.filter(o=>new Date(o.at).toDateString()===today); }
+  if(dateF) os=os.filter(o=>isoDate(new Date(o.at))===dateF);
+  $("#oClearDate").style.display=dateF?"flex":"none";
 
   if(!ordersLoaded){ $("#noOrders").textContent="Loading orders…"; $("#noOrders").style.display="block"; }
   else if(!all.length){ $("#noOrders").textContent="No orders yet. New orders placed on the storefront will appear here automatically."; $("#noOrders").style.display="block"; }
@@ -621,7 +630,9 @@ function orders(){
   });
 }
 $("#oStatus").addEventListener("change",orders);
-$("#oScope").addEventListener("change",orders);
+$("#oDate").addEventListener("change",orders);
+$("#oToday").addEventListener("click",()=>{ $("#oDate").value=isoDate(new Date()); orders(); });
+$("#oClearDate").addEventListener("click",()=>{ $("#oDate").value=""; orders(); });
 
 /* ============================================================ Dashboard charts */
 function ordersByDay(all,days){
@@ -634,6 +645,19 @@ function ordersByDay(all,days){
   const byKey={}; out.forEach(b=>byKey[b.key]=b);
   all.forEach(o=>{ const b=byKey[new Date(o.at).toDateString()]; if(b){ b.count++; b.revenue+=o.total; } });
   return out;
+}
+/* shared floating tooltip for chart hover/tap — native title/<title> tooltips are slow and
+   easy to miss, this shows instantly and also works on touch */
+function wireChartTips(container){
+  if(!container) return;
+  const tip=$("#chartTip");
+  container.querySelectorAll("[data-tip]").forEach(el=>{
+    const show=(x,y)=>{ tip.innerHTML=el.dataset.tip; tip.style.left=x+"px"; tip.style.top=(y-12)+"px"; tip.classList.add("show"); };
+    el.addEventListener("mouseenter",e=>show(e.clientX,e.clientY));
+    el.addEventListener("mousemove",e=>show(e.clientX,e.clientY));
+    el.addEventListener("mouseleave",()=>tip.classList.remove("show"));
+    el.addEventListener("touchstart",e=>{ const t=e.touches[0]; show(t.clientX,t.clientY); setTimeout(()=>tip.classList.remove("show"),1700); },{passive:true});
+  });
 }
 function renderTrendChart(){
   const el=$("#trendChart"); if(!el) return;
@@ -649,12 +673,17 @@ function renderTrendChart(){
     const bh=Math.round((d.count/maxCount)*(h-padT-padB));
     const x=+(i*(barW+gap)).toFixed(1);
     const y=h-padB-bh;
-    bars+=`<rect class="trend-bar" x="${x}" y="${y}" width="${barW.toFixed(1)}" height="${Math.max(bh,3)}" rx="4" fill="#0E5A3C" opacity="${d.count?1:.16}"><title>${d.label}: ${d.count} order${d.count===1?"":"s"}, ${money(d.revenue)}</title></rect>`;
+    const tipText=`${d.label}<small>${d.count} order${d.count===1?"":"s"} · ${money(d.revenue)}</small>`;
+    bars+=`<rect class="trend-bar" data-tip="${tipText.replace(/"/g,'&quot;')}" x="${x}" y="${y}" width="${barW.toFixed(1)}" height="${Math.max(bh,3)}" rx="4" fill="url(#barGrad)" opacity="${d.count?1:.16}"></rect>`;
     if(i%2===0 || days.length<=7) labels+=`<text x="${(x+barW/2).toFixed(1)}" y="${h-8}" font-size="9" fill="#8993A4" text-anchor="middle" font-family="Inter,sans-serif">${d.label}</text>`;
   });
   const totalRev=days.reduce((s,d)=>s+d.revenue,0), totalCnt=days.reduce((s,d)=>s+d.count,0);
-  el.innerHTML=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block">${bars}${labels}</svg>
+  el.innerHTML=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block">
+      <defs><linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#14895C"/><stop offset="100%" stop-color="#0A4630"/></linearGradient></defs>
+      ${bars}${labels}
+    </svg>
     <div class="trend-legend"><span><i style="background:#0E5A3C"></i>${totalCnt} orders</span><span>${money(totalRev)} revenue in the last 14 days</span></div>`;
+  wireChartTips(el);
 }
 function renderStatusChart(){
   const el=$("#statusChart"); if(!el) return;
@@ -666,9 +695,10 @@ function renderStatusChart(){
   all.forEach(o=>{ const s=o.status||"received"; counts[s]=(counts[s]||0)+1; });
   const total=all.length;
   const active=STATUSES.filter(s=>counts[s]>0);
-  const segs=active.map(s=>`<div class="stack-seg" style="flex:${counts[s]} 0 0;background:${COLORS[s]}" title="${SLABEL[s]}: ${counts[s]}"></div>`).join("");
+  const segs=active.map(s=>`<div class="stack-seg" style="flex:${counts[s]} 0 0;background:${COLORS[s]}" data-tip="${SLABEL[s]}<small>${counts[s]} order${counts[s]===1?"":"s"} · ${Math.round(counts[s]/total*100)}%</small>"></div>`).join("");
   const legend=active.map(s=>`<div class="stack-leg"><i style="background:${COLORS[s]}"></i>${SLABEL[s]} <b>${counts[s]}</b><span>(${Math.round(counts[s]/total*100)}%)</span></div>`).join("");
   el.innerHTML=`<div class="stack-bar">${segs}</div><div class="stack-legend">${legend}</div>`;
+  wireChartTips(el);
 }
 function renderCatChart(){
   const el=$("#catChart"); if(!el) return;
