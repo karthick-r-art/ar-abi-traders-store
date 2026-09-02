@@ -336,7 +336,7 @@
             <button class="btn btn-ghost" id="oClearDate" style="padding:7px 14px;font-size:12.5px;font-weight:700;display:none">✕ Clear date</button>
             <span class="save-note" id="oCount" style="margin-left:auto"></span>
             <button class="btn btn-ghost" id="oExport" style="padding:7px 14px;font-size:12.5px;font-weight:700">
-              <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export CSV
+              <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export to Excel
             </button>
           </div>
           <div class="tscroll tbl-view"><table id="ordersTable">
@@ -367,7 +367,7 @@
             </select>
             <span class="save-note" id="pCount" style="margin-left:auto"></span>
             <button class="btn btn-ghost" id="pExport" style="padding:7px 14px;font-size:12.5px;font-weight:700">
-              <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export CSV
+              <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export to Excel
             </button>
           </div>
           <div class="tscroll tbl-view"><table>
@@ -416,7 +416,7 @@ function downloadCSV(filename,headers,rows){
   a.href=url; a.download=filename;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  toast(`Downloaded ${filename}`);
+  toast("Excel file downloaded — check your Downloads folder");
 }
 
 /* Cloudinary — free image hosting for real product photos, no card needed.
