@@ -335,6 +335,9 @@
             <button class="btn btn-ghost" id="oToday" style="padding:7px 14px;font-size:12.5px;font-weight:700">Today</button>
             <button class="btn btn-ghost" id="oClearDate" style="padding:7px 14px;font-size:12.5px;font-weight:700;display:none">✕ Clear date</button>
             <span class="save-note" id="oCount" style="margin-left:auto"></span>
+            <button class="btn btn-ghost" id="oExport" style="padding:7px 14px;font-size:12.5px;font-weight:700">
+              <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export CSV
+            </button>
           </div>
           <div class="tscroll tbl-view"><table id="ordersTable">
             <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
@@ -363,6 +366,9 @@
               <option value="in">In stock only</option>
             </select>
             <span class="save-note" id="pCount" style="margin-left:auto"></span>
+            <button class="btn btn-ghost" id="pExport" style="padding:7px 14px;font-size:12.5px;font-weight:700">
+              <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export CSV
+            </button>
           </div>
           <div class="tscroll tbl-view"><table>
             <thead><tr><th>Photo</th><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Stock</th><th>Status</th></tr></thead>
@@ -394,6 +400,24 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const P=window.PRODUCTS||[], M=window.CATMETA;
 const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");
 const isoDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+
+/* ============================================================ CSV export (opens directly in Excel/Sheets/Numbers) */
+function csvCell(v){
+  const s=String(v==null?"":v);
+  return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+}
+function downloadCSV(filename,headers,rows){
+  const lines=[headers,...rows].map(r=>r.map(csvCell).join(","));
+  // leading BOM so Excel opens it as UTF-8 instead of mangling ₹ and Tamil text
+  const bom=String.fromCharCode(0xFEFF);
+  const blob=new Blob([bom+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast(`Downloaded ${filename}`);
+}
 
 /* Cloudinary — free image hosting for real product photos, no card needed.
    1. Sign up free at https://cloudinary.com
@@ -591,12 +615,17 @@ function orderCardHTML(o){
     <select class="st-sel" data-status="${st}" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${st===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select>
   </div>`;
 }
-function orders(){
+function filteredOrders(){
   const all=currentOrders();
   const statusF=$("#oStatus").value, dateF=$("#oDate").value;
   let os=all;
   if(statusF) os=os.filter(o=>(o.status||"received")===statusF);
   if(dateF) os=os.filter(o=>isoDate(new Date(o.at))===dateF);
+  return {all,os};
+}
+function orders(){
+  const {all,os}=filteredOrders();
+  const dateF=$("#oDate").value;
   $("#oClearDate").style.display=dateF?"flex":"none";
 
   if(!ordersLoaded){ $("#noOrders").textContent="Loading orders…"; $("#noOrders").style.display="block"; }
@@ -633,6 +662,21 @@ $("#oStatus").addEventListener("change",orders);
 $("#oDate").addEventListener("change",orders);
 $("#oToday").addEventListener("click",()=>{ $("#oDate").value=isoDate(new Date()); orders(); });
 $("#oClearDate").addEventListener("click",()=>{ $("#oDate").value=""; orders(); });
+function exportOrders(){
+  const {os}=filteredOrders();
+  if(!os.length){ toast("No orders to export with the current filter"); return; }
+  const headers=["Order #","Date","Time","Customer","Mobile","Address","Payment","Status","Items","Subtotal","Delivery","Total"];
+  const rows=os.map(o=>{
+    const d=new Date(o.at);
+    const items=(o.items||[]).map(i=>`${i.name} x${i.q}`).join("; ");
+    return [o.num,d.toLocaleDateString("en-IN"),d.toLocaleTimeString("en-IN"),o.name,o.mobile,o.address||"",
+      o.pay==="upi"?"UPI":"COD",SLABEL[o.status||"received"],items,o.subtotal,o.delivery,o.total];
+  });
+  const dateF=$("#oDate").value, statusF=$("#oStatus").value;
+  const tag=dateF?dateF:statusF?statusF:"all";
+  downloadCSV(`orders_${tag}_${isoDate(new Date())}.csv`,headers,rows);
+}
+$("#oExport").addEventListener("click",exportOrders);
 
 /* ============================================================ Dashboard charts */
 function ordersByDay(all,days){
@@ -743,10 +787,13 @@ function productCardHTML(p){
 }
 let prodPage=1;
 const PROD_PAGE_SIZE=100;
-function products(){
+function filteredProducts(){
   const q=$("#pSearch").value.trim().toLowerCase(), cat=$("#pCat").value, stockF=$("#pStock").value;
-  let list=P.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||(p.ta&&p.ta.includes($("#pSearch").value.trim())))
+  return P.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||(p.ta&&p.ta.includes($("#pSearch").value.trim())))
     &&(!stockF||(stockF==="out"?val(p,'stock')<=0:val(p,'stock')>0)));
+}
+function products(){
+  let list=filteredProducts();
   const matched=list.length;
   const totalPages=Math.max(1,Math.ceil(matched/PROD_PAGE_SIZE));
   if(prodPage>totalPages) prodPage=totalPages;
@@ -836,6 +883,16 @@ $("#pCat").addEventListener("change",()=>{prodPage=1; products();});
 $("#pStock").addEventListener("change",()=>{prodPage=1; products();});
 $("#pPrevBtn").addEventListener("click",()=>{prodPage--; products(); $("#productsPanel").scrollIntoView({behavior:"smooth",block:"start"});});
 $("#pNextBtn").addEventListener("click",()=>{prodPage++; products(); $("#productsPanel").scrollIntoView({behavior:"smooth",block:"start"});});
+function exportProducts(){
+  const list=filteredProducts();
+  if(!list.length){ toast("No products to export with the current filter"); return; }
+  const headers=["Product Name","Tamil Name","Category","Unit","Price","MRP","Stock","Status"];
+  const rows=list.map(p=>[p.name,p.ta||"",p.cat,p.unit,val(p,'price'),val(p,'mrp')||"",val(p,'stock'),avail(p)?"Available":"Hidden"]);
+  const cat=$("#pCat").value, stockF=$("#pStock").value;
+  const tag=cat?cat.replace(/\s+/g,"-"):stockF?(stockF==="out"?"out-of-stock":"in-stock"):"all";
+  downloadCSV(`products_${tag}_${isoDate(new Date())}.csv`,headers,rows);
+}
+$("#pExport").addEventListener("click",exportProducts);
 </script>
 </body>
 </html>
