@@ -19,26 +19,30 @@
 
   /* ---------- Shell / sidebar ---------- */
   .admin-shell{display:flex;min-height:100vh}
-  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--adm-card);border-right:1px solid var(--adm-border);
-    display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:41;transition:transform .25s cubic-bezier(.4,0,.2,1)}
-  .side-brand{display:flex;align-items:center;gap:11px;padding:20px 18px;border-bottom:1px solid var(--adm-border-soft)}
-  .side-brand img{width:40px;flex-shrink:0}
-  .side-brand .nm{font-family:var(--disp);font-weight:800;font-size:14.5px;line-height:1.25}
-  .side-brand .nm span{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
-  .side-close{display:none;margin-left:auto;width:30px;height:30px;border-radius:8px;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0}
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:linear-gradient(185deg,#0C4A32,#082E20);
+    border-right:1px solid #06251A;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;
+    z-index:41;transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:2px 0 24px rgba(6,25,18,.12)}
+  .side-brand{display:flex;align-items:center;gap:11px;padding:22px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .side-brand img{width:40px;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+  .side-brand .nm{font-family:var(--disp);font-weight:800;font-size:14.5px;line-height:1.25;color:#fff}
+  .side-brand .nm span{display:block;font-size:11px;color:#9FC2AE;font-weight:600;margin-top:2px}
+  .side-close{display:none;margin-left:auto;width:30px;height:30px;border-radius:8px;align-items:center;justify-content:center;color:#B9D6C5;flex-shrink:0}
+  .side-close:hover{background:rgba(255,255,255,.08)}
   .side-close svg{width:16px;height:16px}
-  .side-nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px}
-  .side-cap{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--adm-soft);padding:14px 12px 6px}
-  .side-link{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;font-size:13.5px;
-    font-weight:700;color:var(--muted);text-align:left;width:100%;transition:background .15s,color .15s}
-  .side-link svg{width:18px;height:18px;flex-shrink:0}
-  .side-link:hover{background:var(--adm-bg);color:var(--ink)}
-  .side-link.active{background:color-mix(in srgb,var(--green) 11%,transparent);color:var(--green)}
-  .side-link .cnt{margin-left:auto;font-size:11px;font-weight:800;background:var(--adm-bg);color:var(--adm-soft);
+  .side-nav{padding:16px 14px;display:flex;flex-direction:column;gap:3px}
+  .side-cap{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#6FA084;padding:16px 12px 6px}
+  .side-link{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:10px;font-size:13.5px;
+    font-weight:700;color:#BFDCCC;text-align:left;width:100%;transition:background .15s,color .15s;position:relative}
+  .side-link svg{width:18px;height:18px;flex-shrink:0;opacity:.85}
+  .side-link:hover{background:rgba(255,255,255,.07);color:#fff}
+  .side-link.active{background:rgba(255,255,255,.12);color:#fff}
+  .side-link.active::before{content:"";position:absolute;left:-14px;top:8px;bottom:8px;width:3px;border-radius:0 4px 4px 0;background:var(--marigold)}
+  .side-link.active svg{opacity:1;color:var(--marigold)}
+  .side-link .cnt{margin-left:auto;font-size:11px;font-weight:800;background:rgba(255,255,255,.14);color:#fff;
     padding:2px 8px;border-radius:999px;min-width:20px;text-align:center}
-  .side-link.active .cnt{background:var(--green);color:#fff}
-  .side-foot{margin-top:auto;padding:14px 12px;border-top:1px solid var(--adm-border-soft);display:flex;flex-direction:column;gap:2px}
-  .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(15,25,18,.5);opacity:0;visibility:hidden;
+  .side-link.active .cnt{background:var(--marigold);color:#20301f}
+  .side-foot{margin-top:auto;padding:16px 14px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:2px}
+  .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(6,15,10,.55);opacity:0;visibility:hidden;
     transition:.25s;z-index:40;backdrop-filter:blur(1px)}
   .sidebar-scrim.show{opacity:1;visibility:visible}
 
@@ -80,6 +84,36 @@
   .load-dots i:nth-child(2){animation-delay:.15s}.load-dots i:nth-child(3){animation-delay:.3s}
   @keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
 
+  /* ---------- Charts ---------- */
+  .dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px}
+  .chart-panel .ph{border-bottom:1px solid var(--adm-border-soft)}
+  .chart-body{padding:20px 22px 22px;min-height:170px}
+  .chart-empty{display:flex;align-items:center;justify-content:center;min-height:150px;color:var(--adm-soft);
+    font-size:13px;text-align:center;flex-direction:column;gap:10px}
+  .trend-bar{transition:opacity .15s}
+  .trend-bar:hover{opacity:.75}
+  .trend-legend{display:flex;gap:18px;margin-top:4px;font-size:11.5px;color:var(--muted)}
+  .trend-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .stack-bar{display:flex;height:24px;border-radius:8px;overflow:hidden;background:var(--adm-bg);gap:2px}
+  .stack-seg{transition:opacity .15s;cursor:default}
+  .stack-seg:hover{opacity:.78}
+  .stack-legend{display:flex;flex-wrap:wrap;gap:12px 18px;margin-top:18px}
+  .stack-leg{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted)}
+  .stack-leg i{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+  .stack-leg b{color:var(--ink)}
+  .stack-leg span{color:var(--adm-soft);font-size:11.5px}
+  .hbar-row{display:grid;grid-template-columns:150px 1fr 34px;align-items:center;gap:14px;padding:8px 0;font-size:12.5px}
+  .hbar-row+.hbar-row{border-top:1px solid var(--adm-border-soft)}
+  .hbar-label{color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hbar-track{height:10px;background:var(--adm-bg);border-radius:6px;overflow:hidden}
+  .hbar-fill{height:100%;background:linear-gradient(90deg,#F87171,#DC2626);border-radius:6px;transition:width .4s ease}
+  .hbar-val{font-weight:800;color:var(--ink);text-align:right}
+  @media(max-width:900px){ .dash-grid{grid-template-columns:1fr} }
+  @media(max-width:760px){
+    .chart-body{padding:16px}
+    .hbar-row{grid-template-columns:96px 1fr 28px;gap:10px}
+  }
+
   /* ---------- Panels / tables ---------- */
   .panel{background:var(--adm-card);border:1px solid var(--adm-border);border-radius:16px;margin:0 0 22px;
     overflow:hidden;box-shadow:0 1px 3px rgba(20,30,55,.04)}
@@ -115,9 +149,9 @@
   .toolbar2{display:flex;gap:10px;align-items:center;padding:14px 22px;flex-wrap:wrap;background:var(--adm-bg);border-bottom:1px solid var(--adm-border-soft)}
   .save-note{font-size:12px;color:var(--muted);padding:10px 22px}
   .no-orders{padding:44px 20px;text-align:center;color:var(--muted);font-size:13.5px}
-  .logout-btn{font-size:12.5px;font-weight:700;color:var(--muted);background:var(--adm-card);
-    border:1.5px solid var(--adm-border);padding:8px 14px;border-radius:999px;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;gap:7px}
-  .logout-btn:hover{border-color:var(--kumkum);color:var(--kumkum)}
+  .logout-btn{font-size:12.5px;font-weight:700;color:#BFDCCC;background:rgba(255,255,255,.06);
+    border:1.5px solid rgba(255,255,255,.12);padding:10px 14px;border-radius:10px;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;gap:7px;transition:background .15s,color .15s,border-color .15s}
+  .logout-btn:hover{border-color:var(--kumkum);color:#fff;background:color-mix(in srgb,var(--kumkum) 35%,transparent)}
   .pthumb-btn{width:44px;height:44px;border-radius:10px;border:1.5px dashed var(--adm-border);background:var(--adm-bg);
     cursor:pointer;overflow:hidden;padding:0;display:grid;place-items:center;font-size:16px;color:var(--muted);flex-shrink:0}
   .pthumb-btn:hover{border-color:var(--green-300)}
@@ -264,6 +298,22 @@
           <div class="kpi skeleton" style="min-height:104px"></div><div class="kpi skeleton" style="min-height:104px"></div>
           <div class="kpi skeleton" style="min-height:104px"></div><div class="kpi skeleton" style="min-height:104px"></div>
         </div>
+
+        <div class="dash-grid">
+          <div class="panel chart-panel">
+            <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>Orders &amp; Revenue</h3><div class="sub">Last 14 days</div></div></div>
+            <div class="chart-body" id="trendChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+          </div>
+          <div class="panel chart-panel">
+            <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/></svg>Order Status</h3><div class="sub">Where things stand right now</div></div></div>
+            <div class="chart-body" id="statusChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+          </div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3h7L21 8.5v7L15.5 21h-7L3 15.5v-7z"/><path d="M12 8v5"/><circle cx="12" cy="16.3" r=".2" fill="currentColor" stroke="none"/></svg>Categories Needing Attention</h3><div class="sub">Most out-of-stock items, by category</div></div></div>
+          <div class="chart-body" id="catChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+        </div>
       </section>
 
       <!-- Orders -->
@@ -395,7 +445,7 @@ let ordersLoaded=false;    // false until we have a definitive answer (first Fir
 function currentOrders(){ return ordersCache!==null ? ordersCache : store.get("orders",[]); }
 
 function startAdmin(){
-  kpis(); orders(); prodCats(); products();
+  kpis(); orders(); prodCats(); products(); charts();
 }
 
 async function pushOverride(id, fields){
@@ -419,8 +469,8 @@ function subscribeOrders(){
     ordersCache=snap.docs.map(d=>d.data());
     ordersLoaded=true;
     setLive(true,"Live");
-    kpis(); orders();
-  }, err=>{ console.warn("[A.R. Abi] admin orders listener error:",err); ordersLoaded=true; setLive(false,"Offline"); orders(); });
+    kpis(); orders(); charts();
+  }, err=>{ console.warn("[A.R. Abi] admin orders listener error:",err); ordersLoaded=true; setLive(false,"Offline"); orders(); charts(); });
 }
 
 function initAuthGate(){
@@ -566,12 +616,75 @@ function orders(){
     }else{
       const os=store.get("orders",[]); const i=os.findIndex(o=>o.num===num);
       if(i>-1){ os[i].status=status; store.set("orders",os); }
-      toast("Order status updated (local demo only)"); kpis(); orders();
+      toast("Order status updated (local demo only)"); kpis(); orders(); charts();
     }
   });
 }
 $("#oStatus").addEventListener("change",orders);
 $("#oScope").addEventListener("change",orders);
+
+/* ============================================================ Dashboard charts */
+function ordersByDay(all,days){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const out=[];
+  for(let i=days-1;i>=0;i--){
+    const d=new Date(today); d.setDate(d.getDate()-i);
+    out.push({key:d.toDateString(),label:d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"}),count:0,revenue:0});
+  }
+  const byKey={}; out.forEach(b=>byKey[b.key]=b);
+  all.forEach(o=>{ const b=byKey[new Date(o.at).toDateString()]; if(b){ b.count++; b.revenue+=o.total; } });
+  return out;
+}
+function renderTrendChart(){
+  const el=$("#trendChart"); if(!el) return;
+  if(!ordersLoaded){ el.innerHTML=`<div class="chart-empty"><div class="spinner"></div></div>`; return; }
+  const all=currentOrders();
+  if(!all.length){ el.innerHTML=`<div class="chart-empty">No orders yet — this fills in as orders come in.</div>`; return; }
+  const days=ordersByDay(all,14);
+  const maxCount=Math.max(1,...days.map(d=>d.count));
+  const w=640,h=170,padB=26,padT=8,gap=6;
+  const barW=(w/days.length)-gap;
+  let bars="",labels="";
+  days.forEach((d,i)=>{
+    const bh=Math.round((d.count/maxCount)*(h-padT-padB));
+    const x=+(i*(barW+gap)).toFixed(1);
+    const y=h-padB-bh;
+    bars+=`<rect class="trend-bar" x="${x}" y="${y}" width="${barW.toFixed(1)}" height="${Math.max(bh,3)}" rx="4" fill="#0E5A3C" opacity="${d.count?1:.16}"><title>${d.label}: ${d.count} order${d.count===1?"":"s"}, ${money(d.revenue)}</title></rect>`;
+    if(i%2===0 || days.length<=7) labels+=`<text x="${(x+barW/2).toFixed(1)}" y="${h-8}" font-size="9" fill="#8993A4" text-anchor="middle" font-family="Inter,sans-serif">${d.label}</text>`;
+  });
+  const totalRev=days.reduce((s,d)=>s+d.revenue,0), totalCnt=days.reduce((s,d)=>s+d.count,0);
+  el.innerHTML=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block">${bars}${labels}</svg>
+    <div class="trend-legend"><span><i style="background:#0E5A3C"></i>${totalCnt} orders</span><span>${money(totalRev)} revenue in the last 14 days</span></div>`;
+}
+function renderStatusChart(){
+  const el=$("#statusChart"); if(!el) return;
+  if(!ordersLoaded){ el.innerHTML=`<div class="chart-empty"><div class="spinner"></div></div>`; return; }
+  const all=currentOrders();
+  if(!all.length){ el.innerHTML=`<div class="chart-empty">No orders yet.</div>`; return; }
+  const COLORS={received:"#94A3B8",confirmed:"#60A5FA",preparing:"#FBBF24",out:"#A78BFA",delivered:"#34D399",cancelled:"#F87171"};
+  const counts={}; STATUSES.forEach(s=>counts[s]=0);
+  all.forEach(o=>{ const s=o.status||"received"; counts[s]=(counts[s]||0)+1; });
+  const total=all.length;
+  const active=STATUSES.filter(s=>counts[s]>0);
+  const segs=active.map(s=>`<div class="stack-seg" style="flex:${counts[s]} 0 0;background:${COLORS[s]}" title="${SLABEL[s]}: ${counts[s]}"></div>`).join("");
+  const legend=active.map(s=>`<div class="stack-leg"><i style="background:${COLORS[s]}"></i>${SLABEL[s]} <b>${counts[s]}</b><span>(${Math.round(counts[s]/total*100)}%)</span></div>`).join("");
+  el.innerHTML=`<div class="stack-bar">${segs}</div><div class="stack-legend">${legend}</div>`;
+}
+function renderCatChart(){
+  const el=$("#catChart"); if(!el) return;
+  const counts={};
+  P.forEach(p=>{ if(val(p,'stock')<=0) counts[p.cat]=(counts[p.cat]||0)+1; });
+  const rows=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  if(!rows.length){ el.innerHTML=`<div class="chart-empty">Nothing out of stock right now — nice.</div>`; return; }
+  const max=rows[0][1];
+  el.innerHTML=rows.map(([cat,n])=>`
+    <div class="hbar-row">
+      <span class="hbar-label">${cat}</span>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${Math.max(6,Math.round(n/max*100))}%"></div></div>
+      <span class="hbar-val">${n}</span>
+    </div>`).join("");
+}
+function charts(){ renderTrendChart(); renderStatusChart(); renderCatChart(); }
 
 /* ============================================================ Products */
 function prodCats(){
@@ -639,7 +752,7 @@ function products(){
   $("#prodCards").innerHTML=list.map(productCardHTML).join("");
   $$("input[data-id]").forEach(inp=>inp.onchange=async()=>{
     const id=inp.dataset.id,f=inp.dataset.f,v=parseFloat(inp.value)||0;
-    edits[id]=edits[id]||{}; edits[id][f]=v; store.set("admin_edits",edits); kpis();
+    edits[id]=edits[id]||{}; edits[id][f]=v; store.set("admin_edits",edits); kpis(); if(f==="stock") renderCatChart();
     await pushOverride(id,{[f]:v});
     toast(`${f==="price"?"Price":"Stock"} updated`);
   });
