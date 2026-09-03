@@ -422,7 +422,7 @@
             </button>
           </div>
           <div class="tscroll tbl-view"><table>
-            <thead><tr><th>Photo</th><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Stock</th><th>Status</th></tr></thead>
+            <thead><tr><th>Photo</th><th>Product</th><th>Category</th><th>Price ₹</th><th>MRP ₹</th><th>Offer</th><th>Stock</th><th>Status</th></tr></thead>
             <tbody id="prodBody"></tbody>
           </table></div>
           <div class="cards-view" id="prodCards"></div>
@@ -486,6 +486,13 @@ const store={get(k,d){try{const v=localStorage.getItem("arabi_"+k);return v?JSON
 const edits=store.get("admin_edits",{});
 const val=(p,f)=>edits[p.id]&&edits[p.id][f]!=null?edits[p.id][f]:p[f];
 const avail=p=> (edits[p.id]&&edits[p.id].avail!=null)?edits[p.id].avail : (val(p,'stock')>0);
+/* "offer" isn't its own field — it's whatever discount Price vs MRP works out to, same as the
+   storefront computes it. So the fix here is: let MRP be edited (only Price/Stock were before),
+   and show the live resulting % so the owner isn't guessing at the math. */
+const offerPct=p=>{ const price=val(p,'price'), mrp=val(p,'mrp'); return mrp>price ? Math.round((1-price/mrp)*100) : 0; };
+const offerBadgeHTML=p=>{ const pct=offerPct(p);
+  return pct>0 ? `<span class="badge2" style="background:color-mix(in srgb,var(--kumkum) 14%,transparent);color:var(--kumkum)">${pct}% OFF</span>`
+               : `<span style="color:var(--adm-soft)">—</span>`; };
 
 function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1600);}
 
@@ -933,8 +940,9 @@ function productCardHTML(p){
     </div>
     <div class="pc-fields">
       <div><label>Price ₹</label><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></div>
-      <div><label>MRP ₹</label><span style="color:var(--muted);font-size:13px">${val(p,'mrp')||"—"}</span></div>
+      <div><label>MRP ₹</label><input class="in" type="number" value="${val(p,'mrp')||''}" data-id="${p.id}" data-f="mrp" placeholder="—"></div>
       <div><label>Stock</label><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:66px"></div>
+      <div><label>Offer</label><div data-offer-for="${p.id}" style="padding-top:2px">${offerBadgeHTML(p)}</div></div>
     </div>
   </div>`;
 }
@@ -974,7 +982,8 @@ function products(){
         <div><b style="font-weight:600">${p.name}</b>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}</div></div></td>
       <td><span class="badge2 b-cat">${p.cat}</span></td>
       <td><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></td>
-      <td style="color:var(--muted)">${val(p,'mrp')||"—"}</td>
+      <td><input class="in" type="number" value="${val(p,'mrp')||''}" data-id="${p.id}" data-f="mrp" placeholder="—"></td>
+      <td data-offer-for="${p.id}">${offerBadgeHTML(p)}</td>
       <td><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:66px"></td>
       <td><button class="badge2 ${avail(p)?'b-ok':'b-no'}" data-toggle="${p.id}">${avail(p)?"● Available":"○ Hidden"}</button></td>
     </tr>`;
@@ -983,8 +992,13 @@ function products(){
   $$("input[data-id]").forEach(inp=>inp.onchange=async()=>{
     const id=inp.dataset.id,f=inp.dataset.f,v=parseFloat(inp.value)||0;
     edits[id]=edits[id]||{}; edits[id][f]=v; store.set("admin_edits",edits); kpis(); if(f==="stock") renderCatChart();
+    if(f==="price"||f==="mrp"){
+      const p=P.find(x=>x.id==id);
+      $$(`[data-offer-for="${id}"]`).forEach(el=>el.innerHTML=offerBadgeHTML(p));
+    }
     await pushOverride(id,{[f]:v});
-    toast(`${f==="price"?"Price":"Stock"} updated`);
+    const label=f==="price"?"Price":f==="mrp"?"MRP":"Stock";
+    toast(`${label} updated — live on the storefront now`);
   });
   $$("[data-toggle]").forEach(btn=>btn.onclick=async()=>{
     const id=btn.dataset.toggle,p=P.find(x=>x.id==id); edits[id]=edits[id]||{};
@@ -1039,8 +1053,8 @@ $("#pNextBtn").addEventListener("click",()=>{prodPage++; products(); $("#product
 function exportProducts(){
   const list=filteredProducts();
   if(!list.length){ toast("No products to export with the current filter"); return; }
-  const headers=["Product Name","Tamil Name","Category","Unit","Price","MRP","Stock","Status"];
-  const rows=list.map(p=>[p.name,p.ta||"",p.cat,p.unit,val(p,'price'),val(p,'mrp')||"",val(p,'stock'),avail(p)?"Available":"Hidden"]);
+  const headers=["Product Name","Tamil Name","Category","Unit","Price","MRP","Offer %","Stock","Status"];
+  const rows=list.map(p=>[p.name,p.ta||"",p.cat,p.unit,val(p,'price'),val(p,'mrp')||"",offerPct(p)||"",val(p,'stock'),avail(p)?"Available":"Hidden"]);
   const cat=$("#pCat").value, stockF=$("#pStock").value;
   const tag=cat?cat.replace(/\s+/g,"-"):stockF?(stockF==="out"?"out-of-stock":"in-stock"):"all";
   downloadCSV(`products_${tag}_${isoDate(new Date())}.csv`,headers,rows);
