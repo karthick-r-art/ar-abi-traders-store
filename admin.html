@@ -487,12 +487,16 @@ const edits=store.get("admin_edits",{});
 const val=(p,f)=>edits[p.id]&&edits[p.id][f]!=null?edits[p.id][f]:p[f];
 const avail=p=> (edits[p.id]&&edits[p.id].avail!=null)?edits[p.id].avail : (val(p,'stock')>0);
 /* "offer" isn't its own field — it's whatever discount Price vs MRP works out to, same as the
-   storefront computes it. So the fix here is: let MRP be edited (only Price/Stock were before),
-   and show the live resulting % so the owner isn't guessing at the math. */
+   storefront computes it. Typing a % here computes and saves a new Price from the current MRP
+   (so "give 20% off" reads as "20% off", not "do the maths and type ₹80 into Price yourself"). */
 const offerPct=p=>{ const price=val(p,'price'), mrp=val(p,'mrp'); return mrp>price ? Math.round((1-price/mrp)*100) : 0; };
-const offerBadgeHTML=p=>{ const pct=offerPct(p);
-  return pct>0 ? `<span class="badge2" style="background:color-mix(in srgb,var(--kumkum) 14%,transparent);color:var(--kumkum)">${pct}% OFF</span>`
-               : `<span style="color:var(--adm-soft)">—</span>`; };
+const offerInputHTML=p=>{ const mrp=val(p,'mrp');
+  return `<div style="display:flex;align-items:center;gap:3px">
+      <input class="in" type="number" min="0" max="99" value="${offerPct(p)||''}" data-id="${p.id}" data-f="offer"
+        placeholder="0" title="${mrp>0?'Type a discount % — Price will be calculated from MRP':'Set an MRP first so there’s a price to discount from'}"
+        style="width:52px;border-color:color-mix(in srgb,var(--kumkum) 35%,var(--adm-border));color:var(--kumkum)">
+      <span style="font-size:11px;color:var(--adm-soft)">%</span>
+    </div>`; };
 
 function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1600);}
 
@@ -942,7 +946,7 @@ function productCardHTML(p){
       <div><label>Price ₹</label><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></div>
       <div><label>MRP ₹</label><input class="in" type="number" value="${val(p,'mrp')||''}" data-id="${p.id}" data-f="mrp" placeholder="—"></div>
       <div><label>Stock</label><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:66px"></div>
-      <div><label>Offer</label><div data-offer-for="${p.id}" style="padding-top:2px">${offerBadgeHTML(p)}</div></div>
+      <div><label>Offer</label><div data-offer-for="${p.id}" style="padding-top:2px">${offerInputHTML(p)}</div></div>
     </div>
   </div>`;
 }
@@ -983,18 +987,33 @@ function products(){
       <td><span class="badge2 b-cat">${p.cat}</span></td>
       <td><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></td>
       <td><input class="in" type="number" value="${val(p,'mrp')||''}" data-id="${p.id}" data-f="mrp" placeholder="—"></td>
-      <td data-offer-for="${p.id}">${offerBadgeHTML(p)}</td>
+      <td data-offer-for="${p.id}">${offerInputHTML(p)}</td>
       <td><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:66px"></td>
       <td><button class="badge2 ${avail(p)?'b-ok':'b-no'}" data-toggle="${p.id}">${avail(p)?"● Available":"○ Hidden"}</button></td>
     </tr>`;
   }).join("");
   $("#prodCards").innerHTML=list.map(productCardHTML).join("");
   $$("input[data-id]").forEach(inp=>inp.onchange=async()=>{
-    const id=inp.dataset.id,f=inp.dataset.f,v=parseFloat(inp.value)||0;
+    const id=inp.dataset.id,f=inp.dataset.f;
+    const p=P.find(x=>x.id==id);
+
+    if(f==="offer"){
+      const mrp=val(p,'mrp');
+      if(!(mrp>0)){ toast("Set an MRP first — there's no price to discount from"); inp.value=""; return; }
+      let pct=parseFloat(inp.value); if(isNaN(pct)) pct=0; pct=Math.max(0,Math.min(99,pct));
+      const newPrice=Math.round(mrp*(1-pct/100));
+      edits[id]=edits[id]||{}; edits[id].price=newPrice; store.set("admin_edits",edits); kpis();
+      $$(`input[data-id="${id}"][data-f="price"]`).forEach(el=>el.value=newPrice);
+      $$(`[data-offer-for="${id}"]`).forEach(el=>el.innerHTML=offerInputHTML(p));
+      await pushOverride(id,{price:newPrice});
+      toast(`Offer set — price updated to ${money(newPrice)}`);
+      return;
+    }
+
+    const v=parseFloat(inp.value)||0;
     edits[id]=edits[id]||{}; edits[id][f]=v; store.set("admin_edits",edits); kpis(); if(f==="stock") renderCatChart();
     if(f==="price"||f==="mrp"){
-      const p=P.find(x=>x.id==id);
-      $$(`[data-offer-for="${id}"]`).forEach(el=>el.innerHTML=offerBadgeHTML(p));
+      $$(`[data-offer-for="${id}"]`).forEach(el=>el.innerHTML=offerInputHTML(p));
     }
     await pushOverride(id,{[f]:v});
     const label=f==="price"?"Price":f==="mrp"?"MRP":"Stock";
