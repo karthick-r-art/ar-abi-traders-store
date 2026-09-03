@@ -610,10 +610,18 @@ function buildFaviconBadge(cb){
   img.onerror=()=>cb(null);
   img.src=faviconBase;
 }
+function applyFavicon(href){
+  // Chrome often won't re-render the tab icon from just changing href on the existing
+  // <link> — swapping in a brand-new element is the reliable way to force it to update.
+  const cur=document.getElementById("favicon"); if(!cur) return;
+  const link=document.createElement("link");
+  link.rel="icon"; link.type="image/png"; link.id="favicon"; link.href=href;
+  cur.parentNode.insertBefore(link,cur);
+  cur.parentNode.removeChild(cur);
+}
 function setFaviconBadge(on){
-  const link=$("#favicon"); if(!link) return;
-  if(!on){ link.href=faviconBase; return; }
-  buildFaviconBadge(url=>{ if(url) link.href=url; });
+  if(!on){ applyFavicon(faviconBase); return; }
+  buildFaviconBadge(url=>{ if(url) applyFavicon(url); });
 }
 
 function clearOrderAlert(){ $("#orderAlert").classList.remove("show"); document.title=baseTitle; setFaviconBadge(false); }
