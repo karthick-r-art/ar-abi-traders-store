@@ -1060,6 +1060,15 @@ function wireEditableInputs(root){
     const v=parseFloat(inp.value)||0;
     edits[id]=edits[id]||{}; edits[id][f]=v; stampUpdated(id); store.set("admin_edits",edits);
     if(f==="price"||f==="mrp"){ $$(`[data-offer-for="${id}"]`).forEach(el=>el.innerHTML=offerInputHTML(p)); }
+    if(f==="stock"){
+      // stock affects the Status badge and the stock-health dot/label via the avail() fallback
+      // (avail defaults to stock>0 when never explicitly hidden/shown) — patch both in place so
+      // they don't sit stale until some unrelated re-render happens to touch this row.
+      const ind=stockIndicator(v,getLowStockThreshold());
+      $$(`[data-status-for="${id}"]`).forEach(el=>el.innerHTML=productStatusBadge(p));
+      $$(`[data-stockind-for="${id}"]`).forEach(el=>el.innerHTML=`<span class="stock-dot" style="background:${ind.color}" title="${ind.label}"></span>`);
+      $$(`[data-stockmeta-for="${id}"]`).forEach(el=>el.textContent=el.dataset.format==="full"?`${v} units — ${ind.label}`:ind.label);
+    }
     $$(`[data-updated-for="${id}"]`).forEach(el=>el.textContent=lastUpdatedLabel(p));
     await pushOverride(id,{[f]:v,updatedAt:edits[id].updatedAt});
     const label=f==="price"?"Price":f==="mrp"?"MRP":"Stock";
@@ -1103,6 +1112,10 @@ const PAGE_META={
   settings:{title:"Settings",sub:"Preferences for this dashboard"},
 };
 const PAGE_INIT={
+  // Product edits made from Inventory/Dashboard/Settings only patch the DOM on THEIR own page
+  // (to avoid a full re-render stealing focus while typing) — re-rendering here on every
+  // visit is what keeps Products from ever showing stale price/stock/status on arrival.
+  products:()=>{ products(); },
   inventory:()=>{ invPage=1; inventoryPage(); },
   customers:()=>{ custPage=1; customersPage(); },
   reports:()=>{ renderTrendChart("#trendChartReports",reportsTrendPeriod); renderTopProducts("#topProductsChartFull",10); renderCategorySales("#categorySalesChartFull",10); renderPaymentSplit(); },
@@ -1132,7 +1145,7 @@ $$("[data-logout]").forEach(b=>b.addEventListener("click",()=>{ if(window.ARFire
 function resetOrderFilters(){ $("#oStatus").value=""; $("#oPay").value=""; $("#oDateFrom").value=""; $("#oDateTo").value=""; $("#oSearch").value=""; }
 function routeKpi(target){
   if(target==="products"){ showPage("products"); }
-  else if(target==="products-oos"){ showPage("products"); $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodPage=1; products(); }
+  else if(target==="products-oos"){ $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodPage=1; showPage("products"); }
   else if(target==="orders"){ showPage("orders"); resetOrderFilters(); orders(); }
   else if(target==="orders-today"){ showPage("orders"); resetOrderFilters(); const t=isoDate(new Date()); $("#oDateFrom").value=t; $("#oDateTo").value=t; orders(); }
   else if(target==="orders-pending"){ showPage("orders"); resetOrderFilters(); $("#oStatus").value="received"; orders(); }
@@ -1181,7 +1194,7 @@ $("#globalSearch").addEventListener("input",renderGlobalSearch);
 $("#globalSearch").addEventListener("focus",renderGlobalSearch);
 $("#gsearchResults").addEventListener("click",e=>{
   const pBtn=e.target.closest("[data-gs-product]"), oBtn=e.target.closest("[data-gs-order]");
-  if(pBtn){ const p=P.find(x=>x.id==pBtn.dataset.gsProduct); showPage("products"); $("#pSearch").value=p?p.name:""; prodPage=1; products(); }
+  if(pBtn){ const p=P.find(x=>x.id==pBtn.dataset.gsProduct); $("#pSearch").value=p?p.name:""; prodPage=1; showPage("products"); }
   if(oBtn){ showPage("orders"); resetOrderFilters(); $("#oSearch").value=oBtn.dataset.gsOrder; orders(); }
   $("#globalSearch").value=""; $("#gsearchResults").classList.remove("show");
 });
@@ -1265,7 +1278,9 @@ $$("[data-sound-toggle]").forEach(btn=>btn.addEventListener("click",()=>{
 updateSoundToggleUI();
 $("#setThreshold").addEventListener("change",()=>{
   setLowStockThreshold(+$("#setThreshold").value); $("#setThreshold").value=getLowStockThreshold();
-  toast("Low stock threshold updated"); kpis();
+  toast("Low stock threshold updated");
+  kpis(); renderInventoryHealth("#invHealthChart, #invHealthChart2"); lowStockAlerts();
+  renderProductSummaryStrip(); products();
 });
 
 /* ---- Notification bell log (persisted, capped) ---- */
@@ -2123,7 +2138,7 @@ function productCardHTML(p){
       <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
       <div style="flex:1;min-width:0">
         <button data-view-product-drawer="${p.id}" style="text-align:left"><b>${p.name}</b></button>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}
-        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge2 b-cat">${p.cat}</span>${productStatusBadge(p)}</div>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge2 b-cat">${p.cat}</span><span data-status-for="${p.id}">${productStatusBadge(p)}</span></div>
       </div>
       <input type="checkbox" data-select-id="${p.id}" ${selectedIds.has(p.id)?'checked':''} style="width:18px;height:18px;flex-shrink:0">
     </div>
@@ -2133,7 +2148,7 @@ function productCardHTML(p){
       <div><label>Stock</label><input class="in" type="number" value="${stock}" data-id="${p.id}" data-f="stock" style="width:66px"></div>
       <div><label>Offer</label><div data-offer-for="${p.id}" style="padding-top:2px">${offerInputHTML(p)}</div></div>
     </div>
-    <div class="stock-cell" style="margin-top:8px"><span class="stock-dot" style="background:${ind.color}"></span><span class="stock-meta">${stock} units — ${ind.label}</span></div>
+    <div class="stock-cell" style="margin-top:8px"><span data-stockind-for="${p.id}"><span class="stock-dot" style="background:${ind.color}"></span></span><span class="stock-meta" data-stockmeta-for="${p.id}" data-format="full">${stock} units — ${ind.label}</span></div>
     <div class="od-note" style="margin-top:4px">Code: ${p.id} · Updated <span data-updated-for="${p.id}">${lastUpdatedLabel(p)}</span></div>
   </div>`;
 }
@@ -2227,8 +2242,8 @@ function products(){
       <td><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price">${priceHintHTML(p)}</td>
       <td><input class="in" type="number" value="${val(p,'mrp')||''}" data-id="${p.id}" data-f="mrp" placeholder="—"></td>
       <td data-offer-for="${p.id}">${offerInputHTML(p)}</td>
-      <td><div class="stock-cell"><input class="in" type="number" value="${stock}" data-id="${p.id}" data-f="stock" style="width:60px"><span class="stock-dot" style="background:${ind.color}" title="${ind.label}"></span></div><div class="stock-meta">${ind.label}</div></td>
-      <td>${productStatusBadge(p)}</td>
+      <td><div class="stock-cell"><input class="in" type="number" value="${stock}" data-id="${p.id}" data-f="stock" style="width:60px"><span data-stockind-for="${p.id}"><span class="stock-dot" style="background:${ind.color}" title="${ind.label}"></span></span></div><div class="stock-meta" data-stockmeta-for="${p.id}" data-format="short">${ind.label}</div></td>
+      <td data-status-for="${p.id}">${productStatusBadge(p)}</td>
       <td><span data-updated-for="${p.id}" style="font-size:12px;color:var(--adm-soft);white-space:nowrap">${lastUpdatedLabel(p)}</span></td>
       <td class="row-actions"><button class="topbar-icon-btn" data-pactions-btn="${p.id}" aria-label="Product actions" style="width:32px;height:32px;border-radius:8px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="12" cy="19" r="1.3"/></svg>
