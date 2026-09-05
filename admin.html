@@ -51,6 +51,7 @@
   .topbar{position:sticky;top:0;z-index:35;background:var(--adm-card);
     border-bottom:1px solid var(--adm-border);display:flex;align-items:center;
     gap:12px;padding:14px 26px}
+  .page-eyebrow{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--green)}
   .topbar h1{font-size:19px;font-weight:800;line-height:1.2;color:var(--ink)}
   .topbar .sub{font-size:12px;color:var(--adm-soft);margin-top:1px}
   .hamburger{display:none;width:36px;height:36px;border-radius:9px;background:var(--adm-card);
@@ -163,6 +164,14 @@
   .kpi .kicon svg{width:18px;height:18px}
   .kpi .k{font-size:12px;color:var(--adm-soft);font-weight:700}
   .kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-top:2px}
+  /* subtle per-type differentiation on top of the shared card skeleton */
+  .kpi[data-variant="revenue"]{background:linear-gradient(180deg,color-mix(in srgb,var(--adm-green) 5%,var(--adm-card)),var(--adm-card) 65%)}
+  .kpi[data-variant="revenue"] .kicon{border-radius:50%}
+  .kpi[data-variant="revenue"] .v{font-size:26px}
+  .kpi[data-variant="alert"] .kicon{border-radius:50%;position:relative}
+  .kpi[data-variant="alert"].has-issue .kicon::after{content:"";position:absolute;top:-2px;right:-2px;width:9px;height:9px;
+    border-radius:50%;background:var(--adm-red);animation:kpiAlertPulse 1.8s ease-in-out infinite}
+  @keyframes kpiAlertPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}50%{box-shadow:0 0 0 5px rgba(220,38,38,0)}}
   .kpi-trend-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .kpi-trend{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;flex-shrink:0}
   .kpi-trend svg{width:10px;height:10px}
@@ -177,6 +186,10 @@
   /* ---------- Charts / panels ---------- */
   .dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:14px}
   .dash-grid-even{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .section-label{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--adm-soft);
+    margin:22px 2px 10px}
+  .section-label:first-of-type{margin-top:4px}
+  .chart-panel-lg .chart-body{min-height:260px;padding-top:22px}
   .panel{background:var(--adm-card);border:1px solid var(--adm-border);border-radius:14px;margin:0 0 14px;overflow:hidden}
   .panel .ph{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--adm-border-soft);flex-wrap:wrap}
   .panel .ph h3{font-size:14.5px;font-weight:800;color:var(--ink);display:flex;align-items:center}
@@ -213,7 +226,9 @@
   .hbar-track{height:9px;background:var(--adm-bg);border-radius:6px;overflow:hidden}
   .hbar-fill{height:100%;background:linear-gradient(90deg,#F87171,#DC2626);border-radius:6px;transition:width .3s ease}
   .hbar-val{font-weight:800;color:var(--ink);text-align:right}
-  .top-prod-row{display:grid;grid-template-columns:20px 34px 1fr 70px 70px;align-items:center;gap:10px;padding:9px 0;font-size:12.5px}
+  .top-prod-row{display:grid;grid-template-columns:20px 34px 1fr 70px 70px 68px;align-items:center;gap:10px;padding:9px 0;font-size:12.5px}
+  .top-prod-trend{display:flex;justify-content:flex-end}
+  .top-prod-trend .kpi-trend{white-space:nowrap}
   .top-prod-row+.top-prod-row{border-top:1px solid var(--adm-border-soft)}
   .top-prod-rank{color:var(--adm-soft);font-weight:800;font-size:12px;text-align:center}
   .top-prod-meta{min-width:0}
@@ -222,19 +237,13 @@
   .top-prod-bar{height:6px;background:var(--adm-bg);border-radius:4px;overflow:hidden}
   .top-prod-bar div{height:100%;background:linear-gradient(90deg,#0E5A3C,#0E7A54);border-radius:4px}
   .top-prod-rev{text-align:right;color:var(--ink)}
-  .low-stock-row{display:grid;grid-template-columns:34px 1fr auto auto;align-items:center;gap:12px;padding:10px 0}
-  .low-stock-row+.low-stock-row{border-top:1px solid var(--adm-border-soft)}
-  .ls-meta b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
-  .ls-meta span{font-size:11px;color:var(--adm-soft)}
-  .ls-stock{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--adm-soft)}
   @media(max-width:900px){ .dash-grid,.dash-grid-even{grid-template-columns:1fr} }
   @media(max-width:760px){
     .chart-body{padding:14px}
     .hbar-row{grid-template-columns:92px 1fr 54px;gap:8px}
     .top-prod-row{grid-template-columns:16px 30px 1fr 56px;gap:8px}
     .top-prod-rev{display:none}
-    .low-stock-row{grid-template-columns:30px 1fr auto;gap:8px}
-    .low-stock-row .badge2{display:none}
+    .top-prod-trend{display:none}
   }
 
   /* ---------- Tables ---------- */
@@ -437,8 +446,9 @@
         <span>Dashboard</span>
       </button>
       <div>
+        <div class="page-eyebrow" id="pageEyebrow" style="display:block">A.R. Abi Traders</div>
         <h1 id="pageTitle">Dashboard</h1>
-        <div class="sub" id="pageSub">Overview of your store, right now</div>
+        <div class="sub" id="pageSub">Business overview for today</div>
       </div>
 
       <div class="gsearch" id="gsearch">
@@ -502,25 +512,21 @@
           <div class="kpi skeleton" style="min-height:96px"></div><div class="kpi skeleton" style="min-height:96px"></div>
         </div>
 
-        <div class="dash-grid">
-          <div class="panel chart-panel">
-            <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>Revenue &amp; Orders Trend</h3></div>
-              <div class="period-toggle" id="trendPeriodToggle">
-                <button data-period="7" class="active">7D</button><button data-period="30">30D</button><button data-period="90">90D</button><button data-period="365">1Y</button>
-              </div>
+        <!-- Main analytics -->
+        <div class="panel chart-panel chart-panel-lg">
+          <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>Revenue &amp; Orders Trend</h3><div class="sub">Your sales activity over time</div></div>
+            <div class="period-toggle" id="trendPeriodToggle">
+              <button data-period="7" class="active">7D</button><button data-period="30">30D</button><button data-period="90">90D</button><button data-period="365">1Y</button>
             </div>
-            <div class="chart-body" id="trendChart"><div class="chart-empty"><div class="spinner"></div></div></div>
           </div>
+          <div class="chart-body" id="trendChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+        </div>
+
+        <div class="section-label">Secondary Analytics</div>
+        <div class="dash-grid-even">
           <div class="panel chart-panel">
             <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/></svg>Order Status</h3><div class="sub">Where things stand right now</div></div></div>
             <div class="chart-body" id="statusChart"><div class="chart-empty"><div class="spinner"></div></div></div>
-          </div>
-        </div>
-
-        <div class="dash-grid-even">
-          <div class="panel chart-panel">
-            <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>Top Selling Products</h3><div class="sub">By revenue, all time</div></div></div>
-            <div class="chart-body" id="topProductsChart"><div class="chart-empty"><div class="spinner"></div></div></div>
           </div>
           <div class="panel chart-panel">
             <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>Sales by Category</h3><div class="sub">Revenue share, all time</div></div></div>
@@ -528,24 +534,30 @@
           </div>
         </div>
 
-        <div class="dash-grid-even">
-          <div class="panel chart-panel">
-            <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-5 9 5v12"/><path d="M3 21h18"/><path d="M9 21v-7h6v7"/></svg>Inventory Health</h3><div class="sub">Across your whole catalog</div></div></div>
-            <div class="chart-body" id="invHealthChart"><div class="chart-empty"><div class="spinner"></div></div></div>
-          </div>
-          <div class="panel chart-panel">
-            <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3h7L21 8.5v7L15.5 21h-7L3 15.5v-7z"/><path d="M12 8v5"/><circle cx="12" cy="16.3" r=".2" fill="currentColor" stroke="none"/></svg>Low Stock Alerts</h3><div class="sub">Needs restocking soon</div></div></div>
-            <div class="chart-body" id="lowStockList"><div class="chart-empty"><div class="spinner"></div></div></div>
-          </div>
+        <div class="section-label">Business Insights</div>
+        <div class="panel chart-panel">
+          <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>Top Selling Products</h3><div class="sub">By revenue, all time — trend vs. the prior 30 days</div></div></div>
+          <div class="chart-body" id="topProductsChart"><div class="chart-empty"><div class="spinner"></div></div></div>
         </div>
 
+        <div class="section-label">Inventory</div>
+        <div class="panel chart-panel">
+          <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-5 9 5v12"/><path d="M3 21h18"/><path d="M9 21v-7h6v7"/></svg>Inventory Health</h3><div class="sub">Across your whole catalog</div></div></div>
+          <div class="chart-body" id="invHealthChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3h7L21 8.5v7L15.5 21h-7L3 15.5v-7z"/><path d="M12 8v5"/><circle cx="12" cy="16.3" r=".2" fill="currentColor" stroke="none"/></svg>Low Stock Alerts</h3><div class="sub">Needs restocking soon</div></div></div>
+          <div id="lowStockList"><div class="chart-empty"><div class="spinner"></div></div></div>
+        </div>
+
+        <div class="section-label">Recent Orders</div>
         <div class="panel">
           <div class="ph">
             <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2.5-1.6L13 21l-2.5-1.6L8 21l-2-1.6z"/><path d="M9 8h6M9 12h6"/></svg>Recent Orders</h3><div class="sub">Latest activity from the storefront</div></div>
             <button class="btn btn-ghost" id="viewAllOrdersBtn" style="margin-left:auto;padding:8px 14px;font-size:12.5px;font-weight:700">View all orders →</button>
           </div>
           <div class="tscroll"><table>
-            <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
+            <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Amount</th><th>Payment</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
             <tbody id="recentOrdersBody"></tbody>
           </table></div>
         </div>
@@ -891,7 +903,7 @@ function refreshAfterProductEdit(){
 
 /* ============================================================ NAVIGATION (sidebar / page tabs) */
 const PAGE_META={
-  dash:{title:"Dashboard",sub:"Overview of your store, right now"},
+  dash:{title:"Dashboard",sub:"Business overview for today"},
   orders:{title:"Orders",sub:"Confirm, prepare and dispatch customer orders"},
   products:{title:"Products",sub:"Prices, stock and photos — synced live to the storefront"},
   inventory:{title:"Inventory",sub:"Stock levels and availability across your catalog"},
@@ -910,6 +922,7 @@ function showPage(page){
   $$(".side-link[data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===page));
   $("#pageTitle").textContent=PAGE_META[page].title;
   $("#pageSub").textContent=PAGE_META[page].sub;
+  $("#pageEyebrow").style.display=page==="dash"?"block":"none";
   $("#backBtn").style.display=page==="dash"?"none":"flex";
   closeSidebar(); closeDropdowns();
   if(PAGE_INIT[page]) PAGE_INIT[page]();
@@ -1242,14 +1255,14 @@ function kpis(){
   let cards;
   if(!ordersLoaded){
     cards=[
-      ["#059669",window.icon('coins'),"Total Revenue",dots,"","orders"],
-      ["#0E7A54",window.icon('sunrise'),"Today's Revenue",dots,"","orders-today"],
-      ["#2563EB",window.icon('receipt'),"Total Orders",dots,"","orders"],
-      ["#7C3AED",window.icon('bolt'),"Today's Orders",dots,"","orders-today"],
-      ["#D97706",window.icon('hourglass'),"Pending Orders",dots,"","orders-pending"],
-      ["#0E7A54",window.icon('boxes'),"Products",P.length.toLocaleString("en-IN"),"","products"],
-      ["#D97706",window.icon('alertOct'),"Low Stock",low,"","products"],
-      ["#DC2626",window.icon('alertOct'),"Out of Stock",oos,"","products-oos"],
+      ["#059669",window.icon('coins'),"Total Revenue",dots,"","orders","revenue",false],
+      ["#0E7A54",window.icon('sunrise'),"Today's Revenue",dots,"","orders-today","revenue",false],
+      ["#2563EB",window.icon('receipt'),"Total Orders",dots,"","orders","info",false],
+      ["#7C3AED",window.icon('bolt'),"Today's Orders",dots,"","orders-today","info",false],
+      ["#D97706",window.icon('hourglass'),"Pending Orders",dots,"","orders-pending","alert",false],
+      ["#0E7A54",window.icon('boxes'),"Products",P.length.toLocaleString("en-IN"),"","products","info",false],
+      ["#D97706",window.icon('alertOct'),"Low Stock",low,"","products","alert",false],
+      ["#DC2626",window.icon('alertOct'),"Out of Stock",oos,"","products-oos","alert",false],
     ];
   }else{
     const now=new Date();
@@ -1269,18 +1282,18 @@ function kpis(){
     const todayRevTrend=pctChange(todayRevenue,sumRevenue(yestOrders));
     const todayOrdTrend=pctChange(todayOrdersN,yestOrders.length);
     cards=[
-      ["#059669",window.icon('coins'),"Total Revenue",money(Math.round(totalRevenue)),trendBadge(revTrend)+`<span class="kpi-sub">vs prior 30 days</span>`,"orders"],
-      ["#0E7A54",window.icon('sunrise'),"Today's Revenue",money(Math.round(todayRevenue)),trendBadge(todayRevTrend)+`<span class="kpi-sub">vs yesterday</span>`,"orders-today"],
-      ["#2563EB",window.icon('receipt'),"Total Orders",totalOrdersN.toLocaleString("en-IN"),trendBadge(ordTrend)+`<span class="kpi-sub">vs prior 30 days</span>`,"orders"],
-      ["#7C3AED",window.icon('bolt'),"Today's Orders",todayOrdersN,trendBadge(todayOrdTrend)+`<span class="kpi-sub">vs yesterday</span>`,"orders-today"],
-      ["#D97706",window.icon('hourglass'),"Pending Orders",pendingN,"","orders-pending"],
-      ["#0E7A54",window.icon('boxes'),"Products",P.length.toLocaleString("en-IN"),"","products"],
-      ["#D97706",window.icon('alertOct'),"Low Stock",low,"","products"],
-      ["#DC2626",window.icon('alertOct'),"Out of Stock",oos,"","products-oos"],
+      ["#059669",window.icon('coins'),"Total Revenue",money(Math.round(totalRevenue)),trendBadge(revTrend)+`<span class="kpi-sub">vs prior 30 days</span>`,"orders","revenue",false],
+      ["#0E7A54",window.icon('sunrise'),"Today's Revenue",money(Math.round(todayRevenue)),trendBadge(todayRevTrend)+`<span class="kpi-sub">vs yesterday</span>`,"orders-today","revenue",false],
+      ["#2563EB",window.icon('receipt'),"Total Orders",totalOrdersN.toLocaleString("en-IN"),trendBadge(ordTrend)+`<span class="kpi-sub">vs prior 30 days</span>`,"orders","info",false],
+      ["#7C3AED",window.icon('bolt'),"Today's Orders",todayOrdersN,trendBadge(todayOrdTrend)+`<span class="kpi-sub">vs yesterday</span>`,"orders-today","info",false],
+      ["#D97706",window.icon('hourglass'),"Pending Orders",pendingN,"","orders-pending","alert",pendingN>0],
+      ["#0E7A54",window.icon('boxes'),"Products",P.length.toLocaleString("en-IN"),"","products","info",false],
+      ["#D97706",window.icon('alertOct'),"Low Stock",low,"","products","alert",low>0],
+      ["#DC2626",window.icon('alertOct'),"Out of Stock",oos,"","products-oos","alert",oos>0],
     ];
   }
-  $("#kpis").innerHTML=cards.map(([hex,icon,k,v,trendRow,click])=>`
-    <div class="kpi" data-kpi="${click}" style="border-top:3px solid ${hex}" title="Click to view">
+  $("#kpis").innerHTML=cards.map(([hex,icon,k,v,trendRow,click,variant,issue])=>`
+    <div class="kpi${issue?' has-issue':''}" data-kpi="${click}" data-variant="${variant}" style="border-top:3px solid ${hex}" title="Click to view">
       <div class="kpi-top"><div class="kicon" style="${ic(hex)}">${icon}</div></div>
       <div><div class="k">${k}</div><div class="v">${v}</div></div>
       ${trendRow?`<div class="kpi-trend-row">${trendRow}</div>`:""}
@@ -1461,7 +1474,7 @@ function renderTrendChart(containerSel,period){
   if(!all.length){ el.innerHTML=`<div class="chart-empty">No orders yet — this fills in as orders come in.</div>`; return; }
   const days=trendBuckets(all,period);
   const maxCount=Math.max(1,...days.map(d=>d.count));
-  const w=640,h=170,padB=26,padT=8,gap=days.length>60?2:6;
+  const w=640,h=210,padB=26,padT=8,gap=days.length>60?2:6;
   const barW=(w/days.length)-gap;
   let bars="",labels="";
   const labelEvery=days.length>30?Math.ceil(days.length/12):(days.length>7?5:1);
@@ -1536,15 +1549,23 @@ function renderTopProducts(containerSel,limit){
   const agg=aggregateItems(all).sort((a,b)=>b.revenue-a.revenue).slice(0,limit||5);
   if(!agg.length){ el.innerHTML=`<div class="chart-empty">No sales yet.</div>`; return; }
   const max=Math.max(...agg.map(a=>a.revenue),1);
+  // per-product trend: revenue in the last 30 days vs. the 30 days before that
+  const now=new Date(); const todayStart=new Date(now); todayStart.setHours(0,0,0,0);
+  const last30Start=new Date(todayStart); last30Start.setDate(last30Start.getDate()-30);
+  const prev30Start=new Date(todayStart); prev30Start.setDate(prev30Start.getDate()-60);
+  const last30ByName={}; aggregateItems(ordersInRange(all,last30Start.getTime(),now.getTime()+1)).forEach(a=>last30ByName[a.name]=a.revenue);
+  const prev30ByName={}; aggregateItems(ordersInRange(all,prev30Start.getTime(),last30Start.getTime())).forEach(a=>prev30ByName[a.name]=a.revenue);
   el.innerHTML=agg.map((a,i)=>{
     const p=P.find(x=>x.name===a.name);
     const art=p?(window.artFor?window.artFor(p.type):window.icon('boxes')):window.icon('boxes');
+    const trendPct=pctChange(last30ByName[a.name]||0,prev30ByName[a.name]||0);
     return `<div class="top-prod-row">
       <span class="top-prod-rank">${i+1}</span>
       <span class="em-tag" style="background:${p?catColor(p):'#EEF1F6'}">${art}</span>
       <div class="top-prod-meta"><b>${a.name}</b><span>${a.qty} units sold</span></div>
       <div class="top-prod-bar"><div style="width:${Math.max(6,Math.round(a.revenue/max*100))}%"></div></div>
       <b class="top-prod-rev">${money(a.revenue)}</b>
+      <span class="top-prod-trend">${trendBadge(trendPct)}</span>
     </div>`;
   }).join("");
 }
@@ -1598,14 +1619,25 @@ function lowStockAlerts(){
   const threshold=getLowStockThreshold();
   const rows=P.filter(p=>avail(p)&&val(p,'stock')>0&&val(p,'stock')<=threshold).sort((a,b)=>val(a,'stock')-val(b,'stock')).slice(0,8);
   if(!rows.length){ el.innerHTML=`<div class="chart-empty">Nothing low on stock right now — nice.</div>`; return; }
-  el.innerHTML=rows.map(p=>`
-    <div class="low-stock-row">
-      <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
-      <div class="ls-meta"><b>${p.name}</b><span>${p.cat}</span></div>
-      <div class="ls-stock"><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:56px">/ min ${threshold}</div>
-      <span class="badge2 b-warn">Low</span>
-    </div>`).join("");
+  el.innerHTML=`<div class="tscroll"><table>
+    <thead><tr><th>Product</th><th>Category</th><th>Current Stock</th><th>Min Stock</th><th>Status</th><th></th></tr></thead>
+    <tbody>${rows.map(p=>`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+        <b style="font-weight:600">${p.name}</b></div></td>
+      <td><span class="badge2 b-cat">${p.cat}</span></td>
+      <td><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:60px"></td>
+      <td>${threshold}</td>
+      <td><span class="badge2 b-warn">Low</span></td>
+      <td><button class="btn btn-ghost" data-manage-inv style="padding:6px 12px;font-size:11.5px;font-weight:700">Manage →</button></td>
+    </tr>`).join("")}</tbody>
+  </table></div>`;
   wireEditableInputs(el);
+  $$("[data-manage-inv]",el).forEach(b=>b.onclick=()=>{
+    invFilterState="low"; invPage=1;
+    $$("#invChips [data-inv-filter]").forEach(c=>c.classList.toggle("active",c.dataset.invFilter==="low"));
+    showPage("inventory");
+  });
 }
 function renderPaymentSplit(){
   const el=$("#paymentSplitChart"); if(!el) return;
@@ -1624,14 +1656,17 @@ function renderPaymentSplit(){
 }
 function renderRecentOrders(){
   const el=$("#recentOrdersBody"); if(!el) return;
-  if(!ordersLoaded){ el.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted)">Loading…</td></tr>`; return; }
+  if(!ordersLoaded){ el.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted)">Loading…</td></tr>`; return; }
   const all=currentOrders();
-  if(!all.length){ el.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted)">No orders yet.</td></tr>`; return; }
+  if(!all.length){ el.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted)">No orders yet.</td></tr>`; return; }
   el.innerHTML=all.slice(0,6).map(o=>{ const st=o.status||"received"; return `<tr>
     <td><b>#${o.num}</b></td><td>${o.name}</td><td>${o.items.reduce((s,x)=>s+x.q,0)} items</td>
     <td><b>${money(o.total)}</b></td><td><span class="badge2 b-cat">${o.pay==="upi"?"UPI":"COD"}</span></td>
     <td><span class="badge2 ${SBADGE[st]}">${SLABEL[st]}</span></td>
+    <td style="color:var(--muted);font-size:12px;white-space:nowrap">${new Date(o.at).toLocaleDateString("en-IN",{day:"2-digit",month:"short"})}</td>
+    <td><button class="btn btn-ghost" data-view-order="${o.num}" style="padding:6px 12px;font-size:11.5px;font-weight:700">View</button></td>
   </tr>`; }).join("");
+  $$("[data-view-order]",el).forEach(b=>b.onclick=()=>{ showPage("orders"); $("#oSearch").value=b.dataset.viewOrder; orders(); });
 }
 function charts(){
   renderTrendChart("#trendChart",trendPeriod);
