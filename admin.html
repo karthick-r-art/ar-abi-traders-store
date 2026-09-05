@@ -338,6 +338,29 @@
   .strip-val{font-size:17px;font-weight:800;color:var(--ink);line-height:1.2}
   .strip-label{font-size:11px;color:var(--adm-soft);font-weight:700;margin-top:1px}
 
+  /* ---- Products page ---- */
+  .ph-actions{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+  .pthumb-btn.pthumb-lg{width:52px;height:52px}
+  .price-cell{display:flex;flex-direction:column;gap:1px}
+  .price-cell .pc-sell{font-weight:800;color:var(--ink);font-size:13.5px}
+  .price-cell .pc-mrp{font-size:11.5px;color:var(--adm-soft);text-decoration:line-through}
+  .stock-cell{display:flex;align-items:center;gap:8px}
+  .stock-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .stock-meta{font-size:10.5px;color:var(--adm-soft);white-space:nowrap}
+  .bulk-bar{display:none;align-items:center;gap:12px;padding:12px 20px;background:color-mix(in srgb,var(--green) 8%,var(--adm-card));
+    border-bottom:1px solid var(--adm-border-soft);flex-wrap:wrap}
+  .bulk-bar.show{display:flex}
+  .bulk-bar b{font-size:13px;color:var(--ink)}
+  .bulk-bar .btn{padding:7px 13px;font-size:12px}
+  .filter-row2{display:flex;gap:10px;align-items:center;padding:0 22px 14px;flex-wrap:wrap;background:var(--adm-bg);border-bottom:1px solid var(--adm-border-soft)}
+  .filter-row2 label{font-size:11px;font-weight:700;color:var(--adm-soft);display:flex;align-items:center;gap:6px}
+  .range-input{width:78px;padding:6px 8px;border:1.5px solid var(--adm-border);border-radius:7px;background:var(--adm-card);font-size:12.5px;font-family:inherit;color:var(--ink)}
+  .range-input:focus{outline:none;border-color:var(--green-300)}
+  th.select-col,td.select-col{width:34px;text-align:center}
+  td.select-col input,th.select-col input{width:16px;height:16px;cursor:pointer}
+  .od-desc{font-size:13px;color:var(--muted);line-height:1.5}
+  .od-note{font-size:11.5px;color:var(--adm-soft);font-style:italic;line-height:1.5;margin-top:6px}
+
   /* ---- Orders: row actions menu (single shared floating menu, positioned via JS so it
      never gets clipped by the table's own scroll container) ---- */
   .row-actions{text-align:center}
@@ -666,34 +689,74 @@
 
       <!-- Products -->
       <section class="page-section" data-page="products">
+        <div class="order-summary-strip" id="productSummaryStrip"></div>
         <div class="panel" id="productsPanel">
           <div class="ph">
-            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>Product Management</h3><div class="sub">Edits here sync live to the storefront</div></div>
-            <div class="search">
+            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 12 3l9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>Products</h3><div class="sub">Manage your catalog, pricing and stock</div></div>
+            <div class="ph-actions">
+              <button class="btn btn-ghost" id="pAddBtn" style="padding:8px 14px;font-size:12.5px;font-weight:700">+ Add Product</button>
+              <button class="btn btn-ghost" id="pImportBtn" style="padding:8px 14px;font-size:12.5px;font-weight:700">Import Products</button>
+              <button class="btn btn-ghost" id="pExport" style="padding:8px 14px;font-size:12.5px;font-weight:700">
+                <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export to Excel
+              </button>
+            </div>
+          </div>
+          <div class="ph" style="border-bottom:none;padding-bottom:0">
+            <div class="search" style="max-width:none;flex:1;margin-left:0">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-              <input id="pSearch" type="search" placeholder="Search products…" style="padding-left:42px">
+              <input id="pSearch" type="search" placeholder="Search by name, product code or category…" style="padding-left:42px">
             </div>
           </div>
           <div class="toolbar2">
             <select class="st-sel" id="pCat"></select>
             <select class="st-sel" id="pStock">
               <option value="">All stock</option>
-              <option value="out">Out of stock only</option>
-              <option value="in">In stock only</option>
+              <option value="in">In stock</option>
+              <option value="low">Low stock</option>
+              <option value="out">Out of stock</option>
             </select>
-            <span class="save-note" id="pCount" style="margin-left:auto"></span>
-            <button class="btn btn-ghost" id="pExport" style="padding:7px 14px;font-size:12.5px;font-weight:700">
-              <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export to Excel
-            </button>
+            <select class="st-sel" id="pAvail">
+              <option value="">All availability</option>
+              <option value="avail">Available</option>
+              <option value="hidden">Hidden</option>
+            </select>
+            <select class="st-sel" id="pOffer">
+              <option value="">All offers</option>
+              <option value="on">On offer</option>
+              <option value="off">No offer</option>
+            </select>
+            <select class="st-sel" id="pUpdated">
+              <option value="">Any time</option>
+              <option value="24h">Updated in last 24h</option>
+              <option value="7d">Updated in last 7 days</option>
+            </select>
+          </div>
+          <div class="filter-row2">
+            <label>Price range ₹<input class="range-input" type="number" min="0" id="pPriceMin" placeholder="Min"><span style="color:var(--adm-soft)">–</span><input class="range-input" type="number" min="0" id="pPriceMax" placeholder="Max"></label>
+            <span class="save-note" id="pCount" style="margin-left:auto;padding:0"></span>
+            <select class="st-sel" id="pPageSize" title="Rows per page">
+              <option value="25">25 / page</option>
+              <option value="50" selected>50 / page</option>
+              <option value="100">100 / page</option>
+            </select>
+          </div>
+          <div class="bulk-bar" id="bulkBar">
+            <b><span id="bulkCount">0</span> selected</b>
+            <button class="btn btn-ghost" id="bulkHide">Hide selected</button>
+            <button class="btn btn-ghost" id="bulkShow">Show selected</button>
+            <button class="btn btn-ghost" id="bulkExport">Export selected</button>
+            <button class="btn btn-ghost" id="bulkClear" style="margin-left:auto">✕ Clear</button>
           </div>
           <div class="tscroll tbl-view"><table>
             <thead><tr>
-              <th class="sortable" data-sort="name">Photo / Product <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
+              <th class="select-col"><input type="checkbox" id="pSelectAll" title="Select all on this page"></th>
+              <th>Image</th>
+              <th class="sortable" data-sort="name">Product <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
               <th>Category</th>
-              <th class="sortable" data-sort="price">Price ₹ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
-              <th>MRP ₹</th><th>Offer</th>
+              <th class="sortable" data-sort="price">Selling Price <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
+              <th>MRP</th><th>Offer</th>
               <th class="sortable" data-sort="stock">Stock <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
-              <th>Status</th></tr></thead>
+              <th>Status</th><th>Last Updated</th><th>Actions</th></tr></thead>
             <tbody id="prodBody"></tbody>
           </table></div>
           <div class="cards-view" id="prodCards"></div>
@@ -853,6 +916,17 @@
   <div class="od-body" id="odBody"></div>
 </aside>
 
+<div class="dropdown-menu order-actions-menu" id="productActionsMenu"></div>
+
+<div class="order-drawer-scrim" id="productDrawerScrim"></div>
+<aside class="order-drawer" id="productDrawer" aria-label="Product details">
+  <div class="od-head">
+    <div><h3 id="pdTitle">Product</h3><div class="sub" id="pdSub"></div></div>
+    <button class="icon-btn" id="pdClose" aria-label="Close">✕</button>
+  </div>
+  <div class="od-body" id="pdBody"></div>
+</aside>
+
 <div class="toast" id="toast"></div>
 <div class="chart-tip" id="chartTip"></div>
 
@@ -929,9 +1003,40 @@ function confirmDialog(title,msg){
     $("#confirmCancel").onclick=()=>cleanup(false);
   });
 }
+// Single-button "here's why this isn't available yet" dialog — reuses the confirm overlay
+// rather than a fake action, for things the current data setup genuinely can't do (see
+// the Add/Import/Delete product buttons below).
+function alertDialog(title,msg){
+  return new Promise(resolve=>{
+    $("#confirmTitle").textContent=title;
+    $("#confirmMsg").textContent=msg;
+    $("#confirmCancel").style.display="none";
+    $("#confirmOk").textContent="Got it";
+    $("#confirmOk").style.background="";
+    $("#confirmOverlay").classList.add("show");
+    const cleanup=()=>{
+      $("#confirmOverlay").classList.remove("show"); $("#confirmOk").onclick=null;
+      $("#confirmCancel").style.display=""; $("#confirmOk").textContent="Yes, continue"; $("#confirmOk").style.background="var(--kumkum)";
+      resolve();
+    };
+    $("#confirmOk").onclick=cleanup;
+  });
+}
 
 /* ============================================================ SHARED product-input wiring
    (used by Products, Inventory, and the Dashboard's Low Stock Alerts list — one save path) */
+// Stamped on every save so "Last Updated" columns/filters reflect real edit history —
+// not tracked before this feature existed, so products never touched simply show "—".
+function stampUpdated(id){ edits[id]=edits[id]||{}; edits[id].updatedAt=Date.now(); }
+function lastUpdatedLabel(p){
+  const ts=edits[p.id]&&edits[p.id].updatedAt;
+  if(!ts) return "—";
+  const days=Math.floor((Date.now()-ts)/86400000);
+  if(days<1) return "Today";
+  if(days===1) return "Yesterday";
+  if(days<7) return `${days}d ago`;
+  return new Date(ts).toLocaleDateString("en-IN",{day:"2-digit",month:"short"});
+}
 function wireEditableInputs(root){
   $$("input[data-id]",root).forEach(inp=>inp.onchange=async()=>{
     const id=inp.dataset.id,f=inp.dataset.f;
@@ -942,35 +1047,42 @@ function wireEditableInputs(root){
       if(!(mrp>0)){ toast("Set an MRP first — there's no price to discount from"); inp.value=""; return; }
       let pct=parseFloat(inp.value); if(isNaN(pct)) pct=0; pct=Math.max(0,Math.min(99,pct));
       const newPrice=Math.round(mrp*(1-pct/100));
-      edits[id]=edits[id]||{}; edits[id].price=newPrice; store.set("admin_edits",edits);
+      edits[id]=edits[id]||{}; edits[id].price=newPrice; stampUpdated(id); store.set("admin_edits",edits);
       $$(`input[data-id="${id}"][data-f="price"]`).forEach(el=>el.value=newPrice);
       $$(`[data-offer-for="${id}"]`).forEach(el=>el.innerHTML=offerInputHTML(p));
-      await pushOverride(id,{price:newPrice});
+      await pushOverride(id,{price:newPrice,updatedAt:edits[id].updatedAt});
+      $$(`[data-updated-for="${id}"]`).forEach(el=>el.textContent=lastUpdatedLabel(p));
       toast(`Offer set — price updated to ${money(newPrice)}`);
       refreshAfterProductEdit();
       return;
     }
 
     const v=parseFloat(inp.value)||0;
-    edits[id]=edits[id]||{}; edits[id][f]=v; store.set("admin_edits",edits);
+    edits[id]=edits[id]||{}; edits[id][f]=v; stampUpdated(id); store.set("admin_edits",edits);
     if(f==="price"||f==="mrp"){ $$(`[data-offer-for="${id}"]`).forEach(el=>el.innerHTML=offerInputHTML(p)); }
-    await pushOverride(id,{[f]:v});
+    $$(`[data-updated-for="${id}"]`).forEach(el=>el.textContent=lastUpdatedLabel(p));
+    await pushOverride(id,{[f]:v,updatedAt:edits[id].updatedAt});
     const label=f==="price"?"Price":f==="mrp"?"MRP":"Stock";
     toast(`${label} updated — live on the storefront now`);
     refreshAfterProductEdit();
   });
 }
+async function setAvailById(id,newAvail,opts){
+  const p=P.find(x=>x.id==id); if(!p) return;
+  edits[id]=edits[id]||{}; edits[id].avail=newAvail; stampUpdated(id); store.set("admin_edits",edits);
+  await pushOverride(id,{avail:newAvail,updatedAt:edits[id].updatedAt});
+  if(!(opts&&opts.silent)) toast(newAvail?"Product is now visible on the storefront":"Product hidden from the storefront");
+}
+async function toggleAvailById(id){
+  const p=P.find(x=>x.id==id); if(!p) return;
+  await setAvailById(id,!avail(p));
+  refreshAfterProductEdit();
+  const active=$('.page-section.active').dataset.page;
+  if(active==="products") products();
+  if(active==="inventory") inventoryPage();
+}
 function wireAvailToggle(root){
-  $$("[data-toggle]",root).forEach(btn=>btn.onclick=async()=>{
-    const id=btn.dataset.toggle,p=P.find(x=>x.id==id); if(!p) return;
-    edits[id]=edits[id]||{};
-    const newAvail=!avail(p); edits[id].avail=newAvail; store.set("admin_edits",edits);
-    await pushOverride(id,{avail:newAvail});
-    toast("Availability changed");
-    refreshAfterProductEdit();
-    if($('.page-section.active').dataset.page==="products") products();
-    if($('.page-section.active').dataset.page==="inventory") inventoryPage();
-  });
+  $$("[data-toggle]",root).forEach(btn=>btn.onclick=()=>toggleAvailById(btn.dataset.toggle));
 }
 function refreshAfterProductEdit(){
   kpis();
@@ -1967,32 +2079,97 @@ function prodCats(){
   const cats=[...new Set(P.map(p=>p.cat))].sort();
   $("#pCat").innerHTML=`<option value="">All categories</option>`+cats.map(c=>`<option>${c}</option>`).join("");
 }
+function stockIndicator(stock,threshold){
+  if(stock<=0) return {color:"var(--adm-red)",label:"Out of stock"};
+  if(stock<=threshold) return {color:"var(--adm-amber)",label:"Low stock"};
+  return {color:"var(--adm-green)",label:"Healthy"};
+}
+function productStatusBadge(p){
+  if(!avail(p)) return `<span class="badge2 b-cat">Hidden</span>`;
+  if(val(p,'stock')<=0) return `<span class="badge2 b-no">Out of Stock</span>`;
+  return `<span class="badge2 b-ok">Available</span>`;
+}
+function priceHintHTML(p){
+  const price=val(p,'price'), mrp=val(p,'mrp'), pct=offerPct(p);
+  if(!(mrp>price)) return "";
+  return `<div class="price-cell" style="margin-top:5px"><span class="pc-mrp">${money(mrp)} MRP</span><span style="font-size:11px;color:var(--kumkum);font-weight:800;margin-left:6px">${pct}% OFF</span></div>`;
+}
+function renderProductSummaryStrip(){
+  const el=$("#productSummaryStrip"); if(!el) return;
+  const threshold=getLowStockThreshold();
+  let available=0,low=0,out=0,hidden=0;
+  P.forEach(p=>{
+    const stock=val(p,'stock'), isAvail=avail(p);
+    if(!isAvail) hidden++; else if(stock<=0) out++; else if(stock<=threshold) low++; else available++;
+  });
+  const items=[
+    ["Total Products",P.length.toLocaleString("en-IN"),"#8993A4"],
+    ["Available",available.toLocaleString("en-IN"),"#0E7A54"],
+    ["Low Stock",low,"#D97706"],
+    ["Out of Stock",out,"#DC2626"],
+    ["Hidden",hidden,"#8993A4"],
+  ];
+  el.innerHTML=items.map(([label,v,hex])=>`
+    <div class="strip-chip"><span class="strip-dot" style="background:${hex}"></span>
+      <div><div class="strip-val">${v}</div><div class="strip-label">${label}</div></div>
+    </div>`).join("");
+}
 function productCardHTML(p){
-  const photo=val(p,'photo');
+  const photo=val(p,'photo'), stock=val(p,'stock'), threshold=getLowStockThreshold();
+  const ind=stockIndicator(stock,threshold);
   return `<div class="pcard">
     <div class="pc-head">
-      <button class="pthumb-btn" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
+      <button class="pthumb-btn pthumb-lg" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
       <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
       <div style="flex:1;min-width:0">
-        <b>${p.name}</b>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}
-        <div style="margin-top:4px"><span class="badge2 b-cat">${p.cat}</span></div>
+        <button data-view-product-drawer="${p.id}" style="text-align:left"><b>${p.name}</b></button>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge2 b-cat">${p.cat}</span>${productStatusBadge(p)}</div>
       </div>
-      <button class="badge2 ${avail(p)?'b-ok':'b-no'}" data-toggle="${p.id}" style="flex-shrink:0">${avail(p)?"● Available":"○ Hidden"}</button>
+      <input type="checkbox" data-select-id="${p.id}" ${selectedIds.has(p.id)?'checked':''} style="width:18px;height:18px;flex-shrink:0">
     </div>
     <div class="pc-fields">
-      <div><label>Price ₹</label><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></div>
+      <div><label>Selling Price ₹</label><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></div>
       <div><label>MRP ₹</label><input class="in" type="number" value="${val(p,'mrp')||''}" data-id="${p.id}" data-f="mrp" placeholder="—"></div>
-      <div><label>Stock</label><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:66px"></div>
+      <div><label>Stock</label><input class="in" type="number" value="${stock}" data-id="${p.id}" data-f="stock" style="width:66px"></div>
       <div><label>Offer</label><div data-offer-for="${p.id}" style="padding-top:2px">${offerInputHTML(p)}</div></div>
     </div>
+    <div class="stock-cell" style="margin-top:8px"><span class="stock-dot" style="background:${ind.color}"></span><span class="stock-meta">${stock} units — ${ind.label}</span></div>
+    <div class="od-note" style="margin-top:4px">Code: ${p.id} · Updated <span data-updated-for="${p.id}">${lastUpdatedLabel(p)}</span></div>
   </div>`;
 }
-let prodPage=1, pSort={key:null,dir:"asc"};
-const PROD_PAGE_SIZE=100;
+let prodPage=1, pSort={key:null,dir:"asc"}, prodPageSize=50, selectedIds=new Set(), currentPageProductIds=[];
+const PROD_PAGE_SIZE=100; // Inventory page's own page size — kept independent of Products' adjustable one
+function resetProductView(){ prodPage=1; selectedIds.clear(); }
 function filteredProducts(){
-  const q=$("#pSearch").value.trim().toLowerCase(), cat=$("#pCat").value, stockF=$("#pStock").value;
-  let list=P.filter(p=>(!cat||p.cat===cat)&&(!q||p.name.toLowerCase().includes(q)||(p.ta&&p.ta.includes($("#pSearch").value.trim())))
-    &&(!stockF||(stockF==="out"?val(p,'stock')<=0:val(p,'stock')>0)));
+  const rawQ=$("#pSearch").value.trim(), q=rawQ.toLowerCase(), cat=$("#pCat").value, stockF=$("#pStock").value;
+  const availF=$("#pAvail").value, offerF=$("#pOffer").value, updF=$("#pUpdated").value;
+  const priceMin=parseFloat($("#pPriceMin").value), priceMax=parseFloat($("#pPriceMax").value);
+  const threshold=getLowStockThreshold();
+  let list=P.filter(p=>{
+    if(cat && p.cat!==cat) return false;
+    if(q && !(p.name.toLowerCase().includes(q) || (p.ta&&p.ta.includes(rawQ)) || String(p.id).includes(q) || p.cat.toLowerCase().includes(q))) return false;
+    const stock=val(p,'stock');
+    if(stockF==="out" && stock>0) return false;
+    if(stockF==="low" && !(stock>0 && stock<=threshold)) return false;
+    if(stockF==="in" && stock<=0) return false;
+    const isAvail=avail(p);
+    if(availF==="avail" && !isAvail) return false;
+    if(availF==="hidden" && isAvail) return false;
+    const pct=offerPct(p);
+    if(offerF==="on" && !(pct>0)) return false;
+    if(offerF==="off" && pct>0) return false;
+    const price=val(p,'price');
+    if(!isNaN(priceMin) && price<priceMin) return false;
+    if(!isNaN(priceMax) && price>priceMax) return false;
+    if(updF){
+      const ts=edits[p.id]&&edits[p.id].updatedAt;
+      if(!ts) return false;
+      const hrs=(Date.now()-ts)/3600000;
+      if(updF==="24h" && hrs>24) return false;
+      if(updF==="7d" && hrs>168) return false;
+    }
+    return true;
+  });
   if(pSort.key){
     list=list.slice().sort((a,b)=>{
       if(pSort.key==="name"){ const av=a.name.toLowerCase(),bv=b.name.toLowerCase(); return pSort.dir==="asc"?av.localeCompare(bv):bv.localeCompare(av); }
@@ -2006,14 +2183,29 @@ $$("#productsPanel th[data-sort]").forEach(th=>th.onclick=()=>{
   if(pSort.key===k) pSort.dir=pSort.dir==="asc"?"desc":"asc"; else{ pSort.key=k; pSort.dir="asc"; }
   updateSortIndicators("#productsPanel",pSort); prodPage=1; products();
 });
+
+function updateBulkBar(){
+  const n=selectedIds.size;
+  $("#bulkBar").classList.toggle("show",n>0);
+  $("#bulkCount").textContent=n;
+}
+function updateSelectAllState(){
+  const allChecked=currentPageProductIds.length>0 && currentPageProductIds.every(id=>selectedIds.has(id));
+  const someChecked=currentPageProductIds.some(id=>selectedIds.has(id));
+  $("#pSelectAll").checked=allChecked;
+  $("#pSelectAll").indeterminate=someChecked && !allChecked;
+}
+
 function products(){
+  renderProductSummaryStrip();
   let list=filteredProducts();
   const matched=list.length;
-  const totalPages=Math.max(1,Math.ceil(matched/PROD_PAGE_SIZE));
+  const totalPages=Math.max(1,Math.ceil(matched/prodPageSize));
   if(prodPage>totalPages) prodPage=totalPages;
   if(prodPage<1) prodPage=1;
-  const startIdx=(prodPage-1)*PROD_PAGE_SIZE;
-  list=list.slice(startIdx,startIdx+PROD_PAGE_SIZE);
+  const startIdx=(prodPage-1)*prodPageSize;
+  list=list.slice(startIdx,startIdx+prodPageSize);
+  currentPageProductIds=list.map(p=>p.id);
   const rangeEnd=startIdx+list.length;
   $("#pCount").textContent=matched
     ? `Showing ${matched?startIdx+1:0}–${rangeEnd} of ${matched}${matched<P.length?` matching (${P.length} total)`:" products"}`
@@ -2022,24 +2214,33 @@ function products(){
   $("#pPrevBtn").disabled=prodPage<=1;
   $("#pNextBtn").disabled=prodPage>=totalPages;
   $("#pPagination").style.display=totalPages>1?"flex":"none";
+  const threshold=getLowStockThreshold();
   $("#prodBody").innerHTML=list.map(p=>{
-    const photo=val(p,'photo');
+    const photo=val(p,'photo'), stock=val(p,'stock');
+    const ind=stockIndicator(stock,threshold);
     return `<tr>
-      <td><div style="display:flex;align-items:center;gap:10px">
-        <button class="pthumb-btn" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
-        <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
-        <div><b style="font-weight:600">${p.name}</b>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}</div></div></td>
+      <td class="select-col"><input type="checkbox" data-select-id="${p.id}" ${selectedIds.has(p.id)?'checked':''}></td>
+      <td><button class="pthumb-btn pthumb-lg" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
+        <input type="file" accept="image/*" data-photo="${p.id}" style="display:none"></td>
+      <td><button data-view-product-drawer="${p.id}" style="text-align:left;font-weight:600;color:var(--ink)">${p.name}</button>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}<br><span style="color:var(--adm-soft);font-size:10.5px">Code: ${p.id}</span></td>
       <td><span class="badge2 b-cat">${p.cat}</span></td>
-      <td><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price"></td>
+      <td><input class="in" type="number" value="${val(p,'price')}" data-id="${p.id}" data-f="price">${priceHintHTML(p)}</td>
       <td><input class="in" type="number" value="${val(p,'mrp')||''}" data-id="${p.id}" data-f="mrp" placeholder="—"></td>
       <td data-offer-for="${p.id}">${offerInputHTML(p)}</td>
-      <td><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:66px"></td>
-      <td><button class="badge2 ${avail(p)?'b-ok':'b-no'}" data-toggle="${p.id}">${avail(p)?"● Available":"○ Hidden"}</button></td>
+      <td><div class="stock-cell"><input class="in" type="number" value="${stock}" data-id="${p.id}" data-f="stock" style="width:60px"><span class="stock-dot" style="background:${ind.color}" title="${ind.label}"></span></div><div class="stock-meta">${ind.label}</div></td>
+      <td>${productStatusBadge(p)}</td>
+      <td><span data-updated-for="${p.id}" style="font-size:12px;color:var(--adm-soft);white-space:nowrap">${lastUpdatedLabel(p)}</span></td>
+      <td class="row-actions"><button class="topbar-icon-btn" data-pactions-btn="${p.id}" aria-label="Product actions" style="width:32px;height:32px;border-radius:8px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="12" cy="19" r="1.3"/></svg>
+      </button></td>
     </tr>`;
   }).join("");
   $("#prodCards").innerHTML=list.map(productCardHTML).join("");
+  updateSelectAllState();
+  updateBulkBar();
   wireEditableInputs($("#productsPanel"));
   wireAvailToggle($("#productsPanel"));
+  closeProductActionsMenu();
   $$("[data-photobtn]",$("#productsPanel")).forEach(btn=>btn.onclick=()=>{
     const inp=btn.parentElement.querySelector(`input[type=file][data-photo="${btn.dataset.photobtn}"]`);
     if(inp) inp.click();
@@ -2057,8 +2258,8 @@ function products(){
       if(!res.ok) throw new Error("Cloudinary upload failed: "+res.status);
       const data=await res.json();
       const url=data.secure_url;
-      edits[id]=edits[id]||{}; edits[id].photo=url; store.set("admin_edits",edits);
-      await pushOverride(id, {photo:url});
+      edits[id]=edits[id]||{}; edits[id].photo=url; stampUpdated(id); store.set("admin_edits",edits);
+      await pushOverride(id, {photo:url,updatedAt:edits[id].updatedAt});
       products(); toast("Photo uploaded");
     }catch(e){ console.error("[A.R. Abi] photo upload failed:",e); toast("Upload failed — check your connection"); }
     finally{ btn.classList.remove("uploading"); }
@@ -2079,21 +2280,197 @@ function compressImage(file, maxDim, quality){
     img.src=url;
   });
 }
-$("#pSearch").addEventListener("input",()=>{prodPage=1; products();});
-$("#pCat").addEventListener("change",()=>{prodPage=1; products();});
-$("#pStock").addEventListener("change",()=>{prodPage=1; products();});
+
+/* ---- Filters / pagination wiring ---- */
+["#pCat","#pStock","#pAvail","#pOffer","#pUpdated"].forEach(sel=>$(sel).addEventListener("change",()=>{resetProductView(); products();}));
+["#pPriceMin","#pPriceMax"].forEach(sel=>$(sel).addEventListener("input",()=>{resetProductView(); products();}));
+$("#pSearch").addEventListener("input",()=>{resetProductView(); products();});
+$("#pPageSize").addEventListener("change",()=>{ prodPageSize=+$("#pPageSize").value; resetProductView(); products(); });
 $("#pPrevBtn").addEventListener("click",()=>{prodPage--; products(); $("#productsPanel").scrollIntoView({behavior:"smooth",block:"start"});});
 $("#pNextBtn").addEventListener("click",()=>{prodPage++; products(); $("#productsPanel").scrollIntoView({behavior:"smooth",block:"start"});});
-function exportProducts(){
-  const list=filteredProducts();
+
+/* ---- Bulk selection ---- */
+$("#pSelectAll").addEventListener("change",()=>{
+  const checked=$("#pSelectAll").checked;
+  currentPageProductIds.forEach(id=>checked?selectedIds.add(id):selectedIds.delete(id));
+  $$("#prodBody [data-select-id]").forEach(cb=>cb.checked=checked);
+  updateBulkBar();
+});
+$("#productsPanel").addEventListener("change",e=>{
+  const cb=e.target.closest("[data-select-id]");
+  if(cb){ const id=+cb.dataset.selectId; if(cb.checked) selectedIds.add(id); else selectedIds.delete(id); updateBulkBar(); updateSelectAllState(); }
+});
+$("#productsPanel").addEventListener("click",e=>{
+  const kebab=e.target.closest("[data-pactions-btn]");
+  if(kebab){
+    e.stopPropagation();
+    const id=kebab.dataset.pactionsBtn;
+    const menu=$("#productActionsMenu");
+    if(menu.classList.contains("show") && menu.dataset.openFor===id){ closeProductActionsMenu(); return; }
+    openProductActionsMenu(kebab,id); return;
+  }
+  const viewBtn=e.target.closest("[data-view-product-drawer]");
+  if(viewBtn){ openProductDrawer(viewBtn.dataset.viewProductDrawer); }
+});
+$("#bulkHide").addEventListener("click",async()=>{
+  const ids=[...selectedIds]; if(!ids.length) return;
+  for(const id of ids) await setAvailById(id,false,{silent:true});
+  toast(`${ids.length} product(s) hidden`); refreshAfterProductEdit(); products();
+});
+$("#bulkShow").addEventListener("click",async()=>{
+  const ids=[...selectedIds]; if(!ids.length) return;
+  for(const id of ids) await setAvailById(id,true,{silent:true});
+  toast(`${ids.length} product(s) made available`); refreshAfterProductEdit(); products();
+});
+$("#bulkExport").addEventListener("click",()=>{
+  const list=[...selectedIds].map(id=>P.find(p=>p.id===id)).filter(Boolean);
+  exportProducts(list,"selected");
+});
+$("#bulkClear").addEventListener("click",()=>{ selectedIds.clear(); products(); });
+
+/* ---- Row actions: single shared floating menu, same pattern as Orders ---- */
+function closeProductActionsMenu(){ $("#productActionsMenu").classList.remove("show"); }
+function openProductActionsMenu(btn,id){
+  const p=P.find(x=>x.id==id); if(!p) return;
+  const isAvail=avail(p);
+  const menu=$("#productActionsMenu");
+  menu.innerHTML=`
+    <button class="profile-menu-item" data-pmenu-view="${id}">${window.icon('receipt')}View details</button>
+    <button class="profile-menu-item" data-pmenu-stock="${id}">${window.icon('warehouse')}Update stock</button>
+    <button class="profile-menu-item" data-pmenu-price="${id}">${window.icon('coins')}Change price</button>
+    <button class="profile-menu-item" data-pmenu-avail="${id}">${window.icon(isAvail?'close':'check')}${isAvail?'Hide product':'Show product'}</button>
+    <button class="profile-menu-item danger" data-pmenu-delete="${id}">${window.icon('trash')}Delete</button>
+  `;
+  const r=btn.getBoundingClientRect();
+  let left=r.right-230; if(left<8) left=8;
+  const top=Math.min(r.bottom+8, window.innerHeight-260);
+  menu.style.left=left+"px"; menu.style.top=Math.max(8,top)+"px";
+  menu.classList.add("show");
+  menu.dataset.openFor=id;
+}
+function focusProductField(id,field){
+  const all=$$(`input[data-id="${id}"][data-f="${field}"]`);
+  const visible=all.find(el=>el.offsetParent!==null)||all[0];
+  if(visible){ visible.scrollIntoView({behavior:"smooth",block:"center"}); visible.focus(); visible.select(); }
+  else toast("Search for that product first, then edit it directly in the row");
+}
+$("#productActionsMenu").addEventListener("click",e=>{
+  const view=e.target.closest("[data-pmenu-view]");
+  if(view){ closeProductActionsMenu(); openProductDrawer(view.dataset.pmenuView); return; }
+  const stockBtn=e.target.closest("[data-pmenu-stock]");
+  if(stockBtn){ closeProductActionsMenu(); focusProductField(stockBtn.dataset.pmenuStock,"stock"); return; }
+  const priceBtn=e.target.closest("[data-pmenu-price]");
+  if(priceBtn){ closeProductActionsMenu(); focusProductField(priceBtn.dataset.pmenuPrice,"price"); return; }
+  const availBtn=e.target.closest("[data-pmenu-avail]");
+  if(availBtn){ closeProductActionsMenu(); toggleAvailById(availBtn.dataset.pmenuAvail); return; }
+  const delBtn=e.target.closest("[data-pmenu-delete]");
+  if(delBtn){ closeProductActionsMenu(); alertDialog("Deleting isn't available yet","Your product catalog comes from a fixed file with 1,823 products, not a live database, so products can't be permanently removed from here. Use \"Hide\" instead — it takes the product off the storefront immediately and you can bring it back any time."); }
+});
+document.addEventListener("click",e=>{
+  if(!e.target.closest("#productActionsMenu, [data-pactions-btn]")) closeProductActionsMenu();
+});
+
+/* ---- Product details drawer ---- */
+function openProductDrawer(id){
+  const p=P.find(x=>x.id==id); if(!p) return;
+  const photo=val(p,'photo'), stock=val(p,'stock'), threshold=getLowStockThreshold();
+  const ind=stockIndicator(stock,threshold);
+  $("#pdTitle").textContent=p.name;
+  $("#pdSub").textContent=`Code: ${p.id} · ${p.cat}`;
+  $("#pdBody").innerHTML=`
+    <div class="od-section" style="text-align:center">
+      <div style="width:120px;height:120px;margin:0 auto 12px;border-radius:14px;overflow:hidden;background:var(--adm-bg);display:flex;align-items:center;justify-content:center">
+        ${photo?`<img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}
+      </div>
+      <button class="btn btn-ghost" data-photobtn="${p.id}" style="padding:7px 14px;font-size:12px">Change photo</button>
+      <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
+    </div>
+    <div class="od-section">
+      <h4>Product</h4>
+      <div class="od-row"><span>Name</span><span>${p.name}</span></div>
+      ${p.ta?`<div class="od-row"><span>Tamil name</span><span>${p.ta}</span></div>`:""}
+      <div class="od-row"><span>Category</span><span>${p.cat}</span></div>
+      <div class="od-row"><span>Product code</span><span>${p.id}</span></div>
+      <div class="od-row"><span>Unit</span><span>${p.unit||"—"}${p.pack?` (${p.pack})`:""}</span></div>
+      <div class="od-row"><span>Availability</span><span>${productStatusBadge(p)}</span></div>
+    </div>
+    <div class="od-section">
+      <h4>Pricing</h4>
+      <div class="od-row"><span>MRP</span><span>${val(p,'mrp')?money(val(p,'mrp')):"—"}</span></div>
+      <div class="od-row"><span>Selling price</span><span>${money(val(p,'price'))}</span></div>
+      <div class="od-row"><span>Discount</span><span>${offerPct(p)>0?offerPct(p)+"% OFF":"No offer"}</span></div>
+    </div>
+    <div class="od-section">
+      <h4>Stock</h4>
+      <div class="od-row"><span>Current stock</span><span><span class="stock-dot" style="display:inline-block;background:${ind.color};margin-right:6px"></span>${stock} units — ${ind.label}</span></div>
+      <div class="od-row"><span>Low-stock threshold</span><span>${threshold} units</span></div>
+      <div class="od-note">Detailed stock history (a log of every change over time) isn't tracked yet — this shows the current level only. That would need a small backend addition; happy to add it if you want it.</div>
+    </div>
+    <div class="od-section">
+      <h4>Activity</h4>
+      <div class="od-row"><span>Last updated</span><span data-updated-for="${p.id}">${lastUpdatedLabel(p)}</span></div>
+    </div>
+    <div class="od-section">
+      <h4>Quick actions</h4>
+      <div class="od-contact">
+        <button data-pmenu-avail="${p.id}">${avail(p)?"Hide product":"Show product"}</button>
+        <button data-pmenu-delete="${p.id}">Delete</button>
+      </div>
+    </div>
+  `;
+  $("#productDrawer").classList.add("show");
+  $("#productDrawerScrim").classList.add("show");
+}
+function closeProductDrawer(){ $("#productDrawer").classList.remove("show"); $("#productDrawerScrim").classList.remove("show"); }
+$("#pdClose").addEventListener("click",closeProductDrawer);
+$("#productDrawerScrim").addEventListener("click",closeProductDrawer);
+$("#pdBody").addEventListener("click",e=>{
+  const photobtn=e.target.closest("[data-photobtn]");
+  if(photobtn){ const inp=photobtn.parentElement.querySelector(`input[type=file][data-photo="${photobtn.dataset.photobtn}"]`); if(inp) inp.click(); return; }
+  const availBtn=e.target.closest("[data-pmenu-avail]");
+  if(availBtn){ toggleAvailById(availBtn.dataset.pmenuAvail).then(()=>openProductDrawer(availBtn.dataset.pmenuAvail)); return; }
+  const delBtn=e.target.closest("[data-pmenu-delete]");
+  if(delBtn){ alertDialog("Deleting isn't available yet","Your product catalog comes from a fixed file with 1,823 products, not a live database, so products can't be permanently removed from here. Use \"Hide\" instead — it takes the product off the storefront immediately and you can bring it back any time."); }
+});
+$("#pdBody").addEventListener("change",async e=>{
+  const inp=e.target.closest('input[type=file][data-photo]');
+  if(!inp) return;
+  const id=inp.dataset.photo, file=inp.files[0]; if(!file) return;
+  if(CLOUDINARY_CONFIG.cloudName.startsWith("PASTE_")){ toast("Cloudinary not configured yet — see admin.html"); return; }
+  try{
+    const blob=await compressImage(file, 900, 0.82);
+    const fd=new FormData();
+    fd.append("file", blob, `${id}.jpg`);
+    fd.append("upload_preset", CLOUDINARY_CONFIG.uploadPreset);
+    const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`, {method:"POST", body:fd});
+    if(!res.ok) throw new Error("Cloudinary upload failed: "+res.status);
+    const data=await res.json();
+    edits[id]=edits[id]||{}; edits[id].photo=data.secure_url; stampUpdated(id); store.set("admin_edits",edits);
+    await pushOverride(id, {photo:data.secure_url,updatedAt:edits[id].updatedAt});
+    toast("Photo uploaded"); openProductDrawer(id);
+    if($(".page-section.active").dataset.page==="products") products();
+  }catch(e){ console.error("[A.R. Abi] photo upload failed:",e); toast("Upload failed — check your connection"); }
+});
+
+/* ---- Add / Import: honest about what the current setup can and can't do ---- */
+$("#pAddBtn").addEventListener("click",()=>{
+  alertDialog("Adding products isn't available yet","Your product catalog comes from a fixed file with 1,823 products, not a live database — so brand-new products can't be added from this screen yet. That would need a proper product database added to the site. Let me know if you'd like that built.");
+});
+$("#pImportBtn").addEventListener("click",()=>{
+  alertDialog("Bulk import isn't available yet","This needs the same live product database mentioned above, which isn't set up yet. Tell me if you'd like this built and I'll plan it out.");
+});
+
+function exportProducts(listOverride,tagOverride){
+  const list=listOverride||filteredProducts();
   if(!list.length){ toast("No products to export with the current filter"); return; }
-  const headers=["Product Name","Tamil Name","Category","Unit","Price","MRP","Offer %","Stock","Status"];
-  const rows=list.map(p=>[p.name,p.ta||"",p.cat,p.unit,val(p,'price'),val(p,'mrp')||"",offerPct(p)||"",val(p,'stock'),avail(p)?"Available":"Hidden"]);
-  const cat=$("#pCat").value, stockF=$("#pStock").value;
-  const tag=cat?cat.replace(/\s+/g,"-"):stockF?(stockF==="out"?"out-of-stock":"in-stock"):"all";
+  const headers=["Product Code","Product Name","Tamil Name","Category","Unit","Selling Price","MRP","Offer %","Stock","Status","Last Updated"];
+  const rows=list.map(p=>[p.id,p.name,p.ta||"",p.cat,p.unit,val(p,'price'),val(p,'mrp')||"",offerPct(p)||"",val(p,'stock'),
+    !avail(p)?"Hidden":(val(p,'stock')<=0?"Out of Stock":"Available"),lastUpdatedLabel(p)]);
+  let tag=tagOverride;
+  if(!tag){ const cat=$("#pCat").value, stockF=$("#pStock").value; tag=cat?cat.replace(/\s+/g,"-"):stockF?stockF:"all"; }
   downloadCSV(`products_${tag}_${isoDate(new Date())}.csv`,headers,rows);
 }
-$("#pExport").addEventListener("click",exportProducts);
+$("#pExport").addEventListener("click",()=>exportProducts());
 
 /* ============================================================ Inventory */
 let invPage=1, invFilterState="all";
