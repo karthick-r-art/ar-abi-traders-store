@@ -49,6 +49,16 @@ const ICONS = {
   bulb:       s(`<path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9v.2h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3z"/>`),
   praying:    s(`<path d="M12 3v18"/><path d="M8 6c0 3-1.5 4-3.5 4M16 6c0 3 1.5 4 3.5 4"/><path d="M6 10c1 4 3 6 6 7 3-1 5-3 6-7"/>`),
   trash:      s(`<path d="M4 7h16"/><path d="M9 7V4.8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V7"/><path d="M6.5 7l1 12.5a2 2 0 0 0 2 1.9h5a2 2 0 0 0 2-1.9L17.5 7"/><path d="M10 11v6M14 11v6"/>`),
+  bell:       s(`<path d="M6 8a6 6 0 0 1 12 0c0 5 2 7 2 7H4s2-2 2-7"/><path d="M9.5 19a2.5 2.5 0 0 0 5 0"/>`),
+  chevDown:   s(`<path d="m6 9 6 6 6-6"/>`),
+  sortIc:     s(`<path d="M8 9l4-4 4 4"/><path d="M16 15l-4 4-4-4"/>`),
+  trendUp:    s(`<path d="M3 17l6-6 4 4 8-10"/><path d="M15 5h6v6"/>`),
+  trendDown:  s(`<path d="M3 7l6 6 4-4 8 10"/><path d="M15 19h6v-6"/>`),
+  filter:     s(`<path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/>`),
+  gauge:      s(`<path d="M4.5 19a8.5 8.5 0 1 1 15 0"/><path d="M12 12 15 8"/><path d="M12 12v0"/>`),
+  usersGroup: s(`<circle cx="9" cy="8" r="3"/><path d="M3 19c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M16 8.5a2.5 2.5 0 1 1 1-4.8"/><path d="M15 13.2c2.5.4 4 2.3 4 5.8"/>`),
+  chartBar:   s(`<path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/>`),
+  gear:       s(`<circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.5-2-3.4-2.3.9a7.6 7.6 0 0 0-1.8-1l-.3-2.5H9l-.3 2.5a7.6 7.6 0 0 0-1.8 1l-2.3-.9-2 3.4L4.6 11a7.6 7.6 0 0 0 0 2l-2 1.5 2 3.4 2.3-.9c.5.4 1.1.7 1.8 1l.3 2.5h4.8l.3-2.5c.7-.3 1.3-.6 1.8-1l2.3.9 2-3.4z"/>`),
 };
 
 /* one icon per grocery category, used instead of CATMETA.em everywhere */
