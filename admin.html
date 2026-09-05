@@ -330,6 +330,64 @@
   .confirm-card p{font-size:13px;color:var(--muted);line-height:1.5}
   .confirm-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
 
+  /* ---- Orders: summary strip ---- */
+  .order-summary-strip{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+  .strip-chip{flex:1 1 150px;display:flex;align-items:center;gap:10px;background:var(--adm-card);border:1px solid var(--adm-border);
+    border-radius:12px;padding:12px 14px}
+  .strip-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .strip-val{font-size:17px;font-weight:800;color:var(--ink);line-height:1.2}
+  .strip-label{font-size:11px;color:var(--adm-soft);font-weight:700;margin-top:1px}
+
+  /* ---- Orders: row actions menu (single shared floating menu, positioned via JS so it
+     never gets clipped by the table's own scroll container) ---- */
+  .row-actions{text-align:center}
+  .order-actions-menu{position:fixed;right:auto;top:auto;width:230px}
+  .order-actions-menu .dd-cap{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--adm-soft);padding:10px 16px 4px}
+  .order-actions-menu .profile-menu-item svg{width:15px;height:15px}
+
+  /* ---- Order details drawer ---- */
+  .order-drawer-scrim{position:fixed;inset:0;background:rgba(15,25,35,.5);z-index:95;opacity:0;visibility:hidden;transition:opacity .2s}
+  .order-drawer-scrim.show{opacity:1;visibility:visible}
+  .order-drawer{position:fixed;top:0;right:0;height:100%;width:min(460px,94vw);background:var(--adm-card);z-index:96;
+    display:flex;flex-direction:column;box-shadow:-16px 0 44px rgba(0,0,0,.18);transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1)}
+  .order-drawer.show{transform:none}
+  .od-head{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 22px;border-bottom:1px solid var(--adm-border-soft);flex-shrink:0}
+  .od-head h3{font-size:17px;font-weight:800;color:var(--ink)}
+  .od-head .sub{font-size:12px;color:var(--adm-soft);margin-top:2px}
+  .od-body{flex:1;overflow-y:auto;padding:20px 22px 32px}
+  .od-section{margin-bottom:22px}
+  .od-section h4{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--adm-soft);margin-bottom:10px}
+  .od-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:5px 0}
+  .od-row span:first-child{color:var(--muted)}
+  .od-row span:last-child{color:var(--ink);font-weight:600;text-align:right}
+  .od-contact{display:flex;gap:8px;margin-top:10px}
+  .od-contact a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:9px;
+    border:1.5px solid var(--adm-border);font-size:12.5px;font-weight:700;color:var(--ink)}
+  .od-contact a svg{width:15px;height:15px}
+  .od-contact a:hover{background:var(--adm-bg)}
+  .od-item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;font-size:12.5px;border-bottom:1px solid var(--adm-border-soft)}
+  .od-item .odi-name{font-weight:600;color:var(--ink)}
+  .od-item .odi-meta{color:var(--adm-soft);font-size:11.5px;margin-top:1px}
+  .od-item .odi-amt{text-align:right;color:var(--ink);font-weight:700;white-space:nowrap}
+  .od-totals{margin-top:6px}
+  .od-totals .od-row.final{border-top:1px solid var(--adm-border);margin-top:6px;padding-top:10px}
+  .od-totals .od-row.final span{font-size:15px;font-weight:800;color:var(--ink)}
+  .order-timeline{display:flex}
+  .ot-step{flex:1;position:relative;text-align:center;padding-top:2px}
+  .ot-step:not(:last-child)::after{content:"";position:absolute;top:16px;left:50%;width:100%;height:2px;background:var(--adm-border);z-index:0}
+  .ot-step.done:not(:last-child)::after{background:var(--adm-green)}
+  .ot-dot{width:30px;height:30px;border-radius:50%;background:var(--adm-bg);border:2px solid var(--adm-border);display:flex;
+    align-items:center;justify-content:center;margin:0 auto;position:relative;z-index:1;font-size:12px;font-weight:800;color:var(--adm-soft)}
+  .ot-dot svg{width:14px;height:14px}
+  .ot-step.done .ot-dot{background:var(--adm-green);border-color:var(--adm-green);color:#fff}
+  .ot-step.current .ot-dot{border-color:var(--adm-green);color:var(--adm-green);background:var(--adm-card)}
+  .ot-label{font-size:10px;margin-top:7px;color:var(--adm-soft);font-weight:700;line-height:1.3}
+  .ot-step.done .ot-label,.ot-step.current .ot-label{color:var(--ink)}
+  .ot-cancelled-banner{display:flex;align-items:center;gap:9px;background:color-mix(in srgb,var(--adm-red) 10%,transparent);
+    color:var(--adm-red);border:1px solid color-mix(in srgb,var(--adm-red) 30%,transparent);border-radius:10px;padding:12px 14px;font-size:13px;font-weight:700}
+  .ot-cancelled-banner svg{width:18px;height:18px;flex-shrink:0}
+  @media(max-width:600px){ .order-drawer{width:100vw} }
+
   .field{margin-bottom:14px}
   .field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:6px}
 
@@ -565,19 +623,29 @@
 
       <!-- Orders -->
       <section class="page-section" data-page="orders">
-        <div class="panel">
+        <div class="order-summary-strip" id="orderSummaryStrip">
+          <div class="chart-empty" style="min-height:60px;flex:1"><div class="spinner"></div></div>
+        </div>
+        <div class="panel" id="ordersPanel">
           <div class="ph">
-            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2.5-1.6L13 21l-2.5-1.6L8 21l-2-1.6z"/><path d="M9 8h6M9 12h6"/></svg>Orders</h3><div class="sub">Orders placed on the storefront appear here in real time</div></div>
+            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2.5-1.6L13 21l-2.5-1.6L8 21l-2-1.6z"/><path d="M9 8h6M9 12h6"/></svg>Orders</h3><div class="sub">Track, manage and fulfill customer orders</div></div>
             <div class="search">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-              <input id="oSearch" type="search" placeholder="Search order #, name, mobile…" style="padding-left:42px">
+              <input id="oSearch" type="search" placeholder="Search order #, customer, mobile…" style="padding-left:42px">
             </div>
           </div>
           <div class="toolbar2">
             <select class="st-sel" id="oStatus"></select>
-            <input type="date" class="st-sel" id="oDate" title="Show orders from this date">
+            <select class="st-sel" id="oPay">
+              <option value="">All payments</option>
+              <option value="cod">Cash on Delivery</option>
+              <option value="upi">UPI</option>
+            </select>
+            <input type="date" class="st-sel" id="oDateFrom" title="From date">
+            <span style="color:var(--adm-soft);font-size:12px">to</span>
+            <input type="date" class="st-sel" id="oDateTo" title="To date">
             <button class="btn btn-ghost" id="oToday" style="padding:7px 14px;font-size:12.5px;font-weight:700">Today</button>
-            <button class="btn btn-ghost" id="oClearDate" style="padding:7px 14px;font-size:12.5px;font-weight:700;display:none">✕ Clear date</button>
+            <button class="btn btn-ghost" id="oClearDate" style="padding:7px 14px;font-size:12.5px;font-weight:700;display:none">✕ Clear dates</button>
             <span class="save-note" id="oCount" style="margin-left:auto"></span>
             <button class="btn btn-ghost" id="oExport" style="padding:7px 14px;font-size:12.5px;font-weight:700">
               <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export to Excel
@@ -585,10 +653,10 @@
           </div>
           <div class="tscroll tbl-view"><table id="ordersTable">
             <thead><tr>
-              <th class="sortable" data-sort="at">Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
-              <th>Customer</th><th>Items</th>
-              <th class="sortable" data-sort="total">Total <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
-              <th>Payment</th><th>Status</th></tr></thead>
+              <th class="sortable" data-sort="at">Order ID <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
+              <th>Date &amp; Time</th><th>Customer</th><th>Phone</th><th>Items</th>
+              <th class="sortable" data-sort="total">Order Value <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></th>
+              <th>Payment</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody id="ordersBody"></tbody>
           </table></div>
           <div class="cards-view" id="ordersCards"></div>
@@ -774,6 +842,17 @@
   </div>
 </div>
 
+<div class="dropdown-menu order-actions-menu" id="orderActionsMenu"></div>
+
+<div class="order-drawer-scrim" id="orderDrawerScrim"></div>
+<aside class="order-drawer" id="orderDrawer" aria-label="Order details">
+  <div class="od-head">
+    <div><h3 id="odTitle">Order</h3><div class="sub" id="odSub"></div></div>
+    <button class="icon-btn" id="odClose" aria-label="Close">✕</button>
+  </div>
+  <div class="od-body" id="odBody"></div>
+</aside>
+
 <div class="toast" id="toast"></div>
 <div class="chart-tip" id="chartTip"></div>
 
@@ -938,12 +1017,13 @@ $("#backBtn").onclick=()=>showPage("dash");
 $("#viewAllOrdersBtn").onclick=()=>showPage("orders");
 $$("[data-logout]").forEach(b=>b.addEventListener("click",()=>{ if(window.ARFire&&window.ARFire.auth) window.ARFire.signOut(window.ARFire.auth); }));
 
+function resetOrderFilters(){ $("#oStatus").value=""; $("#oPay").value=""; $("#oDateFrom").value=""; $("#oDateTo").value=""; $("#oSearch").value=""; }
 function routeKpi(target){
   if(target==="products"){ showPage("products"); }
   else if(target==="products-oos"){ showPage("products"); $("#pSearch").value=""; $("#pCat").value=""; $("#pStock").value="out"; prodPage=1; products(); }
-  else if(target==="orders"){ showPage("orders"); $("#oStatus").value=""; $("#oDate").value=""; $("#oSearch").value=""; orders(); }
-  else if(target==="orders-today"){ showPage("orders"); $("#oStatus").value=""; $("#oDate").value=isoDate(new Date()); $("#oSearch").value=""; orders(); }
-  else if(target==="orders-pending"){ showPage("orders"); $("#oStatus").value="received"; $("#oDate").value=""; $("#oSearch").value=""; orders(); }
+  else if(target==="orders"){ showPage("orders"); resetOrderFilters(); orders(); }
+  else if(target==="orders-today"){ showPage("orders"); resetOrderFilters(); const t=isoDate(new Date()); $("#oDateFrom").value=t; $("#oDateTo").value=t; orders(); }
+  else if(target==="orders-pending"){ showPage("orders"); resetOrderFilters(); $("#oStatus").value="received"; orders(); }
 }
 
 /* ============================================================ TOPBAR: dropdowns + global search */
@@ -990,7 +1070,7 @@ $("#globalSearch").addEventListener("focus",renderGlobalSearch);
 $("#gsearchResults").addEventListener("click",e=>{
   const pBtn=e.target.closest("[data-gs-product]"), oBtn=e.target.closest("[data-gs-order]");
   if(pBtn){ const p=P.find(x=>x.id==pBtn.dataset.gsProduct); showPage("products"); $("#pSearch").value=p?p.name:""; prodPage=1; products(); }
-  if(oBtn){ showPage("orders"); $("#oSearch").value=oBtn.dataset.gsOrder; orders(); }
+  if(oBtn){ showPage("orders"); resetOrderFilters(); $("#oSearch").value=oBtn.dataset.gsOrder; orders(); }
   $("#globalSearch").value=""; $("#gsearchResults").classList.remove("show");
 });
 
@@ -1102,7 +1182,7 @@ function renderNotifBell(){
       <div class="notif-ic">${window.icon('receipt')}</div>
       <div class="notif-body"><b>New order #${n.num}</b><span>${n.name} · ${money(n.total)}</span><small>${timeAgo(n.at)}</small></div>
     </button>`).join(""):`<div class="notif-empty">No notifications yet</div>`;
-  $$("[data-notif-order]").forEach(b=>b.onclick=()=>{ showPage("orders"); $("#oSearch").value=b.dataset.notifOrder; orders(); closeDropdowns(); });
+  $$("[data-notif-order]").forEach(b=>b.onclick=()=>{ showPage("orders"); resetOrderFilters(); $("#oSearch").value=b.dataset.notifOrder; orders(); closeDropdowns(); });
 }
 renderNotifBell();
 
@@ -1308,28 +1388,49 @@ function kpis(){
 /* ============================================================ Orders */
 const STATUSES=["received","confirmed","preparing","out","delivered","cancelled"];
 const SLABEL={received:"Order received",confirmed:"Confirmed",preparing:"Preparing",out:"Out for delivery",delivered:"Delivered",cancelled:"Cancelled"};
-const SBADGE={received:"b-cat",confirmed:"b-info",preparing:"b-warn",out:"b-purple",delivered:"b-ok",cancelled:"b-no"};
+const SBADGE={received:"b-cat",confirmed:"b-info",preparing:"b-info",out:"b-warn",delivered:"b-ok",cancelled:"b-no"};
 $("#oStatus").innerHTML=`<option value="">All statuses</option>`+STATUSES.map(s=>`<option value="${s}">${SLABEL[s]}</option>`).join("");
+function waLink(o){
+  if(!o.mobile) return null;
+  const digits=o.mobile.replace(/\D/g,"");
+  if(!digits) return null;
+  const msg=`Hi ${o.name}, this is A.R. Abi Traders regarding your order #${o.num}.`;
+  return `https://wa.me/91${digits}?text=${encodeURIComponent(msg)}`;
+}
 function orderCardHTML(o){
   const st=o.status||"received";
+  const wa=waLink(o);
+  const canCancel=st!=="delivered"&&st!=="cancelled";
   return `<div class="ocard">
     <div class="oc-top">
       <div><div class="oc-num">#${o.num}</div><div class="oc-date">${new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</div></div>
-      <span class="badge2 b-cat">${o.pay==="upi"?"UPI":"COD"}</span>
+      <span class="badge2 ${SBADGE[st]}">${SLABEL[st]}</span>
     </div>
-    <div class="oc-row"><span>Customer</span><span>${o.name} · ${o.mobile}</span></div>
+    <div class="oc-row"><span>Customer</span><span>${o.name}</span></div>
+    <div class="oc-row"><span>Phone</span><span>${o.mobile||"—"}</span></div>
     <div class="oc-row"><span>Items</span><span>${o.items.reduce((s,x)=>s+x.q,0)} items</span></div>
-    <div class="oc-row"><span>Total</span><span><b>${money(o.total)}</b></span></div>
-    <select class="st-sel" data-status="${st}" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${st===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select>
+    <div class="oc-row"><span>Payment</span><span>${o.pay==="upi"?"UPI":"COD"}</span></div>
+    <div class="oc-row"><span>Order Value</span><span><b>${money(o.total)}</b></span></div>
+    <select class="st-sel" data-status="${st}" data-onum="${o.num}" data-prev="${st}">${STATUSES.map(s=>`<option value="${s}" ${st===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select>
+    <div class="od-contact" style="margin-top:10px">
+      <button data-view-order-drawer="${o.num}">${window.icon('receipt')}View</button>
+      ${wa?`<a href="${wa}" target="_blank" rel="noopener">${window.icon('chat')}WhatsApp</a>`:""}
+      ${o.mobile?`<a href="tel:${o.mobile}">${window.icon('phone')}Call</a>`:""}
+    </div>
+    ${canCancel?`<button class="btn btn-ghost" data-cancel-order="${o.num}" style="width:100%;justify-content:center;margin-top:8px;color:var(--kumkum)">Cancel order</button>`:""}
   </div>`;
 }
 let oSort={key:"at",dir:"desc"};
 function filteredOrders(){
   const all=currentOrders();
-  const statusF=$("#oStatus").value, dateF=$("#oDate").value, q=($("#oSearch").value||"").trim().toLowerCase();
+  const statusF=$("#oStatus").value, payF=$("#oPay").value;
+  const fromF=$("#oDateFrom").value, toF=$("#oDateTo").value;
+  const q=($("#oSearch").value||"").trim().toLowerCase();
   let os=all;
   if(statusF) os=os.filter(o=>(o.status||"received")===statusF);
-  if(dateF) os=os.filter(o=>isoDate(new Date(o.at))===dateF);
+  if(payF) os=os.filter(o=>(o.pay==="upi"?"upi":"cod")===payF);
+  if(fromF) os=os.filter(o=>isoDate(new Date(o.at))>=fromF);
+  if(toF) os=os.filter(o=>isoDate(new Date(o.at))<=toF);
   if(q) os=os.filter(o=>o.num.toLowerCase().includes(q)||o.name.toLowerCase().includes(q)||(o.mobile&&o.mobile.includes(q)));
   os=os.slice().sort((a,b)=>{
     const av=oSort.key==="total"?a.total:a.at, bv=oSort.key==="total"?b.total:b.at;
@@ -1349,10 +1450,40 @@ $$("#ordersTable th[data-sort]").forEach(th=>th.onclick=()=>{
   updateSortIndicators("#ordersTable",oSort); orders();
 });
 updateSortIndicators("#ordersTable",oSort);
+
+function renderOrderSummaryStrip(){
+  const el=$("#orderSummaryStrip"); if(!el) return;
+  if(!ordersLoaded){ el.innerHTML=`<div class="chart-empty" style="min-height:60px;flex:1"><div class="spinner"></div></div>`; return; }
+  const all=currentOrders();
+  const c={pending:0,processing:0,out:0,delivered:0,cancelled:0}; let totalValue=0;
+  all.forEach(o=>{
+    const s=o.status||"received"; totalValue+=o.total;
+    if(s==="received") c.pending++;
+    else if(s==="confirmed"||s==="preparing") c.processing++;
+    else if(s==="out") c.out++;
+    else if(s==="delivered") c.delivered++;
+    else if(s==="cancelled") c.cancelled++;
+  });
+  const items=[
+    ["Total Orders",all.length.toLocaleString("en-IN"),"#8993A4"],
+    ["Pending",c.pending,"#94A3B8"],
+    ["Processing",c.processing,"#2563EB"],
+    ["Out for Delivery",c.out,"#D97706"],
+    ["Delivered",c.delivered,"#0E7A54"],
+    ["Cancelled",c.cancelled,"#DC2626"],
+    ["Total Order Value",money(Math.round(totalValue)),"#7C3AED"],
+  ];
+  el.innerHTML=items.map(([label,v,hex])=>`
+    <div class="strip-chip"><span class="strip-dot" style="background:${hex}"></span>
+      <div><div class="strip-val">${v}</div><div class="strip-label">${label}</div></div>
+    </div>`).join("");
+}
+
 function orders(){
   const {all,os}=filteredOrders();
-  const dateF=$("#oDate").value;
-  $("#oClearDate").style.display=dateF?"flex":"none";
+  const fromF=$("#oDateFrom").value, toF=$("#oDateTo").value;
+  $("#oClearDate").style.display=(fromF||toF)?"flex":"none";
+  renderOrderSummaryStrip();
 
   if(!ordersLoaded){ $("#noOrders").textContent="Loading orders…"; $("#noOrders").style.display="block"; }
   else if(!all.length){ $("#noOrders").textContent="No orders yet. New orders placed on the storefront will appear here automatically."; $("#noOrders").style.display="block"; }
@@ -1360,43 +1491,196 @@ function orders(){
   else{ $("#noOrders").style.display="none"; }
   $("#oCount").textContent = ordersLoaded && all.length ? `Showing ${os.length} of ${all.length} orders` : "";
 
-  $("#ordersBody").innerHTML=os.map(o=>{ const st=o.status||"received"; return `<tr>
-    <td><b>#${o.num}</b><br><span style="color:var(--muted);font-size:11px">${new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</span></td>
-    <td>${o.name}<br><span style="color:var(--muted);font-size:12px">${o.mobile}</span></td>
+  $("#ordersBody").innerHTML=os.map(o=>{ const st=o.status||"received"; return `<tr data-order-num="${o.num}">
+    <td><b>#${o.num}</b></td>
+    <td style="color:var(--muted);font-size:12px;white-space:nowrap">${new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}</td>
+    <td>${o.name}</td>
+    <td style="color:var(--muted)">${o.mobile||"—"}</td>
     <td>${o.items.reduce((s,x)=>s+x.q,0)} items</td>
     <td><b>${money(o.total)}</b></td>
     <td><span class="badge2 b-cat">${o.pay==="upi"?"UPI":"COD"}</span></td>
-    <td><select class="st-sel" data-status="${st}" data-onum="${o.num}">${STATUSES.map(s=>`<option value="${s}" ${st===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select></td>
+    <td><span class="badge2 ${SBADGE[st]}">${SLABEL[st]}</span></td>
+    <td class="row-actions">
+      <button class="topbar-icon-btn" data-actions-btn="${o.num}" aria-label="Order actions" style="width:32px;height:32px;border-radius:8px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="12" cy="19" r="1.3"/></svg>
+      </button>
+    </td>
   </tr>`; }).join("");
   $("#ordersCards").innerHTML=os.map(orderCardHTML).join("");
-  $$("[data-onum]").forEach(sel=>{
-    sel.dataset.prev=sel.value;
-    sel.onchange=async()=>{
-      const num=sel.dataset.onum; let status=sel.value; const prev=sel.dataset.prev;
-      if(status==="cancelled"){
-        const ok=await confirmDialog("Cancel this order?","This marks the order as cancelled and the customer sees it live right away. Make sure that's really what you want to do.");
-        if(!ok){ sel.value=prev; return; }
-      }
-      sel.dataset.prev=status;
-      if(ordersCache!==null && window.ARFire && window.ARFire.ready){
-        const {db,doc,updateDoc,serverTimestamp}=window.ARFire;
-        try{
-          await updateDoc(doc(db,"orders",num), {status, statusAt:serverTimestamp()});
-          toast("Order status updated — customer sees it live");
-        }catch(e){ toast("Couldn't update — check your connection"); sel.value=prev; sel.dataset.prev=prev; console.warn(e); }
-      }else{
-        const os2=store.get("orders",[]); const i=os2.findIndex(o=>o.num===num);
-        if(i>-1){ os2[i].status=status; store.set("orders",os2); }
-        toast("Order status updated (local demo only)"); kpis(); orders(); charts();
-      }
-    };
-  });
+  // if a menu was open for a row that just got re-rendered, close it rather than leave it stale/mispositioned
+  closeOrderActionsMenu();
 }
+$("#ordersPanel").addEventListener("click", e=>{
+  const kebab=e.target.closest("[data-actions-btn]");
+  if(kebab){
+    e.stopPropagation();
+    const num=kebab.dataset.actionsBtn;
+    const menu=$("#orderActionsMenu");
+    if(menu.classList.contains("show") && menu.dataset.openFor===num){ closeOrderActionsMenu(); return; }
+    openOrderActionsMenu(kebab,num);
+    return;
+  }
+  const viewBtn=e.target.closest("[data-view-order-drawer]");
+  if(viewBtn){ openOrderDrawer(viewBtn.dataset.viewOrderDrawer); return; }
+  const cancelBtn=e.target.closest("[data-cancel-order]");
+  if(cancelBtn){ requestCancelOrder(cancelBtn.dataset.cancelOrder); return; }
+  const tr=e.target.closest("tr[data-order-num]");
+  if(tr && !e.target.closest(".row-actions")){ openOrderDrawer(tr.dataset.orderNum); }
+});
+$("#ordersPanel").addEventListener("change", e=>{
+  const sel=e.target.closest("[data-onum]");
+  if(sel) handleStatusSelectChange(sel);
+});
+
+async function handleStatusSelectChange(sel){
+  const num=sel.dataset.onum; let status=sel.value; const prev=sel.dataset.prev;
+  if(status==="cancelled"){
+    const ok=await confirmDialog("Cancel this order?","This marks the order as cancelled and the customer sees it live right away. Make sure that's really what you want to do.");
+    if(!ok){ sel.value=prev; return; }
+  }
+  sel.dataset.prev=status;
+  if(ordersCache!==null && window.ARFire && window.ARFire.ready){
+    const {db,doc,updateDoc,serverTimestamp}=window.ARFire;
+    try{
+      await updateDoc(doc(db,"orders",num), {status, statusAt:serverTimestamp()});
+      toast("Order status updated — customer sees it live");
+    }catch(e){ toast("Couldn't update — check your connection"); sel.value=prev; sel.dataset.prev=prev; console.warn(e); }
+  }else{
+    const os2=store.get("orders",[]); const i=os2.findIndex(o=>o.num===num);
+    if(i>-1){ os2[i].status=status; store.set("orders",os2); }
+    toast("Order status updated (local demo only)"); kpis(); orders(); charts();
+  }
+  if($("#orderDrawer").classList.contains("show") && $("#orderDrawer").dataset.openNum===num) openOrderDrawer(num);
+}
+async function requestCancelOrder(num){
+  const o=currentOrders().find(x=>x.num===num); if(!o) return;
+  const st=o.status||"received";
+  if(st==="delivered"||st==="cancelled") return;
+  const ok=await confirmDialog("Cancel this order?","This marks the order as cancelled and the customer sees it live right away. Make sure that's really what you want to do.");
+  if(!ok) return;
+  if(ordersCache!==null && window.ARFire && window.ARFire.ready){
+    const {db,doc,updateDoc,serverTimestamp}=window.ARFire;
+    try{ await updateDoc(doc(db,"orders",num), {status:"cancelled", statusAt:serverTimestamp()}); toast("Order cancelled — customer sees it live"); }
+    catch(e){ toast("Couldn't update — check your connection"); console.warn(e); }
+  }else{
+    const os2=store.get("orders",[]); const i=os2.findIndex(x=>x.num===num);
+    if(i>-1){ os2[i].status="cancelled"; store.set("orders",os2); }
+    toast("Order cancelled (local demo only)"); kpis(); orders(); charts();
+  }
+  if($("#orderDrawer").classList.contains("show") && $("#orderDrawer").dataset.openNum===num) openOrderDrawer(num);
+}
+
+/* ---- Per-row actions menu: one shared floating element, positioned via JS from the
+   clicked kebab button's rect so it's never clipped by the table's own scroll container ---- */
+function closeOrderActionsMenu(){ $("#orderActionsMenu").classList.remove("show"); }
+function openOrderActionsMenu(btn,num){
+  const o=currentOrders().find(x=>x.num===num); if(!o) return;
+  const st=o.status||"received";
+  const menu=$("#orderActionsMenu");
+  const canCancel=st!=="delivered"&&st!=="cancelled";
+  const wa=waLink(o);
+  menu.innerHTML=`
+    <button class="profile-menu-item" data-menu-view="${o.num}">${window.icon('receipt')}View order</button>
+    <div class="dd-cap">Update status</div>
+    <div style="padding:0 16px 10px"><select class="st-sel" data-status="${st}" data-onum="${o.num}" data-prev="${st}" style="width:100%">${STATUSES.map(s=>`<option value="${s}" ${st===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select></div>
+    ${wa?`<a class="profile-menu-item" href="${wa}" target="_blank" rel="noopener">${window.icon('chat')}Contact via WhatsApp</a>`:""}
+    ${o.mobile?`<a class="profile-menu-item" href="tel:${o.mobile}">${window.icon('phone')}Call customer</a>`:""}
+    ${canCancel?`<button class="profile-menu-item danger" data-menu-cancel="${o.num}">${window.icon('close')}Cancel order</button>`:""}
+  `;
+  const r=btn.getBoundingClientRect();
+  let left=r.right-230; if(left<8) left=8;
+  const top=Math.min(r.bottom+8, window.innerHeight-320);
+  menu.style.left=left+"px"; menu.style.top=Math.max(8,top)+"px";
+  menu.classList.add("show");
+  menu.dataset.openFor=num;
+}
+$("#orderActionsMenu").addEventListener("click", e=>{
+  const viewBtn=e.target.closest("[data-menu-view]");
+  if(viewBtn){ closeOrderActionsMenu(); openOrderDrawer(viewBtn.dataset.menuView); return; }
+  const cancelBtn=e.target.closest("[data-menu-cancel]");
+  if(cancelBtn){ closeOrderActionsMenu(); requestCancelOrder(cancelBtn.dataset.menuCancel); }
+});
+$("#orderActionsMenu").addEventListener("change", e=>{
+  const sel=e.target.closest("[data-onum]");
+  if(sel) handleStatusSelectChange(sel);
+});
+document.addEventListener("click", e=>{
+  if(!e.target.closest("#orderActionsMenu, [data-actions-btn]")) closeOrderActionsMenu();
+});
+
+/* ---- Order details drawer ---- */
+function renderOrderTimeline(status){
+  if(status==="cancelled"){
+    return `<div class="ot-cancelled-banner">${window.icon('alertOct')}This order was cancelled</div>`;
+  }
+  const forward=["received","confirmed","preparing","out","delivered"];
+  const curIdx=Math.max(0,forward.indexOf(status||"received"));
+  return `<div class="order-timeline">${forward.map((s,i)=>`
+    <div class="ot-step ${i<curIdx?'done':i===curIdx?'current':''}">
+      <div class="ot-dot">${i<curIdx?window.icon('check'):i+1}</div>
+      <div class="ot-label">${SLABEL[s]}</div>
+    </div>`).join("")}</div>`;
+}
+function openOrderDrawer(num){
+  const o=currentOrders().find(x=>x.num===num); if(!o) return;
+  const st=o.status||"received";
+  $("#odTitle").textContent=`Order #${o.num}`;
+  $("#odSub").textContent=new Date(o.at).toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  const wa=waLink(o);
+  $("#odBody").innerHTML=`
+    <div class="od-section">
+      <h4>Fulfillment status</h4>
+      ${renderOrderTimeline(st)}
+    </div>
+    <div class="od-section">
+      <h4>Customer</h4>
+      <div class="od-row"><span>Name</span><span>${o.name}</span></div>
+      <div class="od-row"><span>Mobile</span><span>${o.mobile||"—"}</span></div>
+      <div class="od-row"><span>Delivery address</span><span>${o.address||"—"}</span></div>
+      ${o.notes?`<div class="od-row"><span>Notes</span><span>${o.notes}</span></div>`:""}
+      <div class="od-contact">
+        ${wa?`<a href="${wa}" target="_blank" rel="noopener">${window.icon('chat')}WhatsApp</a>`:""}
+        ${o.mobile?`<a href="tel:${o.mobile}">${window.icon('phone')}Call</a>`:""}
+      </div>
+    </div>
+    <div class="od-section">
+      <h4>Items</h4>
+      ${(o.items||[]).map(i=>`<div class="od-item">
+        <div><div class="odi-name">${i.name}</div><div class="odi-meta">${fmtQtyAdm(i.q)} × ${money(i.price)}</div></div>
+        <div class="odi-amt">${money(i.line)}</div>
+      </div>`).join("")}
+    </div>
+    <div class="od-section od-totals">
+      <div class="od-row"><span>Subtotal</span><span>${money(o.subtotal)}</span></div>
+      <div class="od-row"><span>Delivery charge</span><span>${o.delivery?money(o.delivery):"FREE"}</span></div>
+      <div class="od-row final"><span>Total</span><span>${money(o.total)}</span></div>
+      <div class="od-row"><span>Payment method</span><span>${o.pay==="upi"?"UPI":"Cash on Delivery"}</span></div>
+    </div>
+    <div class="od-section">
+      <h4>Update status</h4>
+      <select class="st-sel" data-status="${st}" data-onum="${o.num}" data-prev="${st}" style="width:100%">${STATUSES.map(s=>`<option value="${s}" ${st===s?"selected":""}>${SLABEL[s]}</option>`).join("")}</select>
+    </div>
+  `;
+  $("#orderDrawer").dataset.openNum=num;
+  $("#orderDrawer").classList.add("show");
+  $("#orderDrawerScrim").classList.add("show");
+}
+function closeOrderDrawer(){ $("#orderDrawer").classList.remove("show"); $("#orderDrawerScrim").classList.remove("show"); }
+$("#odClose").addEventListener("click",closeOrderDrawer);
+$("#orderDrawerScrim").addEventListener("click",closeOrderDrawer);
+$("#odBody").addEventListener("change", e=>{
+  const sel=e.target.closest("[data-onum]");
+  if(sel) handleStatusSelectChange(sel);
+});
+const fmtQtyAdm=q=>Number.isInteger(q)?String(q):q.toFixed(2).replace(/\.?0+$/,"");
+
 $("#oStatus").addEventListener("change",orders);
-$("#oDate").addEventListener("change",orders);
+$("#oPay").addEventListener("change",orders);
+$("#oDateFrom").addEventListener("change",orders);
+$("#oDateTo").addEventListener("change",orders);
 $("#oSearch").addEventListener("input",orders);
-$("#oToday").addEventListener("click",()=>{ $("#oDate").value=isoDate(new Date()); orders(); });
-$("#oClearDate").addEventListener("click",()=>{ $("#oDate").value=""; orders(); });
+$("#oToday").addEventListener("click",()=>{ const t=isoDate(new Date()); $("#oDateFrom").value=t; $("#oDateTo").value=t; orders(); });
+$("#oClearDate").addEventListener("click",()=>{ $("#oDateFrom").value=""; $("#oDateTo").value=""; orders(); });
 function exportOrders(){
   const {os}=filteredOrders();
   if(!os.length){ toast("No orders to export with the current filter"); return; }
@@ -1407,8 +1691,8 @@ function exportOrders(){
     return [o.num,d.toLocaleDateString("en-IN"),d.toLocaleTimeString("en-IN"),o.name,o.mobile,o.address||"",
       o.pay==="upi"?"UPI":"COD",SLABEL[o.status||"received"],items,o.subtotal,o.delivery,o.total];
   });
-  const dateF=$("#oDate").value, statusF=$("#oStatus").value;
-  const tag=dateF?dateF:statusF?statusF:"all";
+  const fromF=$("#oDateFrom").value, toF=$("#oDateTo").value, statusF=$("#oStatus").value, payF=$("#oPay").value;
+  const tag=(fromF||toF)?`${fromF||"start"}_to_${toF||"now"}`:statusF?statusF:payF?payF:"all";
   downloadCSV(`orders_${tag}_${isoDate(new Date())}.csv`,headers,rows);
 }
 $("#oExport").addEventListener("click",exportOrders);
@@ -1664,9 +1948,9 @@ function renderRecentOrders(){
     <td><b>${money(o.total)}</b></td><td><span class="badge2 b-cat">${o.pay==="upi"?"UPI":"COD"}</span></td>
     <td><span class="badge2 ${SBADGE[st]}">${SLABEL[st]}</span></td>
     <td style="color:var(--muted);font-size:12px;white-space:nowrap">${new Date(o.at).toLocaleDateString("en-IN",{day:"2-digit",month:"short"})}</td>
-    <td><button class="btn btn-ghost" data-view-order="${o.num}" style="padding:6px 12px;font-size:11.5px;font-weight:700">View</button></td>
+    <td><button class="btn btn-ghost" data-view-order-drawer="${o.num}" style="padding:6px 12px;font-size:11.5px;font-weight:700">View</button></td>
   </tr>`; }).join("");
-  $$("[data-view-order]",el).forEach(b=>b.onclick=()=>{ showPage("orders"); $("#oSearch").value=b.dataset.viewOrder; orders(); });
+  $$("[data-view-order-drawer]",el).forEach(b=>b.onclick=()=>openOrderDrawer(b.dataset.viewOrderDrawer));
 }
 function charts(){
   renderTrendChart("#trendChart",trendPeriod);
@@ -1951,7 +2235,7 @@ function customersPage(){
     <button class="btn btn-ghost" data-view-cust="${c.mobile||''}" style="width:100%;margin-top:8px;justify-content:center">View orders</button>
   </div>`).join("");
   $$("[data-view-cust]").forEach(btn=>btn.onclick=()=>{
-    showPage("orders"); $("#oSearch").value=btn.dataset.viewCust; oSort={key:"at",dir:"desc"}; orders();
+    showPage("orders"); resetOrderFilters(); $("#oSearch").value=btn.dataset.viewCust; oSort={key:"at",dir:"desc"}; orders();
   });
 }
 $("#custPrevBtn").addEventListener("click",()=>{custPage--; customersPage();});
