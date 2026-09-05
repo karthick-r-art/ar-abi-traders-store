@@ -55,6 +55,12 @@
   .hamburger{display:none;width:38px;height:38px;border-radius:10px;background:var(--adm-card);
     border:1px solid var(--adm-border);align-items:center;justify-content:center;flex-shrink:0;color:var(--ink)}
   .hamburger svg{width:19px;height:19px}
+  .back-btn{display:none;align-items:center;gap:7px;padding:9px 14px;border-radius:10px;
+    background:var(--adm-card);border:1px solid var(--adm-border);color:var(--ink);
+    font-size:13px;font-weight:700;flex-shrink:0;cursor:pointer}
+  .back-btn:hover{background:var(--adm-bg);border-color:color-mix(in srgb,var(--green) 30%,var(--adm-border));color:var(--green)}
+  .back-btn svg{width:16px;height:16px;flex-shrink:0}
+  @media (max-width:640px){ .back-btn span{display:none} .back-btn{padding:9px 11px} }
   .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
   .live-dot{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--muted);
     background:var(--adm-card);border:1px solid var(--adm-border);padding:7px 12px;border-radius:999px}
@@ -319,6 +325,10 @@
       <button class="hamburger" id="hamburger" aria-label="Open menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
+      <button class="back-btn" id="backBtn" aria-label="Back to Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        <span>Dashboard</span>
+      </button>
       <div>
         <h1 id="pageTitle">Dashboard</h1>
         <div class="sub" id="pageSub">Overview of your store, right now</div>
@@ -511,6 +521,7 @@ function showPage(page){
   $$(".side-link[data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===page));
   $("#pageTitle").textContent=PAGE_META[page].title;
   $("#pageSub").textContent=PAGE_META[page].sub;
+  $("#backBtn").style.display=page==="dash"?"none":"flex";
   closeSidebar();
   $(".admin-content").scrollIntoView({behavior:"instant",block:"start"});
 }
@@ -520,6 +531,7 @@ $$(".side-link[data-section]").forEach(b=>b.onclick=()=>showPage(b.dataset.secti
 $("#hamburger").onclick=openSidebar;
 $("#sideClose").onclick=closeSidebar;
 $("#sidebarScrim").onclick=closeSidebar;
+$("#backBtn").onclick=()=>showPage("dash");
 
 function routeKpi(target){
   if(target==="products"){ showPage("products"); }
