@@ -340,7 +340,12 @@
 <!-- Cart drawer -->
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="Shopping cart">
-  <div class="dhead"><h3 id="drawerTitle"></h3><button class="icon-btn" data-close-cart aria-label="Close">✕</button></div>
+  <div class="dhead"><h3 id="drawerTitle"></h3>
+    <div class="dhead-actions">
+      <button class="clear-cart-btn" id="clearCartBtn" data-clear-cart style="display:none"></button>
+      <button class="icon-btn" data-close-cart aria-label="Close">✕</button>
+    </div>
+  </div>
   <div class="ditems" id="ditems"></div>
   <div class="dfoot" id="dfoot"></div>
 </aside>

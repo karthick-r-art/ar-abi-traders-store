@@ -281,6 +281,11 @@ section.block{padding:40px 0}
 .drawer.show{transform:none}
 .drawer .dhead{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
 .drawer .dhead h3{font-size:18px}
+.dhead-actions{display:flex;align-items:center;gap:8px}
+.clear-cart-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;
+  border:1.5px solid var(--line);color:var(--muted);font-size:12.5px;font-weight:700;flex-shrink:0}
+.clear-cart-btn svg{width:15px;height:15px;flex-shrink:0}
+.clear-cart-btn:hover{color:var(--kumkum);border-color:var(--kumkum)}
 .drawer .ditems{flex:1;overflow-y:auto;padding:8px 20px}
 .crow{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line-2)}
 .crow .cim{width:58px;height:58px;border-radius:12px;display:grid;place-items:center;font-size:28px;flex-shrink:0;overflow:hidden;position:relative}
@@ -289,8 +294,9 @@ section.block{padding:40px 0}
 .crow .cmeta b{font-size:13.5px;font-weight:700;display:block;line-height:1.25}
 .crow .cmeta .tam{font-family:var(--tam);font-size:12px;color:var(--muted)}
 .crow .cmeta .p{font-size:13px;color:var(--muted);margin-top:2px}
-.crow .cright{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between}
-.crow .rm{color:var(--muted);font-size:12px;font-weight:600}
+.crow .cright{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:8px}
+.crow .rm{display:flex;align-items:center;gap:4px;color:var(--muted);font-size:12px;font-weight:600}
+.crow .rm svg{width:14px;height:14px;flex-shrink:0}
 .crow .rm:hover{color:var(--kumkum)}
 .mini{display:flex;align-items:center;gap:0;border:1.5px solid var(--line);border-radius:9px;overflow:hidden}
 .mini button{width:28px;height:28px;font-size:15px;font-weight:800;color:var(--green)}

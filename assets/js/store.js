@@ -194,6 +194,13 @@ function incCart(id){ const p=P.find(x=>x.id==id); if(!p) return;
 function decCart(id){ const p=P.find(x=>x.id==id); if(!p) return;
   S.cart[id]=round2((S.cart[id]||0)-qtyStep(p)); if(S.cart[id]<=0) delete S.cart[id]; saveCart(); syncControls(id); renderCart(); }
 function removeCart(id){ delete S.cart[id]; saveCart(); syncControls(id); renderCart(); }
+function clearCart(){
+  const ids=Object.keys(S.cart);
+  if(!ids.length) return;
+  if(!confirm(t('clearCartConfirm'))) return;
+  S.cart={}; saveCart(); renderCart();
+  ids.forEach(id=>syncControls(id));
+}
 /* direct decimal entry — tap the qty number (weighable products only) */
 function setCartQty(id, qty){
   const p=P.find(x=>x.id==id); if(!p) return;
@@ -222,14 +229,15 @@ function renderCart(){
   const arr=cartArr(), box=$("#ditems");
   if(!arr.length){ box.innerHTML=`<div class="empty"><div class="big">${window.icon('basket')}</div><h3>${t('emptyCart')}</h3>
     <p>${t('emptyCartSub')}</p><button class="btn btn-primary" data-close-cart style="margin-top:16px">${t('startShop')}</button></div>`;
-    $("#dfoot").style.display="none"; wireDynamic(); return; }
+    $("#dfoot").style.display="none"; $("#clearCartBtn").style.display="none"; wireDynamic(); return; }
   $("#dfoot").style.display="block";
+  $("#clearCartBtn").style.display="flex";
   box.innerHTML=arr.map(({p,q})=>`<div class="crow">
     <div class="cim" style="background:${catBg(p.cat)}">${productImg(p)}</div>
     <div class="cmeta"><b>${p.name}</b>${p.ta?`<span class="tam">${p.ta}</span>`:""}
       <span class="p">${money(p.price)} × ${fmtQty(q)} = <b style="color:var(--ink)">${money(p.price*q)}</b></span></div>
     <div class="cright">
-      <button class="rm" data-rm="${p.id}">${t('remove')}</button>
+      <button class="rm" data-rm="${p.id}">${window.icon('trash')}<span>${t('remove')}</span></button>
       <div class="mini"><button data-dec="${p.id}">−</button>${qtySpan(p,q)}<button data-inc="${p.id}">+</button></div>
     </div></div>`).join("");
   const s=subtotal(), d=deliveryFee();
@@ -503,6 +511,7 @@ function applyStaticText(){
   set("#moreOffers","viewall"); set("#morePopular","viewall");
   set("#btnLoadMore","loadMore");
   set("#drawerTitle","cart");
+  $("#clearCartBtn").innerHTML=`${window.icon('trash')}<span>${t('clearCart')}</span>`;
   set("#coTitle","checkoutTitle"); set("#coDetails","yourDetails"); set("#coPayTitle","payment");
   $("#lbl-name").textContent=t('name'); $("#lbl-mobile").textContent=t('mobile');
   $("#lbl-address").textContent=t('address'); $("#lbl-notes").textContent=t('instructions');
@@ -553,6 +562,7 @@ function wireDynamic(){
   $$("[data-inc]").forEach(b=>b.onclick=e=>{e.stopPropagation();incCart(b.dataset.inc);});
   $$("[data-dec]").forEach(b=>b.onclick=e=>{e.stopPropagation();decCart(b.dataset.dec);});
   $$("[data-rm]").forEach(b=>b.onclick=e=>{e.stopPropagation();removeCart(b.dataset.rm);});
+  $$("[data-clear-cart]").forEach(b=>b.onclick=clearCart);
   $$("[data-qty-edit]").forEach(el=>el.onclick=e=>{e.stopPropagation();startQtyEdit(el);});
   $$("[data-open]").forEach(b=>b.onclick=()=>openProduct(b.dataset.open));
   $$("[data-checkout]").forEach(b=>b.onclick=()=>{closeCart();renderCheckout();});
