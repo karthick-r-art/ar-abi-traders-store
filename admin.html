@@ -975,7 +975,12 @@ const store={get(k,d){try{const v=localStorage.getItem("arabi_"+k);return v?JSON
 // live edits overlay
 const edits=store.get("admin_edits",{});
 const val=(p,f)=>edits[p.id]&&edits[p.id][f]!=null?edits[p.id][f]:p[f];
-const avail=p=> (edits[p.id]&&edits[p.id].avail!=null)?edits[p.id].avail : (val(p,'stock')>0);
+// avail() means "has the owner explicitly hidden this" — defaults to true (not hidden) when
+// never touched. It used to default to (stock>0), which silently reclassified every product
+// that was simply out of stock (and never manually hidden) as "Hidden" instead of "Out of
+// Stock" everywhere in the admin — including the Out of Stock KPI, which could never show a
+// nonzero count unless a product was BOTH out of stock AND explicitly marked available.
+const avail=p=> (edits[p.id]&&edits[p.id].avail!=null)?edits[p.id].avail : true;
 /* "offer" isn't its own field — it's whatever discount Price vs MRP works out to, same as the
    storefront computes it. Typing a % here computes and saves a new Price from the current MRP
    (so "give 20% off" reads as "20% off", not "do the maths and type ₹80 into Price yourself"). */
