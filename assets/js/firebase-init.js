@@ -26,7 +26,7 @@ window.FIREBASE_CONFIG = {
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, collection, doc, setDoc, getDoc, updateDoc,
+  getFirestore, collection, doc, setDoc, getDoc, updateDoc, addDoc, getDocs,
   onSnapshot, query, orderBy, where, serverTimestamp, limit,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
@@ -47,7 +47,7 @@ if (configured) {
 window.ARFire = {
   ready: configured,
   db, auth,
-  collection, doc, setDoc, getDoc, updateDoc, onSnapshot, query, orderBy, where, serverTimestamp, limit,
+  collection, doc, setDoc, getDoc, updateDoc, addDoc, getDocs, onSnapshot, query, orderBy, where, serverTimestamp, limit,
   signInWithEmailAndPassword, signOut, onAuthStateChanged,
 };
 window.dispatchEvent(new Event("arfire-ready"));

@@ -770,14 +770,48 @@
       </section>
 
       <!-- Inventory -->
-      <section class="page-section" data-page="inventory">
+      <section class="page-section" data-page="inventory" id="inventoryPageRoot">
+        <div class="order-summary-strip" id="inventorySummaryStrip"></div>
+
         <div class="panel chart-panel">
           <div class="ph"><div><h3>Inventory Health</h3><div class="sub">Across your whole catalog</div></div></div>
           <div class="chart-body" id="invHealthChart2"><div class="chart-empty"><div class="spinner"></div></div></div>
         </div>
+
+        <div class="panel">
+          <div class="ph">
+            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3h7L21 8.5v7L15.5 21h-7L3 15.5v-7z"/><path d="M12 8v5"/><circle cx="12" cy="16.3" r=".2" fill="currentColor" stroke="none"/></svg>Low Stock</h3><div class="sub">Restock these soon to avoid running out</div></div>
+            <button class="btn btn-ghost" id="viewAllLowStockBtn" style="margin-left:auto;padding:8px 14px;font-size:12.5px;font-weight:700">View all in table below →</button>
+          </div>
+          <div class="tscroll"><table>
+            <thead><tr><th>Product</th><th>Category</th><th>Current Stock</th><th>Minimum Level</th><th>Stock Status</th><th>Last Updated</th><th>Action</th></tr></thead>
+            <tbody id="lowStockTableBody"></tbody>
+          </table></div>
+        </div>
+
+        <div class="panel">
+          <div class="ph">
+            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16" r=".3" fill="currentColor"/></svg>Out of Stock</h3><div class="sub">Critical — customers can't buy these right now</div></div>
+            <button class="btn btn-ghost" id="viewAllOutOfStockBtn" style="margin-left:auto;padding:8px 14px;font-size:12.5px;font-weight:700">View all in table below →</button>
+          </div>
+          <div class="tscroll"><table>
+            <thead><tr><th>Product</th><th>Lost Availability</th><th>Category</th><th>Last Price</th><th>Action</th></tr></thead>
+            <tbody id="outOfStockTableBody"></tbody>
+          </table></div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="ph"><div><h3>Stock Movement</h3><div class="sub">Added, sold and adjusted</div></div>
+            <div class="period-toggle" id="stockMovePeriodToggle">
+              <button data-period="7" class="active">7D</button><button data-period="30">30D</button><button data-period="90">90D</button>
+            </div>
+          </div>
+          <div class="chart-body" id="stockMovementChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+        </div>
+
         <div class="panel" id="inventoryPanel">
           <div class="ph">
-            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-5 9 5v12"/><path d="M3 21h18"/><path d="M9 21v-7h6v7"/></svg>Stock Levels</h3><div class="sub">Threshold-based low-stock flags, set in Settings</div></div>
+            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-5 9 5v12"/><path d="M3 21h18"/><path d="M9 21v-7h6v7"/></svg>All Stock</h3><div class="sub">Threshold-based low-stock flags, set in Settings</div></div>
             <div class="search">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
               <input id="invSearch" type="search" placeholder="Search products…" style="padding-left:42px">
@@ -793,7 +827,7 @@
             <span class="save-note" id="invCount" style="margin-left:auto"></span>
           </div>
           <div class="tscroll tbl-view"><table>
-            <thead><tr><th>Product</th><th>Category</th><th>Stock</th><th>Min stock</th><th>Status</th><th>Available</th></tr></thead>
+            <thead><tr><th>Product</th><th>Category</th><th>Stock</th><th>Min stock</th><th>Status</th><th>Available</th><th>Action</th></tr></thead>
             <tbody id="invBody"></tbody>
           </table></div>
           <div class="cards-view" id="invCards"></div>
@@ -901,6 +935,22 @@
     <div class="confirm-actions">
       <button class="btn btn-ghost" id="confirmCancel">Cancel</button>
       <button class="btn btn-primary" id="confirmOk" style="background:var(--kumkum)">Yes, continue</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="restockOverlay">
+  <div class="confirm-card">
+    <h3 id="restockTitle">Restock product</h3>
+    <p id="restockSub" style="margin-bottom:14px;color:var(--muted);font-size:13px"></p>
+    <div class="field">
+      <label for="restockQty">Units to add</label>
+      <input id="restockQty" type="number" min="1" class="in" style="width:100%" placeholder="e.g. 50">
+    </div>
+    <p style="font-size:12px;color:var(--adm-soft)">New stock will be <b id="restockPreview">—</b></p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" id="restockCancel">Cancel</button>
+      <button class="btn btn-primary" id="restockConfirm">Add stock</button>
     </div>
   </div>
 </div>
@@ -1062,21 +1112,21 @@ function wireEditableInputs(root){
       return;
     }
 
+    if(f==="stock"){
+      // stock changes route through saveStock() — it patches the Status badge and stock-health
+      // dot/label in place (both depend on the stock value, not just the raw number shown here),
+      // and logs the change to the real stock-movement history instead of just overwriting silently.
+      const v=parseFloat(inp.value)||0;
+      await saveStock(id, v, {type:"adjustment", reason:"Manual stock update"});
+      return;
+    }
+
     const v=parseFloat(inp.value)||0;
     edits[id]=edits[id]||{}; edits[id][f]=v; stampUpdated(id); store.set("admin_edits",edits);
     if(f==="price"||f==="mrp"){ $$(`[data-offer-for="${id}"]`).forEach(el=>el.innerHTML=offerInputHTML(p)); }
-    if(f==="stock"){
-      // stock affects the Status badge and the stock-health dot/label via the avail() fallback
-      // (avail defaults to stock>0 when never explicitly hidden/shown) — patch both in place so
-      // they don't sit stale until some unrelated re-render happens to touch this row.
-      const ind=stockIndicator(v,getLowStockThreshold());
-      $$(`[data-status-for="${id}"]`).forEach(el=>el.innerHTML=productStatusBadge(p));
-      $$(`[data-stockind-for="${id}"]`).forEach(el=>el.innerHTML=`<span class="stock-dot" style="background:${ind.color}" title="${ind.label}"></span>`);
-      $$(`[data-stockmeta-for="${id}"]`).forEach(el=>el.textContent=el.dataset.format==="full"?`${v} units — ${ind.label}`:ind.label);
-    }
     $$(`[data-updated-for="${id}"]`).forEach(el=>el.textContent=lastUpdatedLabel(p));
     await pushOverride(id,{[f]:v,updatedAt:edits[id].updatedAt});
-    const label=f==="price"?"Price":f==="mrp"?"MRP":"Stock";
+    const label=f==="price"?"Price":"MRP";
     toast(`${label} updated — live on the storefront now`);
     refreshAfterProductEdit();
   });
@@ -1098,6 +1148,93 @@ async function toggleAvailById(id){
 function wireAvailToggle(root){
   $$("[data-toggle]",root).forEach(btn=>btn.onclick=()=>toggleAvailById(btn.dataset.toggle));
 }
+
+/* ============================================================ STOCK MOVEMENT LOG
+   A real (not fake) history of stock changes, stored in Firestore so "Stock Movement"
+   and "Product Stock Detail" reflect actual history instead of invented numbers. Tracking
+   starts the day this shipped — there's no way to backfill changes made before it existed. */
+async function logStockMovement(id,entry){
+  if(!(window.ARFire && window.ARFire.ready)) return;
+  const {db,collection,addDoc}=window.ARFire;
+  const p=P.find(x=>x.id==id);
+  try{
+    await addDoc(collection(db,"stockMovements"),{
+      productId:String(id), productName:p?p.name:String(id),
+      type:entry.type, qty:entry.qty, prevStock:entry.prevStock, newStock:entry.newStock,
+      reason:entry.reason||"", at:Date.now(),
+    });
+  }catch(e){ console.warn("[A.R. Abi] could not log stock movement:",e); }
+}
+async function fetchStockMovementsForProduct(id,limitN){
+  if(!(window.ARFire && window.ARFire.ready)) return [];
+  const {db,collection,query,where,getDocs}=window.ARFire;
+  try{
+    const snap=await getDocs(query(collection(db,"stockMovements"),where("productId","==",String(id))));
+    const rows=snap.docs.map(d=>d.data());
+    rows.sort((a,b)=>b.at-a.at);
+    return rows.slice(0,limitN||15);
+  }catch(e){ console.warn("[A.R. Abi] could not fetch stock movements:",e); return []; }
+}
+async function fetchRecentStockMovements(limitN){
+  if(!(window.ARFire && window.ARFire.ready)) return [];
+  const {db,collection,query,orderBy,limit,getDocs}=window.ARFire;
+  try{
+    const snap=await getDocs(query(collection(db,"stockMovements"),orderBy("at","desc"),limit(limitN||500)));
+    return snap.docs.map(d=>d.data());
+  }catch(e){ console.warn("[A.R. Abi] could not fetch recent stock movements:",e); return []; }
+}
+// Single save path for every stock change (typed edit, Restock dialog, bulk actions later) —
+// keeps the edits overlay, Firestore override, in-row patch, movement log and toast in sync.
+async function saveStock(id,newStock,meta){
+  meta=meta||{};
+  const p=P.find(x=>x.id==id); if(!p) return;
+  const prevStock=val(p,'stock');
+  newStock=Math.max(0,Math.round(newStock));
+  edits[id]=edits[id]||{}; edits[id].stock=newStock; stampUpdated(id); store.set("admin_edits",edits);
+  const ind=stockIndicator(newStock,getLowStockThreshold());
+  $$(`[data-status-for="${id}"]`).forEach(el=>el.innerHTML=productStatusBadge(p));
+  $$(`[data-stockind-for="${id}"]`).forEach(el=>el.innerHTML=`<span class="stock-dot" style="background:${ind.color}" title="${ind.label}"></span>`);
+  $$(`[data-stockmeta-for="${id}"]`).forEach(el=>el.textContent=el.dataset.format==="full"?`${newStock} units — ${ind.label}`:ind.label);
+  $$(`input[data-id="${id}"][data-f="stock"]`).forEach(el=>el.value=newStock);
+  $$(`[data-updated-for="${id}"]`).forEach(el=>el.textContent=lastUpdatedLabel(p));
+  await pushOverride(id,{stock:newStock,updatedAt:edits[id].updatedAt});
+  await logStockMovement(id,{type:meta.type||"adjustment",qty:meta.qty!=null?meta.qty:(newStock-prevStock),prevStock,newStock,reason:meta.reason||""});
+  toast(meta.type==="restock"?`Restocked — now ${newStock} units`:"Stock updated — live on the storefront now");
+  refreshAfterProductEdit();
+  const active=$(".page-section.active").dataset.page;
+  if(active==="products") products();
+  if(active==="inventory") inventoryPage();
+}
+
+/* ---- Restock dialog ---- */
+let restockTargetId=null;
+function openRestockDialog(id){
+  const p=P.find(x=>x.id==id); if(!p) return;
+  restockTargetId=id;
+  const current=val(p,'stock');
+  $("#restockTitle").textContent=`Restock — ${p.name}`;
+  $("#restockSub").textContent=`Current stock: ${current} units`;
+  $("#restockQty").value="";
+  $("#restockPreview").textContent=`${current} units`;
+  $("#restockOverlay").classList.add("show");
+  setTimeout(()=>$("#restockQty").focus(),50);
+}
+function closeRestockDialog(){ $("#restockOverlay").classList.remove("show"); restockTargetId=null; }
+$("#restockQty").addEventListener("input",()=>{
+  const p=P.find(x=>x.id==restockTargetId); if(!p) return;
+  const add=parseFloat($("#restockQty").value)||0;
+  $("#restockPreview").textContent=`${val(p,'stock')+Math.max(0,add)} units`;
+});
+$("#restockCancel").addEventListener("click",closeRestockDialog);
+$("#restockOverlay").addEventListener("click",e=>{ if(e.target.id==="restockOverlay") closeRestockDialog(); });
+$("#restockConfirm").addEventListener("click",async()=>{
+  const id=restockTargetId; const p=P.find(x=>x.id==id); if(!p) return;
+  const add=parseFloat($("#restockQty").value);
+  if(!(add>0)){ toast("Enter how many units you're adding"); return; }
+  const newStock=val(p,'stock')+add;
+  closeRestockDialog();
+  await saveStock(id,newStock,{type:"restock",qty:add,reason:`Restocked +${add} units`});
+});
 function refreshAfterProductEdit(){
   kpis();
   const active=$(".page-section.active").dataset.page;
@@ -1111,7 +1248,7 @@ const PAGE_META={
   dash:{title:"Dashboard",sub:"Business overview for today"},
   orders:{title:"Orders",sub:"Confirm, prepare and dispatch customer orders"},
   products:{title:"Products",sub:"Prices, stock and photos — synced live to the storefront"},
-  inventory:{title:"Inventory",sub:"Stock levels and availability across your catalog"},
+  inventory:{title:"Inventory",sub:"Monitor stock levels and prevent stock-outs"},
   customers:{title:"Customers",sub:"Everyone who has ordered from your store"},
   reports:{title:"Reports",sub:"Deeper look at sales, products and categories"},
   settings:{title:"Settings",sub:"Preferences for this dashboard"},
@@ -1835,10 +1972,10 @@ function ordersByDay(all,days){
   const out=[];
   for(let i=days-1;i>=0;i--){
     const d=new Date(today); d.setDate(d.getDate()-i);
-    out.push({key:d.toDateString(),label:d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"}),count:0,revenue:0});
+    out.push({key:d.toDateString(),label:d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"}),count:0,revenue:0,units:0});
   }
   const byKey={}; out.forEach(b=>byKey[b.key]=b);
-  all.forEach(o=>{ const b=byKey[new Date(o.at).toDateString()]; if(b){ b.count++; b.revenue+=o.total; } });
+  all.forEach(o=>{ const b=byKey[new Date(o.at).toDateString()]; if(b){ b.count++; b.revenue+=o.total; b.units+=(o.items||[]).reduce((s,it)=>s+it.q,0); } });
   return out;
 }
 function ordersByWeek(all,weeks){
@@ -1847,9 +1984,9 @@ function ordersByWeek(all,weeks){
   for(let i=weeks-1;i>=0;i--){
     const end=new Date(today); end.setDate(end.getDate()-i*7);
     const start=new Date(end); start.setDate(start.getDate()-6); start.setHours(0,0,0,0);
-    out.push({start,end,label:start.toLocaleDateString("en-IN",{day:"2-digit",month:"short"}),count:0,revenue:0});
+    out.push({start,end,label:start.toLocaleDateString("en-IN",{day:"2-digit",month:"short"}),count:0,revenue:0,units:0});
   }
-  all.forEach(o=>{ const d=new Date(o.at); const b=out.find(x=>d>=x.start&&d<=x.end); if(b){ b.count++; b.revenue+=o.total; } });
+  all.forEach(o=>{ const d=new Date(o.at); const b=out.find(x=>d>=x.start&&d<=x.end); if(b){ b.count++; b.revenue+=o.total; b.units+=(o.items||[]).reduce((s,it)=>s+it.q,0); } });
   return out;
 }
 function ordersByMonth(all,months){
@@ -1857,10 +1994,10 @@ function ordersByMonth(all,months){
   const out=[];
   for(let i=months-1;i>=0;i--){
     const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-    out.push({key:`${d.getFullYear()}-${d.getMonth()}`,label:d.toLocaleDateString("en-IN",{month:"short"}),count:0,revenue:0});
+    out.push({key:`${d.getFullYear()}-${d.getMonth()}`,label:d.toLocaleDateString("en-IN",{month:"short"}),count:0,revenue:0,units:0});
   }
   const byKey={}; out.forEach(b=>byKey[b.key]=b);
-  all.forEach(o=>{ const d=new Date(o.at); const k=`${d.getFullYear()}-${d.getMonth()}`; const b=byKey[k]; if(b){ b.count++; b.revenue+=o.total; } });
+  all.forEach(o=>{ const d=new Date(o.at); const k=`${d.getFullYear()}-${d.getMonth()}`; const b=byKey[k]; if(b){ b.count++; b.revenue+=o.total; b.units+=(o.items||[]).reduce((s,it)=>s+it.q,0); } });
   return out;
 }
 function trendBuckets(all,period){
@@ -2356,7 +2493,8 @@ function openProductActionsMenu(btn,id){
   const menu=$("#productActionsMenu");
   menu.innerHTML=`
     <button class="profile-menu-item" data-pmenu-view="${id}">${window.icon('receipt')}View details</button>
-    <button class="profile-menu-item" data-pmenu-stock="${id}">${window.icon('warehouse')}Update stock</button>
+    <button class="profile-menu-item" data-restock="${id}">${window.icon('warehouse')}Restock</button>
+    <button class="profile-menu-item" data-pmenu-stock="${id}">${window.icon('boxes')}Set exact stock</button>
     <button class="profile-menu-item" data-pmenu-price="${id}">${window.icon('coins')}Change price</button>
     <button class="profile-menu-item" data-pmenu-avail="${id}">${window.icon(isAvail?'close':'check')}${isAvail?'Hide product':'Show product'}</button>
     <button class="profile-menu-item danger" data-pmenu-delete="${id}">${window.icon('trash')}Delete</button>
@@ -2377,6 +2515,8 @@ function focusProductField(id,field){
 $("#productActionsMenu").addEventListener("click",e=>{
   const view=e.target.closest("[data-pmenu-view]");
   if(view){ closeProductActionsMenu(); openProductDrawer(view.dataset.pmenuView); return; }
+  const restockBtn=e.target.closest("[data-restock]");
+  if(restockBtn){ closeProductActionsMenu(); openRestockDialog(restockBtn.dataset.restock); return; }
   const stockBtn=e.target.closest("[data-pmenu-stock]");
   if(stockBtn){ closeProductActionsMenu(); focusProductField(stockBtn.dataset.pmenuStock,"stock"); return; }
   const priceBtn=e.target.closest("[data-pmenu-price]");
@@ -2424,7 +2564,10 @@ function openProductDrawer(id){
       <h4>Stock</h4>
       <div class="od-row"><span>Current stock</span><span><span class="stock-dot" style="display:inline-block;background:${ind.color};margin-right:6px"></span>${stock} units — ${ind.label}</span></div>
       <div class="od-row"><span>Low-stock threshold</span><span>${threshold} units</span></div>
-      <div class="od-note">Detailed stock history (a log of every change over time) isn't tracked yet — this shows the current level only. That would need a small backend addition; happy to add it if you want it.</div>
+    </div>
+    <div class="od-section">
+      <h4>Stock History</h4>
+      <div id="pdStockHistory"><div class="od-note">Loading stock history…</div></div>
     </div>
     <div class="od-section">
       <h4>Activity</h4>
@@ -2433,6 +2576,7 @@ function openProductDrawer(id){
     <div class="od-section">
       <h4>Quick actions</h4>
       <div class="od-contact">
+        <button data-restock="${p.id}">Restock</button>
         <button data-pmenu-avail="${p.id}">${avail(p)?"Hide product":"Show product"}</button>
         <button data-pmenu-delete="${p.id}">Delete</button>
       </div>
@@ -2440,13 +2584,25 @@ function openProductDrawer(id){
   `;
   $("#productDrawer").classList.add("show");
   $("#productDrawerScrim").classList.add("show");
+  $("#productDrawer").dataset.openId=String(id);
+  fetchStockMovementsForProduct(id,10).then(rows=>{
+    if($("#productDrawer").dataset.openId!==String(id)) return; // drawer moved on before this resolved
+    const el=$("#pdStockHistory"); if(!el) return;
+    if(!rows.length){ el.innerHTML=`<div class="od-note">No stock changes recorded yet — history starts tracking from when this feature was added, via Restock or a manual stock edit.</div>`; return; }
+    el.innerHTML=rows.map(r=>`<div class="od-item">
+      <div><div class="odi-name">${r.type==="restock"?"Restocked":"Adjusted"} ${r.qty>0?"+":""}${r.qty} units</div>
+        <div class="odi-meta">${new Date(r.at).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})} · ${r.prevStock} → ${r.newStock}${r.reason?` · ${r.reason}`:""}</div></div>
+    </div>`).join("");
+  });
 }
-function closeProductDrawer(){ $("#productDrawer").classList.remove("show"); $("#productDrawerScrim").classList.remove("show"); }
+function closeProductDrawer(){ $("#productDrawer").classList.remove("show"); $("#productDrawerScrim").classList.remove("show"); delete $("#productDrawer").dataset.openId; }
 $("#pdClose").addEventListener("click",closeProductDrawer);
 $("#productDrawerScrim").addEventListener("click",closeProductDrawer);
 $("#pdBody").addEventListener("click",e=>{
   const photobtn=e.target.closest("[data-photobtn]");
   if(photobtn){ const inp=photobtn.parentElement.querySelector(`input[type=file][data-photo="${photobtn.dataset.photobtn}"]`); if(inp) inp.click(); return; }
+  const restockBtn=e.target.closest("[data-restock]");
+  if(restockBtn){ openRestockDialog(restockBtn.dataset.restock); return; }
   const availBtn=e.target.closest("[data-pmenu-avail]");
   if(availBtn){ toggleAvailById(availBtn.dataset.pmenuAvail).then(()=>openProductDrawer(availBtn.dataset.pmenuAvail)); return; }
   const delBtn=e.target.closest("[data-pmenu-delete]");
@@ -2521,8 +2677,141 @@ function invRowHTML(p,threshold){
   else statusBadge=`<span class="badge2 b-ok">In stock</span>`;
   return {stock,isAvail,statusBadge};
 }
+function lostAvailabilityLabel(p){
+  return (edits[p.id]&&edits[p.id].updatedAt) ? lastUpdatedLabel(p) : "Unknown";
+}
+function renderInventorySummary(){
+  const el=$("#inventorySummaryStrip"); if(!el) return;
+  const threshold=getLowStockThreshold();
+  let healthy=0,low=0,out=0,stockValue=0;
+  P.forEach(p=>{
+    const stock=val(p,'stock'), isAvail=avail(p);
+    stockValue+=stock*val(p,'price');
+    if(isAvail){ if(stock<=0) out++; else if(stock<=threshold) low++; else healthy++; }
+  });
+  const items=[
+    ["Total Stock Items",P.length.toLocaleString("en-IN"),"#8993A4"],
+    ["Healthy Stock",healthy.toLocaleString("en-IN"),"#0E7A54"],
+    ["Low Stock",low,"#D97706"],
+    ["Out of Stock",out,"#DC2626"],
+    ["Stock Value",money(Math.round(stockValue)),"#7C3AED"],
+  ];
+  el.innerHTML=items.map(([label,v,hex])=>`
+    <div class="strip-chip"><span class="strip-dot" style="background:${hex}"></span>
+      <div><div class="strip-val">${v}</div><div class="strip-label">${label}</div></div>
+    </div>`).join("");
+}
+function renderLowStockTable(){
+  const el=$("#lowStockTableBody"); if(!el) return;
+  const threshold=getLowStockThreshold();
+  const rows=P.filter(p=>avail(p)&&val(p,'stock')>0&&val(p,'stock')<=threshold).sort((a,b)=>val(a,'stock')-val(b,'stock'));
+  if(!rows.length){ el.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:26px;color:var(--muted)">Nothing low on stock right now — nice.</td></tr>`; return; }
+  const shown=rows.slice(0,8);
+  el.innerHTML=shown.map(p=>`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+        <b style="font-weight:600">${p.name}</b></div></td>
+      <td><span class="badge2 b-cat">${p.cat}</span></td>
+      <td>${val(p,'stock')} units</td>
+      <td>${threshold}</td>
+      <td><span class="badge2 b-warn">Low Stock</span></td>
+      <td style="color:var(--adm-soft);font-size:12px">${lastUpdatedLabel(p)}</td>
+      <td><button class="btn btn-ghost" data-restock="${p.id}" style="padding:6px 12px;font-size:11.5px;font-weight:700">Restock</button></td>
+    </tr>`).join("")
+    + (rows.length>shown.length?`<tr><td colspan="7" style="text-align:center;padding:12px"><button class="btn btn-ghost" data-view-inv-filter="low" style="padding:6px 14px;font-size:12px">+${rows.length-shown.length} more — view all low stock →</button></td></tr>`:"");
+}
+function renderOutOfStockTable(){
+  const el=$("#outOfStockTableBody"); if(!el) return;
+  const rows=P.filter(p=>avail(p)&&val(p,'stock')<=0);
+  if(!rows.length){ el.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:26px;color:var(--muted)">Nothing out of stock right now — nice.</td></tr>`; return; }
+  const shown=rows.slice(0,8);
+  el.innerHTML=shown.map(p=>`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+        <b style="font-weight:600">${p.name}</b></div></td>
+      <td style="color:var(--adm-soft);font-size:12px">${lostAvailabilityLabel(p)}</td>
+      <td><span class="badge2 b-cat">${p.cat}</span></td>
+      <td>${money(val(p,'price'))}</td>
+      <td><button class="btn btn-ghost" data-restock="${p.id}" style="padding:6px 12px;font-size:11.5px;font-weight:700">Restock</button></td>
+    </tr>`).join("")
+    + (rows.length>shown.length?`<tr><td colspan="5" style="text-align:center;padding:12px"><button class="btn btn-ghost" data-view-inv-filter="out" style="padding:6px 14px;font-size:12px">+${rows.length-shown.length} more — view all out of stock →</button></td></tr>`:"");
+}
+function jumpToAllStockFilter(filter){
+  invFilterState=filter; invPage=1;
+  $$("#invChips [data-inv-filter]").forEach(c=>c.classList.toggle("active",c.dataset.invFilter===filter));
+  inventoryPage();
+  $("#inventoryPanel").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("#viewAllLowStockBtn").addEventListener("click",()=>jumpToAllStockFilter("low"));
+$("#viewAllOutOfStockBtn").addEventListener("click",()=>jumpToAllStockFilter("out"));
+$("#inventoryPageRoot").addEventListener("click",e=>{
+  const restockBtn=e.target.closest("[data-restock]");
+  if(restockBtn){ openRestockDialog(restockBtn.dataset.restock); return; }
+  const viewBtn=e.target.closest("[data-view-inv-filter]");
+  if(viewBtn){ jumpToAllStockFilter(viewBtn.dataset.viewInvFilter); }
+});
+
+/* ---- Stock Movement chart: real "units sold" from order history + real stock-log
+   entries from Restock/adjustments — tracking for the latter starts from today. ---- */
+function findBucketForDate(buckets,period,ts){
+  const d=new Date(ts);
+  if(period===90) return buckets.find(b=>d>=b.start&&d<=b.end);
+  if(period===7||period===30) return buckets.find(b=>b.key===d.toDateString());
+  return buckets.find(b=>b.key===`${d.getFullYear()}-${d.getMonth()}`);
+}
+function stockMovementBuckets(movements,period){
+  const buckets=trendBuckets([],period);
+  buckets.forEach(b=>{ b.added=0; b.adjusted=0; });
+  movements.forEach(m=>{
+    const b=findBucketForDate(buckets,period,m.at); if(!b) return;
+    if(m.type==="restock") b.added+=Math.max(0,m.qty);
+    else b.adjusted+=m.qty;
+  });
+  return buckets;
+}
+let stockMovePeriod=7;
+async function renderStockMovementChart(period){
+  const el=$("#stockMovementChart"); if(!el) return;
+  const all=ordersLoaded?currentOrders():[];
+  const orderBuckets=trendBuckets(all,period);
+  const movements=await fetchRecentStockMovements(500);
+  if($(".page-section.active").dataset.page!=="inventory") return; // user navigated away while this loaded
+  const moveBuckets=stockMovementBuckets(movements,period);
+  const data=orderBuckets.map((b,i)=>({label:b.label,sold:b.units,added:moveBuckets[i]?moveBuckets[i].added:0,adjusted:moveBuckets[i]?moveBuckets[i].adjusted:0}));
+  const n=data.length;
+  const maxV=Math.max(1,...data.map(d=>Math.max(d.sold,d.added,Math.abs(d.adjusted))));
+  const w=640,h=190,padB=26,padT=8;
+  const groupW=w/n, barW=Math.max(2,(groupW-8)/3);
+  let bars="",labels="";
+  const labelEvery=n>30?Math.ceil(n/12):(n>7?5:1);
+  data.forEach((d,i)=>{
+    const gx=i*groupW+4;
+    const soldH=Math.round(d.sold/maxV*(h-padT-padB));
+    const addedH=Math.round(d.added/maxV*(h-padT-padB));
+    const adjH=Math.round(Math.abs(d.adjusted)/maxV*(h-padT-padB));
+    bars+=`<rect x="${gx.toFixed(1)}" y="${h-padB-soldH}" width="${barW.toFixed(1)}" height="${d.sold?Math.max(soldH,2):0}" fill="#2563EB" rx="2" data-tip="${d.label}<small>${d.sold} units sold</small>"></rect>`;
+    bars+=`<rect x="${(gx+barW+3).toFixed(1)}" y="${h-padB-addedH}" width="${barW.toFixed(1)}" height="${d.added?Math.max(addedH,2):0}" fill="#0E7A54" rx="2" data-tip="${d.label}<small>${d.added} units added</small>"></rect>`;
+    bars+=`<rect x="${(gx+(barW+3)*2).toFixed(1)}" y="${h-padB-adjH}" width="${barW.toFixed(1)}" height="${d.adjusted?Math.max(adjH,2):0}" fill="#D97706" rx="2" data-tip="${d.label}<small>${d.adjusted>=0?'+':''}${d.adjusted} units adjusted</small>"></rect>`;
+    if(i%labelEvery===0) labels+=`<text x="${(gx+(barW+3)*1.5).toFixed(1)}" y="${h-8}" font-size="9" fill="#8993A4" text-anchor="middle" font-family="Inter,sans-serif">${d.label}</text>`;
+  });
+  const hasAnyMovement=movements.length>0;
+  el.innerHTML=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block">${bars}${labels}</svg>
+    <div class="trend-legend"><span><i style="background:#2563EB"></i>Units sold (customer orders)</span><span><i style="background:#0E7A54"></i>Stock added</span><span><i style="background:#D97706"></i>Stock adjusted</span></div>
+    ${!hasAnyMovement?`<div class="od-note" style="margin-top:10px">"Stock added"/"adjusted" tracking starts now and fills in as you use Restock or edit stock — there's no history before today to show. Note that placing an order doesn't automatically reduce stock; "Units sold" reflects customer demand from real orders, so update stock yourself (Restock, or edit it directly) once you've fulfilled an order.</div>`:""}`;
+  wireChartTips(el);
+}
+$$("#stockMovePeriodToggle button").forEach(b=>b.onclick=()=>{
+  stockMovePeriod=+b.dataset.period;
+  $$("#stockMovePeriodToggle button").forEach(x=>x.classList.toggle("active",x===b));
+  renderStockMovementChart(stockMovePeriod);
+});
+
 function inventoryPage(){
   renderInventoryHealth("#invHealthChart, #invHealthChart2");
+  renderInventorySummary();
+  renderLowStockTable();
+  renderOutOfStockTable();
+  renderStockMovementChart(stockMovePeriod);
   let list=filteredInventory();
   const matched=list.length;
   const totalPages=Math.max(1,Math.ceil(matched/PROD_PAGE_SIZE));
@@ -2543,8 +2832,9 @@ function inventoryPage(){
       <td><span class="badge2 b-cat">${p.cat}</span></td>
       <td><input class="in" type="number" value="${stock}" data-id="${p.id}" data-f="stock" style="width:66px"></td>
       <td>${threshold}</td>
-      <td>${statusBadge}</td>
+      <td data-status-for="${p.id}">${statusBadge}</td>
       <td><button class="badge2 ${isAvail?'b-ok':'b-no'}" data-toggle="${p.id}">${isAvail?"● Available":"○ Hidden"}</button></td>
+      <td><button class="btn btn-ghost" data-restock="${p.id}" style="padding:6px 12px;font-size:11.5px;font-weight:700">Restock</button></td>
     </tr>`;
   }).join("");
   $("#invCards").innerHTML=pageList.map(p=>{
@@ -2552,13 +2842,14 @@ function inventoryPage(){
     return `<div class="pcard">
       <div class="pc-head">
         <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
-        <div style="flex:1;min-width:0"><b>${p.name}</b><div style="margin-top:4px">${statusBadge}</div></div>
+        <div style="flex:1;min-width:0"><b>${p.name}</b><div style="margin-top:4px" data-status-for="${p.id}">${statusBadge}</div></div>
         <button class="badge2 ${isAvail?'b-ok':'b-no'}" data-toggle="${p.id}">${isAvail?"● Available":"○ Hidden"}</button>
       </div>
       <div class="pc-fields">
         <div><label>Stock</label><input class="in" type="number" value="${stock}" data-id="${p.id}" data-f="stock" style="width:66px"></div>
         <div><label>Min stock</label><span style="font-size:13px;color:var(--muted)">${threshold}</span></div>
       </div>
+      <button class="btn btn-ghost" data-restock="${p.id}" style="width:100%;margin-top:8px;justify-content:center">Restock</button>
     </div>`;
   }).join("");
   wireEditableInputs($("#inventoryPanel"));
