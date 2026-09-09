@@ -438,6 +438,20 @@
     .cards-view{display:block}
     .dropdown-menu{width:calc(100vw - 32px);right:-8px}
   }
+
+  /* ---- Print: only the Reports content, nothing else ---- */
+  @media print{
+    .sidebar,.topbar,.order-alert,.dropdown-menu,.order-drawer,.order-drawer-scrim,
+    .confirm-overlay,.chart-tip,.toast,#hamburger,.back-btn,.ph-actions,#reportsRangeChips,
+    #reportsCustomRange,.period-toggle{ display:none !important; }
+    body{background:#fff}
+    .admin-main{margin-left:0}
+    .admin-content{padding:0;max-width:none}
+    .page-section{display:none !important}
+    .page-section[data-page="reports"]{display:block !important}
+    .panel,.strip-chip{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+    .chart-panel{break-inside:avoid}
+  }
 </style>
 </head>
 <body>
@@ -871,28 +885,102 @@
       </section>
 
       <!-- Reports -->
-      <section class="page-section" data-page="reports">
-        <div class="panel chart-panel">
-          <div class="ph"><div><h3>Revenue &amp; Orders Trend</h3></div>
-            <div class="period-toggle" id="reportsPeriodToggle">
-              <button data-period="7">7D</button><button data-period="30" class="active">30D</button><button data-period="90">90D</button><button data-period="365">1Y</button>
+      <section class="page-section" data-page="reports" id="reportsPageRoot">
+        <div class="panel">
+          <div class="ph">
+            <div><h3><svg class="ico-svg" style="margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/></svg>Reports &amp; Analytics</h3><div class="sub">Understand your sales, products and business performance</div></div>
+            <div class="ph-actions">
+              <button class="btn btn-ghost" id="reportsExportBtn" style="padding:8px 14px;font-size:12.5px;font-weight:700">
+                <svg class="ico-svg" style="margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Export to Excel
+              </button>
+              <button class="btn btn-ghost" id="reportsPrintBtn" style="padding:8px 14px;font-size:12.5px;font-weight:700">Print Report</button>
             </div>
           </div>
-          <div class="chart-body" id="trendChartReports"><div class="chart-empty"><div class="spinner"></div></div></div>
+          <div class="toolbar2">
+            <div class="filter-chips" id="reportsRangeChips">
+              <button class="chip" data-range="today">Today</button>
+              <button class="chip" data-range="7d">7 Days</button>
+              <button class="chip active" data-range="30d">30 Days</button>
+              <button class="chip" data-range="90d">90 Days</button>
+              <button class="chip" data-range="year">This Year</button>
+              <button class="chip" data-range="custom">Custom Range</button>
+            </div>
+            <div id="reportsCustomRange" style="display:none;align-items:center;gap:8px">
+              <input type="date" class="st-sel" id="reportsFrom">
+              <span style="color:var(--adm-soft);font-size:12px">to</span>
+              <input type="date" class="st-sel" id="reportsTo">
+            </div>
+            <span class="save-note" id="reportsRangeLabel" style="margin-left:auto"></span>
+          </div>
         </div>
-        <div class="dash-grid-even">
-          <div class="panel chart-panel">
-            <div class="ph"><div><h3>Top Selling Products</h3><div class="sub">Top 10, by revenue</div></div></div>
-            <div class="chart-body" id="topProductsChartFull"><div class="chart-empty"><div class="spinner"></div></div></div>
+
+        <div id="reportsContent">
+          <div class="section-label">Sales Overview</div>
+          <div class="order-summary-strip" id="salesOverviewStrip"></div>
+          <div class="dash-grid-even">
+            <div class="panel chart-panel">
+              <div class="ph"><div><h3>Revenue Trend</h3></div></div>
+              <div class="chart-body" id="reportsRevenueChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+            </div>
+            <div class="panel chart-panel">
+              <div class="ph"><div><h3>Order Trend</h3></div></div>
+              <div class="chart-body" id="reportsOrderChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+            </div>
+          </div>
+
+          <div class="section-label">Product Performance</div>
+          <div class="dash-grid-even">
+            <div class="panel chart-panel">
+              <div class="ph"><div><h3>Top Selling Products</h3><div class="sub">By units sold</div></div></div>
+              <div class="chart-body" id="reportsTopSelling"><div class="chart-empty"><div class="spinner"></div></div></div>
+            </div>
+            <div class="panel chart-panel">
+              <div class="ph"><div><h3>Highest Revenue Products</h3></div></div>
+              <div class="chart-body" id="reportsTopRevenue"><div class="chart-empty"><div class="spinner"></div></div></div>
+            </div>
           </div>
           <div class="panel chart-panel">
-            <div class="ph"><div><h3>Sales by Category</h3></div></div>
-            <div class="chart-body" id="categorySalesChartFull"><div class="chart-empty"><div class="spinner"></div></div></div>
+            <div class="ph"><div><h3>Slow Moving Products</h3><div class="sub">Well-stocked, but barely selling in this period</div></div></div>
+            <div class="chart-body" id="reportsSlowMoving"><div class="chart-empty"><div class="spinner"></div></div></div>
           </div>
-        </div>
-        <div class="panel chart-panel">
-          <div class="ph"><div><h3>Payment Method Split</h3><div class="sub">Cash on Delivery vs UPI, all time</div></div></div>
-          <div class="chart-body" id="paymentSplitChart"><div class="chart-empty"><div class="spinner"></div></div></div>
+
+          <div class="section-label">Category Performance</div>
+          <div class="dash-grid-even">
+            <div class="panel chart-panel">
+              <div class="ph"><div><h3>Revenue by Category</h3></div></div>
+              <div class="chart-body" id="reportsCatRevenue"><div class="chart-empty"><div class="spinner"></div></div></div>
+            </div>
+            <div class="panel chart-panel">
+              <div class="ph"><div><h3>Orders by Category</h3></div></div>
+              <div class="chart-body" id="reportsCatOrders"><div class="chart-empty"><div class="spinner"></div></div></div>
+            </div>
+          </div>
+
+          <div class="section-label">Customer Performance</div>
+          <div class="order-summary-strip" id="customerPerfStrip"></div>
+          <div class="panel chart-panel">
+            <div class="ph"><div><h3>Top Customers</h3></div></div>
+            <div class="chart-body" id="reportsTopCustomers"><div class="chart-empty"><div class="spinner"></div></div></div>
+          </div>
+
+          <div class="section-label">Order Performance</div>
+          <div class="panel chart-panel">
+            <div class="ph"><div><h3>Order Status Breakdown</h3></div></div>
+            <div class="chart-body" id="reportsOrderPerf"><div class="chart-empty"><div class="spinner"></div></div></div>
+          </div>
+
+          <div class="section-label">Payment Analysis</div>
+          <div class="panel chart-panel">
+            <div class="ph"><div><h3>Payment Method Split</h3></div></div>
+            <div class="chart-body" id="reportsPaymentSplit"><div class="chart-empty"><div class="spinner"></div></div></div>
+          </div>
+
+          <div class="section-label">Inventory Performance</div>
+          <div class="order-summary-strip" id="inventoryPerfStrip"></div>
+          <div class="panel chart-panel">
+            <div class="ph"><div><h3>Stock Movement</h3><div class="sub">Within the selected date range</div></div></div>
+            <div class="chart-body" id="reportsStockMovement"><div class="chart-empty"><div class="spinner"></div></div></div>
+          </div>
         </div>
       </section>
 
@@ -1240,7 +1328,7 @@ function refreshAfterProductEdit(){
   const active=$(".page-section.active").dataset.page;
   if(active==="dash"){ renderInventoryHealth("#invHealthChart"); lowStockAlerts(); renderCategorySales("#categorySalesChart",6); renderTopProducts("#topProductsChart",5); }
   if(active==="inventory"){ inventoryPage(); }
-  if(active==="reports"){ renderCategorySales("#categorySalesChartFull",10); renderTopProducts("#topProductsChartFull",10); }
+  if(active==="reports"){ renderReportsPage(); }
 }
 
 /* ============================================================ NAVIGATION (sidebar / page tabs) */
@@ -1250,7 +1338,7 @@ const PAGE_META={
   products:{title:"Products",sub:"Prices, stock and photos — synced live to the storefront"},
   inventory:{title:"Inventory",sub:"Monitor stock levels and prevent stock-outs"},
   customers:{title:"Customers",sub:"Everyone who has ordered from your store"},
-  reports:{title:"Reports",sub:"Deeper look at sales, products and categories"},
+  reports:{title:"Reports & Analytics",sub:"Understand your sales, products and business performance"},
   settings:{title:"Settings",sub:"Preferences for this dashboard"},
 };
 const PAGE_INIT={
@@ -1260,7 +1348,7 @@ const PAGE_INIT={
   products:()=>{ products(); },
   inventory:()=>{ invPage=1; inventoryPage(); },
   customers:()=>{ custPage=1; customersPage(); },
-  reports:()=>{ renderTrendChart("#trendChartReports",reportsTrendPeriod); renderTopProducts("#topProductsChartFull",10); renderCategorySales("#categorySalesChartFull",10); renderPaymentSplit(); },
+  reports:()=>{ renderReportsPage(); },
   settings:()=>{ $("#setThreshold").value=getLowStockThreshold(); },
 };
 function showPage(page){
@@ -1525,7 +1613,7 @@ function subscribeOrders(){
     kpis(); orders(); charts();
     const active=$(".page-section.active").dataset.page;
     if(active==="customers") customersPage();
-    if(active==="reports"){ renderTrendChart("#trendChartReports",reportsTrendPeriod); renderTopProducts("#topProductsChartFull",10); renderCategorySales("#categorySalesChartFull",10); renderPaymentSplit(); }
+    if(active==="reports") renderReportsPage();
   }, err=>{ console.warn("[A.R. Abi] admin orders listener error:",err); ordersLoaded=true; setLive(false,"Offline"); orders(); charts(); });
 }
 
@@ -2019,7 +2107,7 @@ function wireChartTips(container){
     el.addEventListener("touchstart",e=>{ const t=e.touches[0]; show(t.clientX,t.clientY); setTimeout(()=>tip.classList.remove("show"),1700); },{passive:true});
   });
 }
-let trendPeriod=7, reportsTrendPeriod=30;
+let trendPeriod=7;
 function renderTrendChart(containerSel,period){
   const el=$(containerSel); if(!el) return;
   if(!ordersLoaded){ el.innerHTML=`<div class="chart-empty"><div class="spinner"></div></div>`; return; }
@@ -2052,11 +2140,6 @@ $$("#trendPeriodToggle button").forEach(b=>b.onclick=()=>{
   trendPeriod=+b.dataset.period;
   $$("#trendPeriodToggle button").forEach(x=>x.classList.toggle("active",x===b));
   renderTrendChart("#trendChart",trendPeriod);
-});
-$$("#reportsPeriodToggle button").forEach(b=>b.onclick=()=>{
-  reportsTrendPeriod=+b.dataset.period;
-  $$("#reportsPeriodToggle button").forEach(x=>x.classList.toggle("active",x===b));
-  renderTrendChart("#trendChartReports",reportsTrendPeriod);
 });
 function renderStatusChart(){
   const el=$("#statusChart"); if(!el) return;
@@ -2192,21 +2275,6 @@ function lowStockAlerts(){
     showPage("inventory");
   });
 }
-function renderPaymentSplit(){
-  const el=$("#paymentSplitChart"); if(!el) return;
-  if(!ordersLoaded){ el.innerHTML=`<div class="chart-empty"><div class="spinner"></div></div>`; return; }
-  const all=currentOrders();
-  if(!all.length){ el.innerHTML=`<div class="chart-empty">No orders yet.</div>`; return; }
-  const cod=all.filter(o=>o.pay!=="upi").length, upi=all.filter(o=>o.pay==="upi").length, total=all.length;
-  el.innerHTML=`<div class="stack-bar">
-    <div class="stack-seg" style="flex:${cod} 0 0;background:#0E7A54" data-tip="Cash on Delivery<small>${cod} orders · ${Math.round(cod/total*100)}%</small>"></div>
-    <div class="stack-seg" style="flex:${upi} 0 0;background:#2563EB" data-tip="UPI<small>${upi} orders · ${Math.round(upi/total*100)}%</small>"></div>
-  </div><div class="stack-legend">
-    <div class="stack-leg"><i style="background:#0E7A54"></i>Cash on Delivery <b>${cod}</b><span>(${Math.round(cod/total*100)}%)</span></div>
-    <div class="stack-leg"><i style="background:#2563EB"></i>UPI <b>${upi}</b><span>(${Math.round(upi/total*100)}%)</span></div>
-  </div>`;
-  wireChartTips(el);
-}
 function renderRecentOrders(){
   const el=$("#recentOrdersBody"); if(!el) return;
   if(!ordersLoaded){ el.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted)">Loading…</td></tr>`; return; }
@@ -2221,6 +2289,305 @@ function renderRecentOrders(){
   </tr>`; }).join("");
   $$("[data-view-order-drawer]",el).forEach(b=>b.onclick=()=>openOrderDrawer(b.dataset.viewOrderDrawer));
 }
+
+/* ============================================================ REPORTS & ANALYTICS
+   Everything here (except Inventory Performance, which is a live snapshot) is scoped to
+   the selected date range via reportsOrders() — a filtered slice of real order history,
+   never invented numbers. */
+let reportsRangeType="30d", reportsCustomFrom=null, reportsCustomTo=null;
+function getReportsRange(){
+  const now=new Date();
+  const todayStart=new Date(now); todayStart.setHours(0,0,0,0);
+  let start,end=now.getTime()+1,label;
+  if(reportsRangeType==="today"){ start=todayStart.getTime(); label="Today"; }
+  else if(reportsRangeType==="7d"){ const d=new Date(todayStart); d.setDate(d.getDate()-6); start=d.getTime(); label="Last 7 days"; }
+  else if(reportsRangeType==="30d"){ const d=new Date(todayStart); d.setDate(d.getDate()-29); start=d.getTime(); label="Last 30 days"; }
+  else if(reportsRangeType==="90d"){ const d=new Date(todayStart); d.setDate(d.getDate()-89); start=d.getTime(); label="Last 90 days"; }
+  else if(reportsRangeType==="year"){ start=new Date(now.getFullYear(),0,1).getTime(); label=`Jan 1 – today, ${now.getFullYear()}`; }
+  else{
+    // Default each missing side off the OTHER side that's actually picked (not a fixed "today-29"),
+    // so e.g. picking only a "To" date in the past doesn't invert into an empty [start,end) window.
+    if(reportsCustomFrom && reportsCustomTo){
+      start=new Date(reportsCustomFrom+"T00:00:00").getTime();
+      end=new Date(reportsCustomTo+"T23:59:59").getTime();
+    }else if(reportsCustomFrom){
+      start=new Date(reportsCustomFrom+"T00:00:00").getTime();
+      end=now.getTime()+1;
+    }else if(reportsCustomTo){
+      end=new Date(reportsCustomTo+"T23:59:59").getTime();
+      start=end-29*86400000;
+    }else{
+      start=todayStart.getTime()-29*86400000;
+      end=now.getTime()+1;
+    }
+    if(start>end){ const t=start; start=end; end=t; } // defensive: never let a picked range invert
+    label=(reportsCustomFrom&&reportsCustomTo)?`${reportsCustomFrom} to ${reportsCustomTo}`:"Pick a custom range";
+  }
+  return {start,end,label};
+}
+function reportsOrders(){
+  const {start,end}=getReportsRange();
+  return currentOrders().filter(o=>o.at>=start&&o.at<end);
+}
+$$("#reportsRangeChips [data-range]").forEach(btn=>btn.onclick=()=>{
+  reportsRangeType=btn.dataset.range;
+  $$("#reportsRangeChips [data-range]").forEach(b=>b.classList.toggle("active",b===btn));
+  $("#reportsCustomRange").style.display=reportsRangeType==="custom"?"flex":"none";
+  renderReportsPage();
+});
+$("#reportsFrom").addEventListener("change",()=>{ reportsCustomFrom=$("#reportsFrom").value; if(reportsRangeType==="custom") renderReportsPage(); });
+$("#reportsTo").addEventListener("change",()=>{ reportsCustomTo=$("#reportsTo").value; if(reportsRangeType==="custom") renderReportsPage(); });
+
+function bucketRange(all,start,end){
+  const spanDays=Math.max(1,Math.ceil((end-start)/86400000));
+  const out=[];
+  if(spanDays<=31){
+    let d=new Date(start); d.setHours(0,0,0,0);
+    while(d.getTime()<end){
+      out.push({key:d.toDateString(),label:d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"}),count:0,revenue:0,units:0});
+      d=new Date(d); d.setDate(d.getDate()+1);
+    }
+    const byKey={}; out.forEach(b=>byKey[b.key]=b);
+    all.forEach(o=>{ const b=byKey[new Date(o.at).toDateString()]; if(b){ b.count++; b.revenue+=o.total; b.units+=(o.items||[]).reduce((s,it)=>s+it.q,0); } });
+  }else if(spanDays<=210){
+    let d=new Date(start); d.setHours(0,0,0,0);
+    while(d.getTime()<end){
+      const wEnd=new Date(d); wEnd.setDate(wEnd.getDate()+6); wEnd.setHours(23,59,59,999);
+      out.push({start:new Date(d),end:wEnd,label:d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"}),count:0,revenue:0,units:0});
+      d=new Date(d); d.setDate(d.getDate()+7);
+    }
+    all.forEach(o=>{ const od=new Date(o.at); const b=out.find(x=>od>=x.start&&od<=x.end); if(b){ b.count++; b.revenue+=o.total; b.units+=(o.items||[]).reduce((s,it)=>s+it.q,0); } });
+  }else{
+    let cur=new Date(new Date(start).getFullYear(),new Date(start).getMonth(),1);
+    while(cur.getTime()<end){
+      out.push({key:`${cur.getFullYear()}-${cur.getMonth()}`,label:cur.toLocaleDateString("en-IN",{month:"short",year:"2-digit"}),count:0,revenue:0,units:0});
+      cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);
+    }
+    const byKey={}; out.forEach(b=>byKey[b.key]=b);
+    all.forEach(o=>{ const od=new Date(o.at); const k=`${od.getFullYear()}-${od.getMonth()}`; const b=byKey[k]; if(b){ b.count++; b.revenue+=o.total; b.units+=(o.items||[]).reduce((s,it)=>s+it.q,0); } });
+  }
+  return out;
+}
+function renderBarChart(containerSel,buckets,opts){
+  const el=$(containerSel); if(!el) return;
+  if(!buckets.length||!buckets.some(b=>b[opts.metric]>0)){ el.innerHTML=`<div class="chart-empty">${opts.emptyMsg}</div>`; return; }
+  const maxV=Math.max(1,...buckets.map(b=>b[opts.metric]));
+  const w=640,h=170,padB=26,padT=8,n=buckets.length,gap=n>60?2:6;
+  const barW=(w/n)-gap;
+  let bars="",labels="";
+  const labelEvery=n>30?Math.ceil(n/12):(n>7?5:1);
+  buckets.forEach((b,i)=>{
+    const bh=Math.round(b[opts.metric]/maxV*(h-padT-padB));
+    const x=+(i*(barW+gap)).toFixed(1), y=h-padB-bh;
+    bars+=`<rect x="${x}" y="${y}" width="${Math.max(barW,1).toFixed(1)}" height="${b[opts.metric]?Math.max(bh,2):0}" rx="3" fill="${opts.color}" data-tip="${opts.tipFn(b).replace(/"/g,'&quot;')}"></rect>`;
+    if(i%labelEvery===0) labels+=`<text x="${(x+barW/2).toFixed(1)}" y="${h-8}" font-size="9" fill="#8993A4" text-anchor="middle" font-family="Inter,sans-serif">${b.label}</text>`;
+  });
+  el.innerHTML=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block">${bars}${labels}</svg>`;
+  wireChartTips(el);
+}
+function renderSalesOverviewStrip(orders){
+  const el=$("#salesOverviewStrip"); if(!el) return;
+  const revenue=orders.reduce((s,o)=>s+o.total,0);
+  const aov=orders.length?revenue/orders.length:0;
+  const items=[["Revenue",money(Math.round(revenue)),"#0E7A54"],["Orders",orders.length.toLocaleString("en-IN"),"#2563EB"],["Avg Order Value",money(Math.round(aov)),"#7C3AED"]];
+  el.innerHTML=items.map(([label,v,hex])=>`<div class="strip-chip"><span class="strip-dot" style="background:${hex}"></span><div><div class="strip-val">${v}</div><div class="strip-label">${label}</div></div></div>`).join("");
+}
+function rankedProductRowHTML(item,i,valueText){
+  const p=P.find(x=>x.name===item.name);
+  const art=p?(window.artFor?window.artFor(p.type):window.icon('boxes')):window.icon('boxes');
+  return `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:${i?'1px solid var(--adm-border-soft)':'none'};font-size:12.5px">
+    <span style="color:var(--adm-soft);font-weight:800;width:16px;text-align:center;flex-shrink:0">${i+1}</span>
+    <span class="em-tag" style="background:${p?catColor(p):'#EEF1F6'}">${art}</span>
+    <span style="flex:1;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.name}</span>
+    <b style="color:var(--ink);flex-shrink:0">${valueText}</b>
+  </div>`;
+}
+function renderRankedProductList(containerSel,orders,sortBy,limit,emptyMsg){
+  const el=$(containerSel); if(!el) return;
+  const agg=aggregateItems(orders).sort((a,b)=>b[sortBy]-a[sortBy]).slice(0,limit);
+  if(!agg.length){ el.innerHTML=`<div class="chart-empty">${emptyMsg}</div>`; return; }
+  el.innerHTML=agg.map((a,i)=>rankedProductRowHTML(a,i,sortBy==="qty"?`${a.qty} units`:money(a.revenue))).join("");
+}
+function renderSlowMovingProducts(orders){
+  const el=$("#reportsSlowMoving"); if(!el) return;
+  const threshold=getLowStockThreshold();
+  const soldMap={}; aggregateItems(orders).forEach(a=>soldMap[a.name]=a.qty);
+  const candidates=P.filter(p=>avail(p)&&val(p,'stock')>threshold).map(p=>({p,sold:soldMap[p.name]||0}));
+  candidates.sort((a,b)=>a.sold-b.sold);
+  const shown=candidates.slice(0,8);
+  if(!shown.length){ el.innerHTML=`<div class="chart-empty">Not enough catalog data yet.</div>`; return; }
+  el.innerHTML=shown.map(({p,sold},i)=>`<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:${i?'1px solid var(--adm-border-soft)':'none'};font-size:12.5px">
+    <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+    <span style="flex:1;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</span>
+    <span style="color:var(--adm-soft);font-size:11px;flex-shrink:0">${val(p,'stock')} in stock</span>
+    <b style="color:${sold===0?'var(--adm-red)':'var(--adm-amber)'};flex-shrink:0">${sold} sold</b>
+  </div>`).join("");
+}
+function renderReportsCategoryRevenue(orders){
+  const el=$("#reportsCatRevenue"); if(!el) return;
+  const agg=aggregateItems(orders);
+  const byCat={}; agg.forEach(a=>{ const p=P.find(x=>x.name===a.name); const cat=p?p.cat:"Other"; byCat[cat]=(byCat[cat]||0)+a.revenue; });
+  const rows=Object.entries(byCat).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  if(!rows.length){ el.innerHTML=`<div class="chart-empty">No sales in this range.</div>`; return; }
+  const max=rows[0][1];
+  el.innerHTML=rows.map(([cat,rev])=>`<div class="hbar-row"><span class="hbar-label">${cat}</span><div class="hbar-track"><div class="hbar-fill" style="width:${Math.max(6,Math.round(rev/max*100))}%;background:linear-gradient(90deg,#2563EB,#1D4ED8)"></div></div><span class="hbar-val">${money(rev)}</span></div>`).join("");
+}
+function renderReportsCategoryOrders(orders){
+  const el=$("#reportsCatOrders"); if(!el) return;
+  if(!orders.length){ el.innerHTML=`<div class="chart-empty">No orders in this range.</div>`; return; }
+  const byCat={};
+  orders.forEach(o=>{
+    const cats=new Set();
+    (o.items||[]).forEach(it=>{ const p=P.find(x=>x.name===it.name); cats.add(p?p.cat:"Other"); });
+    cats.forEach(c=>byCat[c]=(byCat[c]||0)+1);
+  });
+  const rows=Object.entries(byCat).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  if(!rows.length){ el.innerHTML=`<div class="chart-empty">No orders in this range.</div>`; return; }
+  const max=rows[0][1];
+  el.innerHTML=rows.map(([cat,n])=>`<div class="hbar-row"><span class="hbar-label">${cat}</span><div class="hbar-track"><div class="hbar-fill" style="width:${Math.max(6,Math.round(n/max*100))}%"></div></div><span class="hbar-val">${n}</span></div>`).join("");
+}
+function renderCustomerPerfStrip(orders){
+  const el=$("#customerPerfStrip"); if(!el) return;
+  const customers=buildCustomers(orders);
+  const total=customers.length, repeat=customers.filter(c=>c.orders>1).length;
+  const revenue=orders.reduce((s,o)=>s+o.total,0);
+  const avgCustVal=total?revenue/total:0;
+  const items=[["Total Customers",total.toLocaleString("en-IN"),"#2563EB"],["Repeat Customers",repeat.toLocaleString("en-IN"),"#0E7A54"],["Avg Customer Value",money(Math.round(avgCustVal)),"#7C3AED"]];
+  el.innerHTML=items.map(([label,v,hex])=>`<div class="strip-chip"><span class="strip-dot" style="background:${hex}"></span><div><div class="strip-val">${v}</div><div class="strip-label">${label}</div></div></div>`).join("");
+}
+function renderTopCustomers(orders){
+  const el=$("#reportsTopCustomers"); if(!el) return;
+  const customers=buildCustomers(orders).sort((a,b)=>b.total-a.total).slice(0,8);
+  if(!customers.length){ el.innerHTML=`<div class="chart-empty">No customers in this range.</div>`; return; }
+  el.innerHTML=customers.map((c,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:${i?'1px solid var(--adm-border-soft)':'none'};font-size:12.5px">
+    <span style="color:var(--adm-soft);font-weight:800;width:16px;text-align:center;flex-shrink:0">${i+1}</span>
+    <div style="flex:1;min-width:0"><b style="color:var(--ink)">${c.name}</b><div style="font-size:11px;color:var(--adm-soft)">${c.mobile||""} · ${c.orders} order${c.orders===1?"":"s"}</div></div>
+    <b style="color:var(--ink);flex-shrink:0">${money(c.total)}</b>
+  </div>`).join("");
+}
+function renderOrderPerformance(orders){
+  const el=$("#reportsOrderPerf"); if(!el) return;
+  if(!orders.length){ el.innerHTML=`<div class="chart-empty">No orders in this range.</div>`; return; }
+  let pending=0,out=0,delivered=0,cancelled=0;
+  orders.forEach(o=>{
+    const s=o.status||"received";
+    if(s==="delivered") delivered++; else if(s==="cancelled") cancelled++; else if(s==="out") out++; else pending++;
+  });
+  const total=orders.length;
+  const data=[["Delivered",delivered,"#0E7A54"],["Pending",pending,"#94A3B8"],["Out for Delivery",out,"#D97706"],["Cancelled",cancelled,"#DC2626"]];
+  const active=data.filter(([,n])=>n>0);
+  const segs=active.map(([label,n,hex])=>`<div class="stack-seg" style="flex:${n} 0 0;background:${hex}" data-tip="${label}<small>${n} order${n===1?"":"s"} · ${Math.round(n/total*100)}%</small>"></div>`).join("");
+  const legend=data.map(([label,n,hex])=>`<div class="stack-leg"><i style="background:${hex}"></i>${label} <b>${n}</b><span>(${total?Math.round(n/total*100):0}%)</span></div>`).join("");
+  el.innerHTML=`<div class="stack-bar">${segs}</div><div class="stack-legend">${legend}</div>`;
+  wireChartTips(el);
+}
+function renderReportsPaymentSplit(orders){
+  const el=$("#reportsPaymentSplit"); if(!el) return;
+  if(!orders.length){ el.innerHTML=`<div class="chart-empty">No orders in this range.</div>`; return; }
+  const cod=orders.filter(o=>o.pay!=="upi").length, upi=orders.filter(o=>o.pay==="upi").length, total=orders.length;
+  el.innerHTML=`<div class="stack-bar">
+    <div class="stack-seg" style="flex:${cod} 0 0;background:#0E7A54" data-tip="Cash on Delivery<small>${cod} orders · ${Math.round(cod/total*100)}%</small>"></div>
+    <div class="stack-seg" style="flex:${upi} 0 0;background:#2563EB" data-tip="UPI<small>${upi} orders · ${Math.round(upi/total*100)}%</small>"></div>
+  </div><div class="stack-legend">
+    <div class="stack-leg"><i style="background:#0E7A54"></i>Cash on Delivery <b>${cod}</b><span>(${Math.round(cod/total*100)}%)</span></div>
+    <div class="stack-leg"><i style="background:#2563EB"></i>UPI <b>${upi}</b><span>(${Math.round(upi/total*100)}%)</span></div>
+  </div>`;
+  wireChartTips(el);
+}
+function renderInventoryPerfStrip(){
+  const el=$("#inventoryPerfStrip"); if(!el) return;
+  const threshold=getLowStockThreshold();
+  let out=0,low=0,stockValue=0;
+  P.forEach(p=>{
+    const stock=val(p,'stock'), isAvail=avail(p);
+    stockValue+=stock*val(p,'price');
+    if(isAvail){ if(stock<=0) out++; else if(stock<=threshold) low++; }
+  });
+  const items=[["Stock Value",money(Math.round(stockValue)),"#7C3AED"],["Low Stock",low,"#D97706"],["Out of Stock",out,"#DC2626"]];
+  el.innerHTML=items.map(([label,v,hex])=>`<div class="strip-chip"><span class="strip-dot" style="background:${hex}"></span><div><div class="strip-val">${v}</div><div class="strip-label">${label}</div></div></div>`).join("");
+}
+async function renderReportsStockMovement(){
+  const el=$("#reportsStockMovement"); if(!el) return;
+  const {start,end}=getReportsRange();
+  const movements=await fetchRecentStockMovements(1000);
+  if($(".page-section.active").dataset.page!=="reports") return;
+  const scoped=movements.filter(m=>m.at>=start&&m.at<end);
+  const added=scoped.filter(m=>m.type==="restock").reduce((s,m)=>s+Math.max(0,m.qty),0);
+  const adjusted=scoped.filter(m=>m.type!=="restock").reduce((s,m)=>s+m.qty,0);
+  el.innerHTML=`<div class="stack-legend" style="margin-top:0">
+      <div class="stack-leg"><i style="background:#0E7A54"></i>Stock added <b>${added}</b> units</div>
+      <div class="stack-leg"><i style="background:#D97706"></i>Net adjustments <b>${adjusted>=0?"+":""}${adjusted}</b> units</div>
+      <div class="stack-leg"><i style="background:#8993A4"></i>Movements logged <b>${scoped.length}</b></div>
+    </div>
+    ${!movements.length?`<div class="od-note" style="margin-top:10px">Stock movement tracking starts from when it was added — see the Inventory page for the full day-by-day chart.</div>`:""}`;
+}
+function renderReportsPage(){
+  const {start,end,label}=getReportsRange();
+  $("#reportsRangeLabel").textContent=label;
+  const orders=reportsOrders();
+  const buckets=bucketRange(orders,start,end);
+  renderSalesOverviewStrip(orders);
+  renderBarChart("#reportsRevenueChart",buckets,{metric:"revenue",color:"#0E7A54",tipFn:b=>`${b.label}<small>${money(b.revenue)}</small>`,emptyMsg:"No revenue in this range."});
+  renderBarChart("#reportsOrderChart",buckets,{metric:"count",color:"#2563EB",tipFn:b=>`${b.label}<small>${b.count} order${b.count===1?"":"s"}</small>`,emptyMsg:"No orders in this range."});
+  renderRankedProductList("#reportsTopSelling",orders,"qty",8,"No sales in this range.");
+  renderRankedProductList("#reportsTopRevenue",orders,"revenue",8,"No sales in this range.");
+  renderSlowMovingProducts(orders);
+  renderReportsCategoryRevenue(orders);
+  renderReportsCategoryOrders(orders);
+  renderCustomerPerfStrip(orders);
+  renderTopCustomers(orders);
+  renderOrderPerformance(orders);
+  renderReportsPaymentSplit(orders);
+  renderInventoryPerfStrip();
+  renderReportsStockMovement();
+}
+function exportReportsCSV(){
+  const {label}=getReportsRange();
+  const orders=reportsOrders();
+  const revenue=orders.reduce((s,o)=>s+o.total,0);
+  const aov=orders.length?revenue/orders.length:0;
+  const agg=aggregateItems(orders);
+  const byCatRev={}; agg.forEach(a=>{ const p=P.find(x=>x.name===a.name); const cat=p?p.cat:"Other"; byCatRev[cat]=(byCatRev[cat]||0)+a.revenue; });
+  const customers=buildCustomers(orders).sort((a,b)=>b.total-a.total);
+  const threshold=getLowStockThreshold();
+  let stockValue=0,lowN=0,outN=0;
+  P.forEach(p=>{ const stock=val(p,'stock'); stockValue+=stock*val(p,'price'); if(avail(p)){ if(stock<=0) outN++; else if(stock<=threshold) lowN++; } });
+  const sections=[
+    {title:`A.R. Abi Traders — Reports & Analytics (${label})`,headers:["Metric","Value"],rows:[
+      ["Revenue",money(Math.round(revenue))],["Orders",orders.length],["Average Order Value",money(Math.round(aov))],
+      ["Stock Value",money(Math.round(stockValue))],["Low Stock Items",lowN],["Out of Stock Items",outN],
+    ]},
+    {title:"Top Selling Products (by units)",headers:["Product","Units Sold","Revenue"],
+      rows:agg.slice().sort((a,b)=>b.qty-a.qty).slice(0,15).map(a=>[a.name,a.qty,money(a.revenue)])},
+    {title:"Highest Revenue Products",headers:["Product","Revenue","Units Sold"],
+      rows:agg.slice().sort((a,b)=>b.revenue-a.revenue).slice(0,15).map(a=>[a.name,money(a.revenue),a.qty])},
+    {title:"Revenue by Category",headers:["Category","Revenue"],
+      rows:Object.entries(byCatRev).sort((a,b)=>b[1]-a[1]).map(([cat,rev])=>[cat,money(rev)])},
+    {title:"Top Customers",headers:["Customer","Mobile","Orders","Total Spent"],
+      rows:customers.slice(0,20).map(c=>[c.name,c.mobile||"",c.orders,money(c.total)])},
+  ];
+  downloadMultiSectionCSV(`reports_${reportsRangeType}_${isoDate(new Date())}.csv`,sections);
+}
+function downloadMultiSectionCSV(filename,sections){
+  const bom=String.fromCharCode(0xFEFF);
+  const lines=[];
+  sections.forEach((sec,i)=>{
+    if(i>0) lines.push("");
+    lines.push(csvCell(sec.title));
+    lines.push(sec.headers.map(csvCell).join(","));
+    sec.rows.forEach(r=>lines.push(r.map(csvCell).join(",")));
+  });
+  const blob=new Blob([bom+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast("Report downloaded — check your Downloads folder");
+}
+$("#reportsExportBtn").addEventListener("click",exportReportsCSV);
+$("#reportsPrintBtn").addEventListener("click",()=>window.print());
+
 function charts(){
   renderTrendChart("#trendChart",trendPeriod);
   renderStatusChart();
@@ -2859,8 +3226,8 @@ $("#invPrevBtn").addEventListener("click",()=>{invPage--; inventoryPage(); $("#i
 $("#invNextBtn").addEventListener("click",()=>{invPage++; inventoryPage(); $("#inventoryPanel").scrollIntoView({behavior:"smooth",block:"start"});});
 
 /* ============================================================ Customers (derived from order history) */
-function buildCustomers(){
-  const all=currentOrders();
+function buildCustomers(orderList){
+  const all=orderList||currentOrders();
   const byMobile={};
   all.forEach(o=>{
     const key=o.mobile||o.name;
