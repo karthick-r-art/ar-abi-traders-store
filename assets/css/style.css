@@ -386,6 +386,7 @@ section.block{padding:40px 0}
   box-shadow:var(--shadow-lg);transition:transform .3s;display:flex;align-items:center;gap:10px}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast .em{font-size:18px}
+body.ovl .toast{bottom:104px}
 
 /* ---------- Footer ---------- */
 footer.site{background:var(--green-700);color:#DCE7DC;margin-top:40px}

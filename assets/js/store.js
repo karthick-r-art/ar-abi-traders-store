@@ -248,8 +248,8 @@ function renderCart(){
     <button class="btn btn-primary" style="width:100%;justify-content:center" data-checkout>${t('checkout')} →</button>`;
   wireDynamic();
 }
-function openCart(){ $("#scrim").classList.add("show"); $("#drawer").classList.add("show"); renderCart(); document.body.style.overflow="hidden"; }
-function closeCart(){ $("#scrim").classList.remove("show"); $("#drawer").classList.remove("show"); document.body.style.overflow=""; }
+function openCart(){ $("#scrim").classList.add("show"); $("#drawer").classList.add("show"); renderCart(); document.body.style.overflow="hidden"; document.body.classList.add("ovl"); }
+function closeCart(){ $("#scrim").classList.remove("show"); $("#drawer").classList.remove("show"); document.body.style.overflow=""; if(!$("#modal").classList.contains("show")) document.body.classList.remove("ovl"); }
 
 /* ============================================================ PRODUCT MODAL */
 function renderModalCtrl(p){
@@ -282,9 +282,9 @@ function openProduct(id){
       </div>
     </div>`;
   renderModalCtrl(p);
-  $("#modal").classList.add("show"); document.body.style.overflow="hidden";
+  $("#modal").classList.add("show"); document.body.style.overflow="hidden"; document.body.classList.add("ovl");
 }
-function closeModal(){ $("#modal").classList.remove("show"); if(!$("#drawer").classList.contains("show")) document.body.style.overflow=""; }
+function closeModal(){ $("#modal").classList.remove("show"); if(!$("#drawer").classList.contains("show")){ document.body.style.overflow=""; document.body.classList.remove("ovl"); } }
 
 /* ============================================================ VIEWS: checkout / confirm */
 function show(view){
