@@ -510,6 +510,10 @@ function applyStaticText(){
   set("#hOffers","offers"); set("#hPopular","popular");
   set("#moreOffers","viewall"); set("#morePopular","viewall");
   set("#btnLoadMore","loadMore");
+  $("#wbIcon").innerHTML=window.icon('warehouse');
+  set("#wbEyebrow","wbEyebrow"); set("#wbTitle","wbTitle"); set("#wbSub","wbSub");
+  $("#wbCheck1").innerHTML=window.icon('check'); $("#wbCheck2").innerHTML=window.icon('check'); $("#wbCheck3").innerHTML=window.icon('check');
+  set("#wbP1","wbP1"); set("#wbP2","wbP2"); set("#wbP3","wbP3"); set("#wbCta","wbCta");
   set("#drawerTitle","cart");
   $("#clearCartBtn").innerHTML=`${window.icon('trash')}<span>${t('clearCart')}</span>`;
   set("#coTitle","checkoutTitle"); set("#coDetails","yourDetails"); set("#coPayTitle","payment");
