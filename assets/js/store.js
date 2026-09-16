@@ -126,11 +126,15 @@ function renderCategories(){
   const counts = {};
   P.forEach(p=>counts[p.cat]=(counts[p.cat]||0)+1);
   const order = Object.keys(CATMETA).filter(c=>counts[c]);
-  $("#cats").innerHTML = order.map(c=>`
-    <button class="catcard" data-cat="${c}" style="background:${catBg(c)}">
+  $("#cats").innerHTML = order.map(c=>{
+    const img = window.CATPHOTO && window.CATPHOTO[c];
+    return `
+    <button class="catcard${img?' has-photo':''}" data-cat="${c}" style="background:${catBg(c)}">
+      ${img?`<img class="catcard-img" src="${img}" alt="" loading="lazy" onerror="this.closest('.catcard').classList.remove('has-photo');this.remove()">`:""}
       <span class="cem">${window.catIcon(c)}</span>
       <b>${catName(c)}</b><small>${counts[c]} ${t('items')}</small>
-    </button>`).join("");
+    </button>`;
+  }).join("");
   wireDynamic();
 }
 function renderRail(){

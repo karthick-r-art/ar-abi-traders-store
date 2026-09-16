@@ -16,6 +16,27 @@ window.CATMETA = {
   "General Store":        {em:"🛒", ta:"பொது சரக்குகள்",       c:"#EFF1EC,#1D2218"},
 };
 
+/* Optional real photo per category — drop a matching file in assets/img/categories/
+   and the tile switches from icon+color to a photo automatically. Missing files are
+   skipped silently (see the onerror handler in renderCategories), so this is safe to
+   fill in gradually, one category at a time. */
+window.CATPHOTO = {
+  "Beverages":            "assets/img/categories/beverages.jpg",
+  "Dairy & Ghee":         "assets/img/categories/dairy-ghee.jpg",
+  "Rice & Atta":          "assets/img/categories/rice-atta.jpg",
+  "Dal & Pulses":         "assets/img/categories/dal-pulses.jpg",
+  "Oils":                 "assets/img/categories/oils.jpg",
+  "Masala & Spices":      "assets/img/categories/masala-spices.jpg",
+  "Chocolates & Candy":   "assets/img/categories/chocolates-candy.jpg",
+  "Snacks & Biscuits":    "assets/img/categories/snacks-biscuits.jpg",
+  "Baby Care":            "assets/img/categories/baby-care.jpg",
+  "Home Care":            "assets/img/categories/home-care.jpg",
+  "Personal Care":        "assets/img/categories/personal-care.jpg",
+  "Tobacco & Pan":        "assets/img/categories/tobacco-pan.jpg",
+  "Stationery & General": "assets/img/categories/stationery-general.jpg",
+  "General Store":        "assets/img/categories/general-store.jpg",
+};
+
 window.I18N = {
   en:{
     tagline:"Groceries & General Store, Cuddalore",
