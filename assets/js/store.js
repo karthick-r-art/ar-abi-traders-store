@@ -79,8 +79,9 @@ function productImg(p){
     return `<img class="pimg" src="assets/img/products/${p.id}.jpg" alt="${p.name}" loading="lazy" onerror="window.imgFallback(this,'${p.type}')">`;
   return window.artFor ? window.artFor(p.type) : "";
 }
+const hasRealPhoto = p => !!(p.photo || window.PRODUCT_PHOTOS.has(p.id));
 function tile(p, size){
-  return `<div class="thumb" style="background:${catBg(p.cat)}" data-open="${p.id}">
+  return `<div class="thumb${hasRealPhoto(p)?' has-photo':''}" style="background:${catBg(p.cat)}" data-open="${p.id}">
       ${discount(p)?`<span class="badge">${discount(p)}% ${t('off')}</span>`:""}
       ${productImg(p)}
       ${!inStock(p)?`<span class="oos">${t('outStock')}</span>`:""}
