@@ -51,4 +51,78 @@ const A={
 A.tobacco=A.beedi;
 window.PRODUCTART=A;
 window.artFor=(t)=>A[t]||A.generic;
+
+/* ============================================================
+   Brand-label packs — one distinct, readable image for every product.
+   Shape comes from product.type; colour is fixed per brand (so every
+   "AACHI …" item shares a look); the label prints brand, variant and size.
+   A real photo (uploaded in admin, or listed in PRODUCT_PHOTOS) always wins.
+   ============================================================ */
+const PALETTE=[["#C4361F","#8E2415"],["#0E5A3C","#0A4630"],["#1F4E9E","#163A76"],["#D98A00","#A86A00"],["#6B3FA0","#4E2C78"],
+  ["#0F7C8C","#0B5C68"],["#8E2B5B","#6A1F44"],["#B8551B","#8C4014"],["#2E7D32","#1F5A23"],["#37474F","#263238"],
+  ["#A61E4D","#7C1539"],["#1B6CA8","#134F7C"],["#5D4037","#3E2A24"],["#00838F","#006069"]];
+const SHAPE={oil:"bottle",soda:"bottle",water:"bottle",shampoo:"bottle",hairoil:"bottle",cleaner:"bottle",
+  pickle:"jar",health:"jar",cream:"jar",coffee:"jar",nuts:"jar",
+  rice:"pouch",atta:"pouch",dal:"pouch",sugar:"pouch",salt:"pouch",spice:"pouch",chips:"pouch",tea:"pouch",
+  noodles:"pouch",detergent:"pouch",milk:"pouch",candy:"pouch",egg:"box"};
+const SIZE_RE=/^(\d+(?:\.\d+)?)(KG|G|GM|GMS|GRAM|GRAMS|ML|L|LTR|LITRE|RS|W|PC|PCS)$/i;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const titleCase=w=>w.length<=3&&!/[AEIOU]/i.test(w)?w.toUpperCase():w.charAt(0).toUpperCase()+w.slice(1).toLowerCase();
+function parseName(name){
+  const words=String(name||"").replace(/[\[\]()]/g," ").replace(/(\d)\s+(KG|G|GM|ML|L|LTR|RS)\b/gi,"$1$2").split(/\s+/).filter(Boolean);
+  let size="",price="",rest=[];
+  words.forEach(w=>{
+    const m=w.match(SIZE_RE);
+    if(m){ const u=m[2].toUpperCase();
+      if(u==="RS"){ if(!price) price="₹"+m[1]; }
+      else if(!size){ size=m[1]+({KG:"kg",G:"g",GM:"g",GMS:"g",GRAM:"g",GRAMS:"g",ML:"ml",L:"L",LTR:"L",LITRE:"L",W:"W",PC:" pc",PCS:" pcs"}[u]); }
+      return; }
+    if(/^RS$/i.test(w)||/^\d+$/.test(w)||/^(SAR|CASE|BOX|PKT|BAG|BIG|SMALL)$/i.test(w)) return;
+    rest.push(w);
+  });
+  while(rest.length>1 && /^(TO|AND|OF|THE|A|&|-)$/i.test(rest[0])) rest.shift();
+  if(!rest.length) rest=["A.R.","Abi"];
+  return {brand:titleCase(rest[0]), variant:rest.slice(1,4).map(titleCase).join(" "), badge:size||price};
+}
+function hashStr(s){ let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return h; }
+/* text that always fits: shrink font to width, compress only as a last resort */
+function fitText(txt,x,y,maxW,size,weight,fill,extra=""){
+  const est=txt.length*size*(weight>=700?.62:.56);
+  const fs=est>maxW?Math.max(size*maxW/est,size*.62):size;
+  const needSqueeze=txt.length*fs*(weight>=700?.62:.56)>maxW;
+  return `<text x="${x}" y="${y}" text-anchor="middle" font-family="Inter,'Segoe UI',Arial,sans-serif" font-weight="${weight}" font-size="${fs.toFixed(2)}" fill="${fill}"${needSqueeze?` textLength="${maxW}" lengthAdjust="spacingAndGlyphs"`:""} ${extra}>${esc(txt)}</text>`;
+}
+const PACK_CACHE=new Map();
+window.packFor=function(p){
+  if(!p) return A.generic;
+  const key=p.id+"|"+p.name+"|"+p.type; if(PACK_CACHE.has(key)) return PACK_CACHE.get(key);
+  const {brand,variant,badge}=parseName(p.name);
+  const [c,cd]=PALETTE[hashStr(brand.toUpperCase())%PALETTE.length];
+  const shape=SHAPE[p.type]||"box";
+  const uid="g"+p.id;
+  const defs=`<defs><linearGradient id="${uid}" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".85" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient></defs>`;
+  let body, lx=50, ly, lw, lh;
+  if(shape==="bottle"){
+    body=`<rect x="44" y="9" width="12" height="7" rx="2" fill="${cd}"/><path d="M45 16h10v6l6 7v55a5 5 0 0 1-5 5H44a5 5 0 0 1-5-5V29l6-7z" fill="${c}"/><path d="M45 16h10v6l6 7v55a5 5 0 0 1-5 5H44a5 5 0 0 1-5-5V29l6-7z" fill="url(#${uid})"/>`;
+    ly=40; lw=24; lh=36;
+  } else if(shape==="jar"){
+    body=`<rect x="31" y="20" width="38" height="10" rx="3" fill="${cd}"/><rect x="28" y="28" width="44" height="60" rx="8" fill="${c}"/><rect x="28" y="28" width="44" height="60" rx="8" fill="url(#${uid})"/>`;
+    ly=38; lw=38; lh=38;
+  } else if(shape==="pouch"){
+    body=`<path d="M27 14h46l2 6-2 5 3 58a5 5 0 0 1-5 5H29a5 5 0 0 1-5-5l3-58-2-5z" fill="${c}"/><path d="M27 14h46l2 6-2 5 3 58a5 5 0 0 1-5 5H29a5 5 0 0 1-5-5l3-58-2-5z" fill="url(#${uid})"/><path d="M27 14h46l2 6H25z" fill="${cd}"/><path d="M29 18h42" stroke="#fff" stroke-opacity=".35" stroke-dasharray="2 2"/>`;
+    ly=32; lw=42; lh=42;
+  } else {
+    body=`<path d="M26 22l6-8h36l6 8z" fill="${cd}"/><rect x="26" y="22" width="48" height="66" rx="3" fill="${c}"/><rect x="26" y="22" width="48" height="66" rx="3" fill="url(#${uid})"/>`;
+    ly=32; lw=42; lh=42;
+  }
+  const lxL=lx-lw/2;
+  const label=`<rect x="${lxL}" y="${ly}" width="${lw}" height="${lh}" rx="3" fill="#FFFDF7"/>
+    <rect x="${lxL}" y="${ly}" width="${lw}" height="3" rx="1.5" fill="${cd}" opacity=".9"/>
+    ${fitText(brand.toUpperCase(),lx,ly+(variant?15:lh/2+4),lw-5,shape==="bottle"?7.4:10,800,c)}
+    ${variant?fitText(variant,lx,ly+24,lw-5,shape==="bottle"?4.8:5.6,600,"#3A4540"):""}
+    ${badge?`<rect x="${lx-11}" y="${ly+lh-11}" width="22" height="8" rx="4" fill="#E3A11B"/>${fitText(badge,lx,ly+lh-5.2,19,5,800,"#20301f")}`:""}`;
+  const svg=`<svg viewBox="16 5 68 90" xmlns="http://www.w3.org/2000/svg" class="pill-art pack-art" role="img" aria-label="${esc(brand+" "+variant)}">${defs}<ellipse cx="50" cy="91" rx="28" ry="3.5" fill="#000" opacity=".1"/>${body}${label}</svg>`;
+  PACK_CACHE.set(key,svg); return svg;
+};
+
 })();

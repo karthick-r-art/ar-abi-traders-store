@@ -125,12 +125,13 @@ function catsInOrder(){
 
 /* ============================================================ RENDER: product card */
 window.PRODUCT_PHOTOS = window.PRODUCT_PHOTOS || new Set();  // add ids here when real photos exist
-window.imgFallback = (el, type) => { el.outerHTML = window.artFor ? window.artFor(type) : ""; };
+const packImg = p => window.packFor ? window.packFor(p) : (window.artFor ? window.artFor(p.type) : "");
+window.imgFallback = (el, id) => { const p=P.find(x=>x.id==id); el.outerHTML = p ? packImg(p) : ""; };
 function productImg(p){
-  if(p.photo) return `<img class="pimg" src="${esc(p.photo)}" alt="${esc(prettyName(p.name))}" loading="lazy" onerror="window.imgFallback(this,'${p.type}')">`;
+  if(p.photo) return `<img class="pimg" src="${esc(p.photo)}" alt="${esc(prettyName(p.name))}" loading="lazy" decoding="async" onerror="window.imgFallback(this,${Number(p.id)})">`;
   if(window.PRODUCT_PHOTOS.has(p.id))
-    return `<img class="pimg" src="assets/img/products/${p.id}.jpg" alt="${esc(prettyName(p.name))}" loading="lazy" onerror="window.imgFallback(this,'${p.type}')">`;
-  return window.artFor ? window.artFor(p.type) : "";
+    return `<img class="pimg" src="assets/img/products/${p.id}.jpg" alt="${esc(prettyName(p.name))}" loading="lazy" decoding="async" onerror="window.imgFallback(this,${Number(p.id)})">`;
+  return packImg(p);
 }
 const hasRealPhoto = p => !!(p.photo || window.PRODUCT_PHOTOS.has(p.id));
 function tile(p){
@@ -343,7 +344,7 @@ function renderCart(){
         <div class="sg-f"><span>${money(p.price)}</span><button class="add" data-add="${p.id}" aria-label="${t('addCart')}">+</button></div></div>`).join("")}
       </div></div>`:"");
   $("#dfoot").innerHTML=`
-    <div class="drow"><span>${t('subtotal')} (${arr.length} ${t('items')})</span><span>${money(round2(s))}</span></div>
+    <div class="drow"><span>${t('subtotal')} (${arr.length} ${arr.length===1?t('item'):t('items')})</span><span>${money(round2(s))}</span></div>
     <div class="drow"><span>${t('deliveryFee')}</span><span>${d?money(d):`<b style="color:var(--ok)">${t('free')}</b>`}</span></div>
     <div class="drow total"><span>${t('total')}</span><span>${money(round2(s+d))}</span></div>
     <button class="btn btn-gold btn-block" data-checkout>${t('checkout')}</button>`;
@@ -431,14 +432,14 @@ function show(view, keepScroll){
 }
 function renderCheckoutBody(){
   const arr=cartArr(); const s=subtotal(), d=deliveryFee();
-  $("#coCart").innerHTML=`<h3>${t('cart')} (${arr.length} ${t('items')})</h3>`+arr.map(({p,q})=>`
+  $("#coCart").innerHTML=`<h3>${t('cart')} (${arr.length} ${arr.length===1?t('item'):t('items')})</h3>`+arr.map(({p,q})=>`
     <div class="co-item"><div class="cim" style="background:${catBg(p.cat)}">${productImg(p)}</div>
       <div class="ci-m"><b>${esc(titleOf(p))}</b><small>${esc(unitOf(p))} · ${money(p.price)}</small>
         <div class="mini" style="margin-top:6px;width:max-content"><button data-dec="${p.id}" aria-label="decrease">−</button>${qtySpan(p,q)}<button data-inc="${p.id}" aria-label="increase">+</button></div></div>
       <div class="ci-r"><strong>${money(round2(p.price*q))}</strong><button class="rm" data-rm="${p.id}">${window.icon('trash')}<span>${t('remove')}</span></button></div>
     </div>`).join("")+`<button class="co-empty-link" data-home>← ${t('continueShopping')}</button>`;
   $("#coSummary").innerHTML=`<h3>${t('orderSummary')}</h3>
-    <div class="drow"><span>${t('subtotal')} (${arr.length} ${t('items')})</span><span>${money(round2(s))}</span></div>
+    <div class="drow"><span>${t('subtotal')} (${arr.length} ${arr.length===1?t('item'):t('items')})</span><span>${money(round2(s))}</span></div>
     <div class="drow"><span>${t('deliveryFee')}</span><span>${d?money(d):`<b style="color:var(--ok)">${t('free')}</b>`}</span></div>
     <div class="drow total"><span>${t('total')}</span><span>${money(round2(s+d))}</span></div>`;
   wireDynamic();
@@ -472,7 +473,7 @@ async function placeOrder(){
   S.order=order;
   const orders=store.get("orders",[]); orders.unshift(order); store.set("orders",orders);
   S.cart={}; saveCart();
-  renderFeatured(); renderAll();   // clear the old quantities off the product cards
+  renderFeatured(); renderAll(); refreshTrackDot();   // clear the old quantities off the product cards
   renderConfirm(order);
   if(window.ARFire && window.ARFire.ready){
     try{
@@ -515,7 +516,7 @@ function stopTracking(){ if(S.unsub){ S.unsub(); S.unsub=null; } }
 function renderConfirm(o){
   stopTracking();
   $("#confirm").innerHTML=`<div class="track">
-    <p style="color:var(--muted);margin:0 0 2px">${t('orderThanks')}, <b style="color:var(--ink)">${o.name}</b> ${window.icon('praying')}</p>
+    <p style="color:var(--muted);margin:0 0 2px">${t('orderThanks')}, <b style="color:var(--ink)">${esc(o.name)}</b> ${window.icon('praying')}</p>
     <p style="color:var(--muted);font-size:13px;margin-bottom:14px">${t('orderNum')} <b style="color:var(--green)">#${o.num}</b></p>
     <div id="trackBody"></div>
     <p style="color:var(--muted);max-width:42ch;margin:14px auto 0">${t('orderMsg')}</p>
@@ -523,41 +524,60 @@ function renderConfirm(o){
       <a class="btn btn-primary" href="https://wa.me/${SHOP.wa}?text=${waMessage(o)}" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1s-.5-.2-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5L8.9 6.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3A3 3 0 0 0 6 9.1c0 1.3.9 2.6 1.1 2.8a10.7 10.7 0 0 0 4.1 3.6c2 .8 2 .6 2.4.5a2.6 2.6 0 0 0 1.7-1.2c.2-.5.2-.9.1-1zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2z"/></svg>
         ${t('waOrder')}</a>
+      <button class="btn btn-ghost" data-track-this="${esc(o.num)}">${t('trackThis')}</button>
+      <button class="btn btn-ghost" data-copy-num="${esc(o.num)}">${t('copyNum')}</button>
       <button class="btn btn-ghost" data-home>${t('keepShopping')}</button>
     </div>
+    <p class="tk-note" style="text-align:center;margin-top:14px">${t('saveNumHint')}</p>
   </div>`;
-  $("#trackBody").innerHTML=trackerHTML(o);
+  $("#confirm #trackBody").innerHTML=trackerHTML(o);
   show("confirm"); wireDynamic();
   if(window.ARFire && window.ARFire.ready){
     const {db,doc,onSnapshot}=window.ARFire;
     S.unsub=onSnapshot(doc(db,"orders",o.num),snap=>{
       if(!snap.exists()) return;
       const fresh=snap.data(); S.order={...S.order,...fresh};
-      const body=$("#trackBody"); if(body) body.innerHTML=trackerHTML(S.order);
+      const body=$("#confirm #trackBody"); if(body) body.innerHTML=trackerHTML(S.order);
     },err=>console.warn("[A.R. Abi] tracker listener error:",err));
   }
 }
 
 
 /* ============================================================ TRACK MY ORDER (returning / other device) */
-function renderTrack(){
-  $("#view-track .wrap").innerHTML = trackFormHTML();
+function renderTrack(prefill){
+  $("#view-track .wrap").innerHTML = trackFormHTML(prefill);
   wireTrackForm();
 }
-function trackFormHTML(){
-  return `<button class="btn btn-ghost" id="tkBack" style="margin-bottom:20px">← <span>${t('back')}</span></button>
-    <h2 style="font-size:26px;margin-bottom:6px">${t('trackTitle')}</h2>
-    <p style="color:var(--muted);margin-bottom:20px;max-width:48ch">${t('trackDesc')}</p>
-    <div style="max-width:380px">
-      <div class="field"><label>${t('orderNum')}</label><input id="tk-num" type="text" placeholder="AB123456" autocomplete="off"></div>
-      <div class="field"><label>${t('mobile')}</label><input id="tk-mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="9876543210"></div>
-      <button class="btn btn-primary" id="tk-go" style="width:100%;justify-content:center">${t('trackBtn')}</button>
-      <p class="err" id="tk-err" style="display:none;margin-top:10px"></p>
+function recentOrders(){ return (store.get("orders",[])||[]).filter(o=>o&&o.num).slice(0,6); }
+const isActiveOrder = o => o && !["delivered","cancelled"].includes(o.status||"received") && (Date.now()-(o.at||0)) < 4*864e5;
+function trackFormHTML(prefill){
+  const recent=recentOrders();
+  const fmtDate=ts=>{ try{ return new Date(ts).toLocaleDateString(S.lang==="ta"?"ta-IN":"en-IN",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}); }catch{ return ""; } };
+  return `<button class="btn btn-ghost btn-sm" id="tkBack" style="margin-bottom:18px">← <span>${t('back')}</span></button>
+    <h2 class="co-title" style="margin-bottom:6px">${t('trackTitle')}</h2>
+    <p style="color:var(--muted);margin:0 0 20px;max-width:52ch">${t('trackDesc')}</p>
+    <div class="tk-grid">
+      <div class="co-card">
+        <div class="field"><label for="tk-num">${t('orderNum')}</label><input id="tk-num" type="text" placeholder="AB12345678" autocomplete="off" value="${esc(prefill||"")}"></div>
+        <div class="field"><label for="tk-mobile">${t('mobile')}</label><input id="tk-mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="9876543210"></div>
+        <button class="btn btn-primary btn-block" id="tk-go">${t('trackBtn')}</button>
+        <p class="err" id="tk-err" style="display:none;margin-top:10px"></p>
+      </div>
+      <div class="co-card">
+        <h3>${t('recentOrders')}</h3>
+        <p class="tk-note">${t('recentNote')}</p>
+        ${recent.length?recent.map(o=>`<button class="tk-row" data-track-num="${esc(o.num)}" data-track-mob="${esc(o.mobile||"")}">
+            <span class="tk-dot ${isActiveOrder(o)?'on':''}"></span>
+            <span class="tk-m"><b>#${esc(o.num)}</b><small>${fmtDate(o.at)} · ${(o.items||[]).length} ${(o.items||[]).length===1?t('item'):t('items')} · ${money(o.total||0)}</small></span>
+            <span class="tk-go">${t('trackBtn')} →</span></button>`).join(""):`<p class="tk-empty">${t('noRecent')}</p>`}
+      </div>
     </div>
     <div id="tk-result" style="margin-top:24px"></div>`;
 }
 function wireTrackForm(){
   $("#tkBack").onclick=()=>{ stopTracking(); show("shop"); };
+  $$("[data-track-num]").forEach(b=>b.onclick=()=>{ $("#tk-num").value=b.dataset.trackNum; $("#tk-mobile").value=b.dataset.trackMob; doTrackLookup();
+    requestAnimationFrame(()=>$("#tk-result").scrollIntoView({behavior:"smooth",block:"start"})); });
   $("#tk-go").onclick=doTrackLookup;
   [$("#tk-num"),$("#tk-mobile")].forEach(el=>el.addEventListener("keydown",e=>{ if(e.key==="Enter") doTrackLookup(); }));
 }
@@ -584,20 +604,22 @@ async function doTrackLookup(){
     if(String(found.mobile).replace(/\s/g,"")!==mobile){ tkError(t('trackMismatch')); return; }
     $("#tk-result").innerHTML=`<div class="track" style="padding-top:4px">
       <p style="color:var(--muted);font-size:13px">${t('orderNum')} <b style="color:var(--green)">#${found.num}</b></p>
-      <div id="trackBody"></div></div>`;
-    $("#trackBody").innerHTML=trackerHTML(found);
+      <div class="tk-body"></div></div>`;
+    $("#tk-result .tk-body").innerHTML=trackerHTML(found);
+    { const list=store.get("orders",[]); const i=list.findIndex(o=>o.num===found.num); if(i>=0 && found.status){ list[i].status=found.status; store.set("orders",list); refreshTrackDot(); } }
     if(window.ARFire && window.ARFire.ready){
       const {db,doc,onSnapshot}=window.ARFire;
       S.unsub=onSnapshot(doc(db,"orders",num),snap=>{
         if(!snap.exists()) return;
-        const fresh=snap.data(); const body=$("#trackBody"); if(body) body.innerHTML=trackerHTML(fresh);
+        const fresh=snap.data(); const body=$("#tk-result .tk-body"); if(body) body.innerHTML=trackerHTML(fresh);
       },err=>console.warn("[A.R. Abi] tracker listener error:",err));
     }
   }finally{
     $("#tk-go").disabled=false; $("#tk-go").textContent=t('trackBtn');
   }
 }
-function openTrack(){ show("track"); renderTrack(); }
+function refreshTrackDot(){ const on=recentOrders().some(isActiveOrder); $$('[data-track]').forEach(b=>b.classList.toggle('has-active',on)); }
+function openTrack(prefill){ show("track"); renderTrack(typeof prefill==="string"?prefill:""); }
 
 
 /* ============================================================ VOICE SEARCH (mic) */
@@ -740,6 +762,9 @@ function wireDynamic(){
   $$("[data-home]").forEach(b=>b.onclick=e=>{ e.preventDefault(); stopTracking(); closeMega(); show("shop"); });
   $$("[data-view-all]").forEach(b=>b.onclick=e=>{ e.preventDefault(); goCategory(""); });
   $$("[data-cat]").forEach(b=>b.onclick=()=>goCategory(b.dataset.cat));
+  $$("[data-track-this]").forEach(b=>b.onclick=()=>{ openTrack(b.dataset.trackThis);
+    const o=recentOrders().find(x=>x.num===b.dataset.trackThis); if(o){ $("#tk-mobile").value=o.mobile||""; doTrackLookup(); } });
+  $$("[data-copy-num]").forEach(b=>b.onclick=async()=>{ try{ await navigator.clipboard.writeText(b.dataset.copyNum); toast(t('copied'),"✓"); }catch{ toast("#"+b.dataset.copyNum,"✓"); } });
   $$("[data-pdq]").forEach(b=>b.onclick=()=>{
     const p=P.find(x=>x.id==$("#modalCtrl").dataset.pid); if(!p) return;
     const step=qtyStep(p); S.pdq=round2(Math.min(p.stock,Math.max(step,(S.pdq||step)+step*Number(b.dataset.pdq))));
@@ -777,7 +802,9 @@ function init(){
   const tn=$("#trustProductsN"); if(tn) tn.textContent = P.length.toLocaleString("en-IN")+"+";
   applyStaticText();
   renderCategories(); renderRail(); renderFeatured(); renderAll(); refreshCount();
-  initReveal();
+  initReveal(); refreshTrackDot();
+  const deepTrack=()=>{ const hm=location.hash.match(/^#track=([A-Za-z0-9]+)/); if(hm) openTrack(hm[1].toUpperCase()); };
+  setTimeout(deepTrack,0); window.addEventListener("hashchange",deepTrack);
   // Firebase loads async so it never blocks the initial render — attach live
   // price/stock sync as soon as it's ready, whether that's now or a moment later.
   if(window.ARFire) subscribeProductOverrides();

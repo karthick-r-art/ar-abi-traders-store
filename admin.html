@@ -1417,7 +1417,7 @@ function renderGlobalSearch(){
   if(!products.length && !orders.length){ box.innerHTML=`<div class="gs-empty">No matches for "${q}"</div>`; box.classList.add("show"); return; }
   let html="";
   if(products.length) html+=`<div class="gs-group"><div class="gs-cap">Products</div>`+products.map(p=>
-    `<button class="gs-item" data-gs-product="${p.id}">${window.artFor?window.artFor(p.type):window.icon('boxes')}<span>${p.name}</span><small>${money(val(p,'price'))}</small></button>`).join("")+`</div>`;
+    `<button class="gs-item" data-gs-product="${p.id}">${window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.icon('boxes')}<span>${p.name}</span><small>${money(val(p,'price'))}</small></button>`).join("")+`</div>`;
   if(orders.length) html+=`<div class="gs-group"><div class="gs-cap">Orders</div>`+orders.map(o=>
     `<button class="gs-item" data-gs-order="${o.num}">${window.icon('receipt')}<span>#${o.num} — ${o.name}</span><small>${money(o.total)}</small></button>`).join("")+`</div>`;
   box.innerHTML=html; box.classList.add("show");
@@ -2201,7 +2201,7 @@ function renderTopProducts(containerSel,limit){
   const prev30ByName={}; aggregateItems(ordersInRange(all,prev30Start.getTime(),last30Start.getTime())).forEach(a=>prev30ByName[a.name]=a.revenue);
   el.innerHTML=agg.map((a,i)=>{
     const p=P.find(x=>x.name===a.name);
-    const art=p?(window.artFor?window.artFor(p.type):window.icon('boxes')):window.icon('boxes');
+    const art=p?(window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.icon('boxes')):window.icon('boxes');
     const trendPct=pctChange(last30ByName[a.name]||0,prev30ByName[a.name]||0);
     return `<div class="top-prod-row">
       <span class="top-prod-rank">${i+1}</span>
@@ -2267,7 +2267,7 @@ function lowStockAlerts(){
     <thead><tr><th>Product</th><th>Category</th><th>Current Stock</th><th>Min Stock</th><th>Status</th><th></th></tr></thead>
     <tbody>${rows.map(p=>`<tr>
       <td><div style="display:flex;align-items:center;gap:10px">
-        <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+        <span class="em-tag" style="background:${catColor(p)}">${window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
         <b style="font-weight:600">${p.name}</b></div></td>
       <td><span class="badge2 b-cat">${p.cat}</span></td>
       <td><input class="in" type="number" value="${val(p,'stock')}" data-id="${p.id}" data-f="stock" style="width:60px"></td>
@@ -2402,7 +2402,7 @@ function renderSalesOverviewStrip(orders){
 }
 function rankedProductRowHTML(item,i,valueText){
   const p=P.find(x=>x.name===item.name);
-  const art=p?(window.artFor?window.artFor(p.type):window.icon('boxes')):window.icon('boxes');
+  const art=p?(window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.icon('boxes')):window.icon('boxes');
   return `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:${i?'1px solid var(--adm-border-soft)':'none'};font-size:12.5px">
     <span style="color:var(--adm-soft);font-weight:800;width:16px;text-align:center;flex-shrink:0">${i+1}</span>
     <span class="em-tag" style="background:${p?catColor(p):'#EEF1F6'}">${art}</span>
@@ -2425,7 +2425,7 @@ function renderSlowMovingProducts(orders){
   const shown=candidates.slice(0,8);
   if(!shown.length){ el.innerHTML=`<div class="chart-empty">Not enough catalog data yet.</div>`; return; }
   el.innerHTML=shown.map(({p,sold},i)=>`<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:${i?'1px solid var(--adm-border-soft)':'none'};font-size:12.5px">
-    <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+    <span class="em-tag" style="background:${catColor(p)}">${window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
     <span style="flex:1;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</span>
     <span style="color:var(--adm-soft);font-size:11px;flex-shrink:0">${val(p,'stock')} in stock</span>
     <b style="color:${sold===0?'var(--adm-red)':'var(--adm-amber)'};flex-shrink:0">${sold} sold</b>
@@ -2651,7 +2651,7 @@ function productCardHTML(p){
   const ind=stockIndicator(stock,threshold);
   return `<div class="pcard">
     <div class="pc-head">
-      <button class="pthumb-btn pthumb-lg" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
+      <button class="pthumb-btn pthumb-lg" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
       <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
       <div style="flex:1;min-width:0">
         <button data-view-product-drawer="${p.id}" style="text-align:left"><b>${p.name}</b></button>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}
@@ -2752,7 +2752,7 @@ function products(){
     const ind=stockIndicator(stock,threshold);
     return `<tr>
       <td class="select-col"><input type="checkbox" data-select-id="${p.id}" ${selectedIds.has(p.id)?'checked':''}></td>
-      <td><button class="pthumb-btn pthumb-lg" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
+      <td><button class="pthumb-btn pthumb-lg" data-photobtn="${p.id}" title="Upload real photo">${photo?`<img src="${photo}" alt="" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.icon('camera'))}</button>
         <input type="file" accept="image/*" data-photo="${p.id}" style="display:none"></td>
       <td><button data-view-product-drawer="${p.id}" style="text-align:left;font-weight:600;color:var(--ink)">${p.name}</button>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}<br><span style="color:var(--adm-soft);font-size:10.5px">Code: ${p.id}</span></td>
       <td><span class="badge2 b-cat">${p.cat}</span></td>
@@ -2915,7 +2915,7 @@ function openProductDrawer(id){
   $("#pdBody").innerHTML=`
     <div class="od-section" style="text-align:center">
       <div style="width:120px;height:120px;margin:0 auto 12px;border-radius:14px;overflow:hidden;background:var(--adm-bg);display:flex;align-items:center;justify-content:center">
-        ${photo?`<img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.artFor?window.artFor(p.type):window.icon('camera'))}
+        ${photo?`<img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML=window.artFor?window.artFor('${p.type}'):''">`:(window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.icon('camera'))}
       </div>
       <button class="btn btn-ghost" data-photobtn="${p.id}" style="padding:7px 14px;font-size:12px">Change photo</button>
       <input type="file" accept="image/*" data-photo="${p.id}" style="display:none">
@@ -3084,7 +3084,7 @@ function renderLowStockTable(){
   const shown=rows.slice(0,8);
   el.innerHTML=shown.map(p=>`<tr>
       <td><div style="display:flex;align-items:center;gap:10px">
-        <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+        <span class="em-tag" style="background:${catColor(p)}">${window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
         <b style="font-weight:600">${p.name}</b></div></td>
       <td><span class="badge2 b-cat">${p.cat}</span></td>
       <td>${val(p,'stock')} units</td>
@@ -3102,7 +3102,7 @@ function renderOutOfStockTable(){
   const shown=rows.slice(0,8);
   el.innerHTML=shown.map(p=>`<tr>
       <td><div style="display:flex;align-items:center;gap:10px">
-        <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+        <span class="em-tag" style="background:${catColor(p)}">${window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
         <b style="font-weight:600">${p.name}</b></div></td>
       <td style="color:var(--adm-soft);font-size:12px">${lostAvailabilityLabel(p)}</td>
       <td><span class="badge2 b-cat">${p.cat}</span></td>
@@ -3202,7 +3202,7 @@ function inventoryPage(){
     const {stock,isAvail,statusBadge}=invRowHTML(p,threshold);
     return `<tr>
       <td><div style="display:flex;align-items:center;gap:10px">
-        <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+        <span class="em-tag" style="background:${catColor(p)}">${window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
         <div><b style="font-weight:600">${p.name}</b>${p.ta?`<br><span class="ta" style="color:var(--muted);font-size:12px">${p.ta}</span>`:""}</div></div></td>
       <td><span class="badge2 b-cat">${p.cat}</span></td>
       <td><input class="in" type="number" value="${stock}" data-id="${p.id}" data-f="stock" style="width:66px"></td>
@@ -3216,7 +3216,7 @@ function inventoryPage(){
     const {stock,isAvail,statusBadge}=invRowHTML(p,threshold);
     return `<div class="pcard">
       <div class="pc-head">
-        <span class="em-tag" style="background:${catColor(p)}">${window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
+        <span class="em-tag" style="background:${catColor(p)}">${window.packFor?window.packFor(p):window.artFor?window.artFor(p.type):window.catIcon(p.cat)}</span>
         <div style="flex:1;min-width:0"><b>${p.name}</b><div style="margin-top:4px" data-status-for="${p.id}">${statusBadge}</div></div>
         <button class="badge2 ${isAvail?'b-ok':'b-no'}" data-toggle="${p.id}">${isAvail?"● Available":"○ Hidden"}</button>
       </div>
