@@ -9,7 +9,7 @@ const SHOP = {
   freeOver:500, deliveryFee:40,
 };
 
-const PAGE_SIZE = 60;
+const PAGE_SIZE = 24;
 const S = { cart:{}, lang:"en", theme:"light", cat:"", q:"", sort:"pop", order:null, shown:PAGE_SIZE };
 const $  = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
