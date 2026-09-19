@@ -3,11 +3,11 @@
    Loaded after style.css. admin.html never loads this file, so nothing
    here can change the admin dashboard.
    ============================================================ */
-html:has(body.store){overflow-x:hidden;overflow-x:clip}
 body.store{
   --gold:#E3A11B; --gold-d:#C98B0C; --cream:#F7F3EA;
   --card-r:14px; --ease:cubic-bezier(.2,.8,.25,1);
   background:var(--paper);
+  overflow-x:hidden;overflow-x:clip;
 }
 [data-theme="dark"] body.store{--cream:#171d14}
 .store .wrap{max-width:1240px}
