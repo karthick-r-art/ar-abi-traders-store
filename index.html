@@ -159,13 +159,6 @@
   <!-- Hero -->
   <div class="hero">
     <div class="kolam"></div>
-    <div class="hero-fx" aria-hidden="true">
-      <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
-      <span class="ico i1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 8h9l1 4-1.2 8a2 2 0 0 1-2 1.8h-4.6a2 2 0 0 1-2-1.8L6.5 12z"/><path d="M7.5 8L8.5 4h7l1 4"/></svg></span>
-      <span class="ico i2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c8 0 14-6 14-14-8 0-14 6-14 14z"/><path d="M6.3 17.7C9 15 12 12 17 7"/></svg></span>
-      <span class="ico i3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6c4.5-2.2 11 .3 13 6.3-1 6.3-8.5 9.5-11.8 6.3-2.2-2.2-1.2-6.3.8-8.6"/><path d="M5.5 6c-1-2 0-3.2 1.3-3.2"/></svg></span>
-      <span class="ico i4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.6" r=".6" fill="currentColor" stroke="none"/><circle cx="12" cy="7.2" r=".6" fill="currentColor" stroke="none"/><circle cx="15" cy="8.6" r=".6" fill="currentColor" stroke="none"/><path d="M4 11h16a8 8 0 0 1-16 0z"/></svg></span>
-    </div>
     <div class="wrap">
       <div>
         <span class="eyebrow" id="heroEyebrow"></span>
@@ -181,8 +174,10 @@
           <div><b><svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h5.5L11 21l8-10.5h-5.5z"/></svg></b><small id="trustDelivery"></small></div>
         </div>
       </div>
-      <div class="hero-card">
-        <div class="grid4" id="heroTiles"></div>
+      <div class="hero-photo">
+        <img src="assets/img/hero-bg.jpg" alt="Rice, oil, spices and daily essentials at A.R. Abi Traders">
+        <span class="note" id="heroNote"></span>
+        <span class="ribbon" id="heroRibbon"></span>
       </div>
     </div>
   </div>
@@ -393,21 +388,6 @@
 <script src="assets/js/store.js"></script>
 <script>
   document.getElementById('yr').textContent=new Date().getFullYear();
-  // hero tiles = top 4 populated categories
-  (function(){
-    const counts={}; (window.PRODUCTS||[]).forEach(p=>counts[p.cat]=(counts[p.cat]||0)+1);
-    const top=Object.entries(counts).filter(([c])=>window.CATMETA[c]).sort((a,b)=>b[1]-a[1]).slice(0,4);
-    const tints=["#0E5A3C","#F2A900","#C4361F","#3E8E6B"];
-    const txt=["#F6EFDD","#20301f","#fff","#fff"];
-    document.getElementById('heroTiles').innerHTML=top.map(([c,n],i)=>{
-      const m=window.CATMETA[c];
-      return `<button class="tile" data-cat="${c}" style="background:${tints[i]};color:${txt[i]}">
-        <span class="big">${m.em}</span><div><b>${c}</b><br><small>${n} items</small></div></button>`;
-    }).join("");
-    document.querySelectorAll('#heroTiles .tile').forEach(el=>el.onclick=()=>{
-      const ev=el.dataset.cat; const btn=document.querySelector(`#rail [data-cat="${ev}"]`); if(btn) btn.click();
-    });
-  })();
 </script>
 </body>
 </html>

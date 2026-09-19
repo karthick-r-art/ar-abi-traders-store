@@ -509,6 +509,7 @@ function applyStaticText(){
   const mic=$("#micBtn"); if(mic){ mic.setAttribute("aria-label",t('micLabel')); mic.title=t('micLabel'); }
   set("#heroEyebrow","heroEyebrow"); $("#heroTitle").innerHTML=`${t('heroTitle')} <em>${t('heroTitleEm')}</em>`;
   set("#heroLede","heroLede"); set("#btnShop","shopNow"); set("#btnCall","callUs");
+  set("#heroRibbon","heroRibbon"); set("#heroNote","heroNote");
   set("#hwT1","hwT1"); set("#hwS1","hwS1"); set("#hwT2","hwT2"); set("#hwS2","hwS2"); set("#hwT3","hwT3"); set("#hwS3","hwS3");
   set("#trustProducts","products"); set("#trustBrands","brands"); set("#trustDelivery","delivery");
   set("#hCats","categories"); set("#hCatsSub","categories");
