@@ -21,28 +21,30 @@
 
   /* ---------- Shell / sidebar ---------- */
   .admin-shell{display:flex;min-height:100vh}
-  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:#FFFFFF;
-    border-right:1px solid var(--adm-border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--green);
+    border-right:none;box-shadow:2px 0 14px rgba(0,0,0,.12);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;
     z-index:41;transition:transform .25s cubic-bezier(.4,0,.2,1)}
-  .side-brand{display:flex;align-items:center;gap:12px;padding:19px 18px;border-bottom:1px solid var(--adm-border-soft)}
-  .side-brand img{width:44px;flex-shrink:0}
-  .side-brand .nm{font-weight:800;font-size:14px;line-height:1.3;color:var(--ink)}
-  .side-brand .nm span{display:block;font-size:10.5px;color:var(--adm-soft);font-weight:700;margin-top:1px;text-transform:uppercase;letter-spacing:.04em}
-  .side-close{display:none;margin-left:auto;width:30px;height:30px;border-radius:8px;align-items:center;justify-content:center;color:var(--adm-soft);flex-shrink:0}
-  .side-close:hover{background:var(--adm-bg)}
+  .side-brand{display:flex;align-items:center;gap:12px;padding:19px 18px;border-bottom:1px solid rgba(255,255,255,.14)}
+  .side-brand img{width:44px;height:44px;flex-shrink:0;border-radius:50%;background:#F7F3EA;padding:2px;object-fit:cover}
+  .side-brand .nm{font-weight:800;font-size:14px;line-height:1.3;color:#fff}
+  .side-brand .nm span{display:block;font-size:10.5px;color:var(--marigold);font-weight:700;margin-top:1px;text-transform:uppercase;letter-spacing:.04em}
+  .side-close{display:none;margin-left:auto;width:30px;height:30px;border-radius:8px;align-items:center;justify-content:center;color:rgba(255,255,255,.75);flex-shrink:0}
+  .side-close:hover{background:rgba(255,255,255,.12);color:#fff}
   .side-close svg{width:16px;height:16px}
   .side-nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px}
-  .side-cap{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--adm-soft);padding:16px 12px 6px}
+  .side-cap{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);padding:16px 12px 6px}
   .side-link{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;font-size:13.5px;
-    font-weight:600;color:var(--muted);text-align:left;width:100%;transition:background .15s,color .15s;position:relative}
-  .side-link svg{width:18px;height:18px;flex-shrink:0;opacity:.75}
-  .side-link:hover{background:var(--adm-bg);color:var(--ink)}
-  .side-link.active{background:color-mix(in srgb,var(--green) 9%,transparent);color:var(--green);font-weight:700}
-  .side-link.active::before{content:"";position:absolute;left:-12px;top:6px;bottom:6px;width:3px;border-radius:0 4px 4px 0;background:var(--green)}
-  .side-link.active svg{opacity:1;color:var(--green)}
-  .side-link .cnt{margin-left:auto;font-size:10.5px;font-weight:800;background:var(--adm-red);color:#fff;
+    font-weight:600;color:rgba(255,255,255,.78);text-align:left;width:100%;transition:background .15s,color .15s;position:relative}
+  .side-link svg{width:18px;height:18px;flex-shrink:0;opacity:.85}
+  .side-link:hover{background:rgba(255,255,255,.08);color:#fff}
+  .side-link.active{background:rgba(255,255,255,.14);color:#fff;font-weight:700}
+  .side-link.active::before{content:"";position:absolute;left:-12px;top:6px;bottom:6px;width:3px;border-radius:0 4px 4px 0;background:var(--marigold)}
+  .side-link.active svg{opacity:1;color:#fff}
+  .side-link .cnt{margin-left:auto;font-size:10.5px;font-weight:800;background:var(--marigold);color:#1B2A22;
     padding:2px 7px;border-radius:999px;min-width:18px;text-align:center}
-  .side-foot{margin-top:auto;padding:14px 14px 16px;border-top:1px solid var(--adm-border-soft)}
+  .side-foot{margin-top:auto;padding:14px 14px 16px;border-top:1px solid rgba(255,255,255,.14)}
+  .side-foot .logout-btn{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}
+  .side-foot .logout-btn:hover{border-color:var(--kumkum);color:#FFD9D0;background:color-mix(in srgb,var(--kumkum) 22%,transparent)}
   .sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(15,25,35,.5);opacity:0;visibility:hidden;
     transition:.2s;z-index:40}
   .sidebar-scrim.show{opacity:1;visibility:visible}
