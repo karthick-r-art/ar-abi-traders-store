@@ -28,6 +28,11 @@ window.CATPHOTO = {
   "Home Care":            "assets/img/categories/home-care.jpg",
   "Personal Care":        "assets/img/categories/personal-care.jpg",
   "General Store":        "assets/img/categories/general-store.jpg",
+  "Beverages":            "assets/img/categories/beverages.jpg",
+  "Dairy & Ghee":         "assets/img/categories/dairy-ghee.jpg",
+  "Chocolates & Candy":   "assets/img/categories/chocolates-candy.jpg",
+  "Stationery & General": "assets/img/categories/stationery-general.jpg",
+  "Tobacco & Pan":        "assets/img/categories/tobacco-pan.jpg",
 };
 
 window.I18N = {
