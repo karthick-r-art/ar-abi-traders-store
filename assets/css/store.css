@@ -395,7 +395,6 @@ body.store{
 
 /* ---------- Responsive ---------- */
 @media(max-width:1100px){
-  .hd-link span{display:none}
   .store .ft-grid{grid-template-columns:1fr 1fr;row-gap:10px}
   .store .ft:nth-child(3){border-left:none}
   .store .co-grid{grid-template-columns:1fr 1fr}
@@ -403,6 +402,7 @@ body.store{
   .store .summary{position:static}
 }
 @media(max-width:900px){
+  .hd-link span{display:none}
   .store .wholesale-banner{grid-template-columns:1fr}
   .wb-photo{clip-path:none;min-height:160px}
   .store .wb-body{padding:20px 20px 0}
