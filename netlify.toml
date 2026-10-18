@@ -2,12 +2,99 @@
 [build]
   publish = "."
 
-[[redirects]]
-  from = "/store"
-  to = "/index.html"
-  status = 200
 
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Short URLs (pamphlets) — keep in sync with vercel.json
+[[redirects]]
+  from = "/rice"
+  to = "/category/rice-atta/"
+  status = 301
+
+[[redirects]]
+  from = "/atta"
+  to = "/category/rice-atta/"
+  status = 301
+
+[[redirects]]
+  from = "/oil"
+  to = "/category/oils/"
+  status = 301
+
+[[redirects]]
+  from = "/oils"
+  to = "/category/oils/"
+  status = 301
+
+[[redirects]]
+  from = "/dal"
+  to = "/category/dal-pulses/"
+  status = 301
+
+[[redirects]]
+  from = "/pulses"
+  to = "/category/dal-pulses/"
+  status = 301
+
+[[redirects]]
+  from = "/spices"
+  to = "/category/masala-spices/"
+  status = 301
+
+[[redirects]]
+  from = "/masala"
+  to = "/category/masala-spices/"
+  status = 301
+
+[[redirects]]
+  from = "/category/spices"
+  to = "/category/masala-spices/"
+  status = 301
+
+[[redirects]]
+  from = "/category/rice"
+  to = "/category/rice-atta/"
+  status = 301
+
+[[redirects]]
+  from = "/category/oil"
+  to = "/category/oils/"
+  status = 301
+
+[[redirects]]
+  from = "/snacks"
+  to = "/category/snacks-biscuits/"
+  status = 301
+
+[[redirects]]
+  from = "/biscuits"
+  to = "/category/snacks-biscuits/"
+  status = 301
+
+[[redirects]]
+  from = "/beverages"
+  to = "/category/beverages/"
+  status = 301
+
+[[redirects]]
+  from = "/ghee"
+  to = "/category/dairy-ghee/"
+  status = 301
+
+[[redirects]]
+  from = "/bulk"
+  to = "/wholesale/"
+  status = 301
+
+[[redirects]]
+  from = "/bulk-enquiry"
+  to = "/wholesale/"
+  status = 301
+
+[[redirects]]
+  from = "/store"
+  to = "/"
+  status = 301

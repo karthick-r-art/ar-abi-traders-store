@@ -19,20 +19,22 @@ window.CATMETA = {
 /* Real photo per category. Only list files that exist in assets/img/categories/ —
    every listed-but-missing file costs each visitor a failed request. Categories not
    listed here show their icon on a soft tint instead. */
+/* Site root, worked out from this script's own URL, so image paths resolve the same on the
+   home page and on the generated sub-pages (/category/oils/, /delivery/manjakuppam/ …). */
+window.AR_ROOT = ((document.currentScript && document.currentScript.src) || "").replace(/assets\/js\/i18n\.js(\?.*)?$/,"");
 window.CATPHOTO = {
-  "Rice & Atta":          "assets/img/categories/rice-atta.jpg",
-  "Dal & Pulses":         "assets/img/categories/dal-pulses.jpg",
-  "Oils":                 "assets/img/categories/oils.jpg",
-  "Masala & Spices":      "assets/img/categories/masala-spices.jpg",
-  "Snacks & Biscuits":    "assets/img/categories/snacks-biscuits.jpg",
-  "Home Care":            "assets/img/categories/home-care.jpg",
-  "Personal Care":        "assets/img/categories/personal-care.jpg",
-  "General Store":        "assets/img/categories/general-store.jpg",
-  "Beverages":            "assets/img/categories/beverages.jpg",
-  "Dairy & Ghee":         "assets/img/categories/dairy-ghee.jpg",
-  "Chocolates & Candy":   "assets/img/categories/chocolates-candy.jpg",
-  "Stationery & General": "assets/img/categories/stationery-general.jpg",
-  "Tobacco & Pan":        "assets/img/categories/tobacco-pan.jpg",
+  "Rice & Atta":          window.AR_ROOT+"assets/img/categories/rice-atta.jpg",
+  "Dal & Pulses":         window.AR_ROOT+"assets/img/categories/dal-pulses.jpg",
+  "Oils":                 window.AR_ROOT+"assets/img/categories/oils.jpg",
+  "Masala & Spices":      window.AR_ROOT+"assets/img/categories/masala-spices.jpg",
+  "Snacks & Biscuits":    window.AR_ROOT+"assets/img/categories/snacks-biscuits.jpg",
+  "Home Care":            window.AR_ROOT+"assets/img/categories/home-care.jpg",
+  "Personal Care":        window.AR_ROOT+"assets/img/categories/personal-care.jpg",
+  "General Store":        window.AR_ROOT+"assets/img/categories/general-store.jpg",
+  "Dairy & Ghee":         window.AR_ROOT+"assets/img/categories/dairy-ghee.jpg",
+  "Chocolates & Candy":   window.AR_ROOT+"assets/img/categories/chocolates-candy.jpg",
+  "Stationery & General": window.AR_ROOT+"assets/img/categories/stationery-general.jpg",
+  "Tobacco & Pan":        window.AR_ROOT+"assets/img/categories/tobacco-pan.jpg",
 };
 
 window.I18N = {

@@ -3,41 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--ssr:head-->
 <title>A.R. Abi Traders — Online Grocery Store, Cuddalore</title>
-<meta name="description" content="Order groceries online from A.R. Abi Traders, Cuddalore — rice, oil, spices, snacks & 1,800+ daily essentials at honest prices. Cash on delivery, same-day.">
-<meta name="keywords" content="A.R. Abi Traders, grocery store Cuddalore, online grocery Cuddalore, rice oil spices Cuddalore, Manjakuppam grocery, ஆபி ட்ரேடர்ஸ் கடலூர்">
+<meta name="description" content="Order groceries online from A.R. Abi Traders, Cuddalore — rice, oil, spices, snacks &amp; 1,800+ daily essentials at honest prices. Cash on delivery, same-day.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://ar-abi-traders-store.vercel.app/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="A.R. Abi Traders">
 <meta property="og:title" content="A.R. Abi Traders — Online Grocery Store, Cuddalore">
-<meta property="og:description" content="Order groceries online from A.R. Abi Traders, Cuddalore. Rice, oil, spices, snacks & 1800+ daily essentials at honest prices. Cash on delivery.">
+<meta property="og:description" content="Order groceries online from A.R. Abi Traders, Cuddalore — rice, oil, spices, snacks &amp; 1,800+ daily essentials at honest prices. Cash on delivery, same-day.">
 <meta property="og:url" content="https://ar-abi-traders-store.vercel.app/">
 <meta property="og:image" content="https://ar-abi-traders-store.vercel.app/assets/img/hero-bg.jpg">
-<meta property="og:image:width" content="1915">
-<meta property="og:image:height" content="821">
 <meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A.R. Abi Traders — Online Grocery Store, Cuddalore">
-<meta name="twitter:description" content="Order groceries online from A.R. Abi Traders, Cuddalore. 1800+ daily essentials at honest prices.">
+<meta name="twitter:description" content="Order groceries online from A.R. Abi Traders, Cuddalore — rice, oil, spices, snacks &amp; 1,800+ daily essentials at honest prices. Cash on delivery, same-day.">
 <meta name="twitter:image" content="https://ar-abi-traders-store.vercel.app/assets/img/hero-bg.jpg">
 <meta name="geo.region" content="IN-TN">
 <meta name="geo.placename" content="Cuddalore">
-<link rel="icon" href="assets/img/favicon.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&family=Mukta+Malar:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/store.css">
 <link rel="preload" as="image" href="assets/img/hero-products.jpg?v=2" fetchpriority="high">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "GroceryStore",
+  "@id": "https://ar-abi-traders-store.vercel.app/#store",
   "name": "A.R. Abi Traders",
+  "alternateName": "ஏ.ஆர். அபி டிரேடர்ஸ்",
   "image": [
     "https://ar-abi-traders-store.vercel.app/assets/img/hero-bg.jpg",
     "https://ar-abi-traders-store.vercel.app/assets/img/shop-front.jpg"
   ],
+  "logo": "https://ar-abi-traders-store.vercel.app/assets/img/logo.png",
   "url": "https://ar-abi-traders-store.vercel.app/",
   "telephone": "+919566561558",
   "priceRange": "₹",
@@ -49,29 +45,138 @@
     "postalCode": "607001",
     "addressCountry": "IN"
   },
+  "hasMap": "https://www.google.com/maps/search/?api=1&query=A.R.+Abi+Traders+Angalamman+Koil+Street+Manjakuppam+Cuddalore",
   "areaServed": [
-    { "@type": "City", "name": "Cuddalore" },
-    { "@type": "AdministrativeArea", "name": "Cuddalore District" }
+    {
+      "@type": "City",
+      "name": "Cuddalore"
+    },
+    {
+      "@type": "Place",
+      "name": "Manjakuppam, Cuddalore District"
+    },
+    {
+      "@type": "Place",
+      "name": "Thirupapuliyur, Cuddalore District"
+    },
+    {
+      "@type": "Place",
+      "name": "Semmandalam, Cuddalore District"
+    },
+    {
+      "@type": "Place",
+      "name": "Nellikuppam, Cuddalore District"
+    },
+    {
+      "@type": "Place",
+      "name": "Panruti, Cuddalore District"
+    }
   ],
   "openingHoursSpecification": [
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "09:00", "closes": "22:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Sunday"], "opens": "09:00", "closes": "14:00" }
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "opens": "09:00",
+      "closes": "22:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Sunday"
+      ],
+      "opens": "09:00",
+      "closes": "14:00"
+    }
   ],
+  "paymentAccepted": "Cash, UPI",
+  "currenciesAccepted": "INR",
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Grocery categories",
     "itemListElement": [
-      { "@type": "OfferCatalog", "name": "Rice & Atta" },
-      { "@type": "OfferCatalog", "name": "Oils" },
-      { "@type": "OfferCatalog", "name": "Dal & Pulses" },
-      { "@type": "OfferCatalog", "name": "Masala & Spices" },
-      { "@type": "OfferCatalog", "name": "Dairy & Ghee" },
-      { "@type": "OfferCatalog", "name": "Snacks & Biscuits" },
-      { "@type": "OfferCatalog", "name": "Beverages" },
-      { "@type": "OfferCatalog", "name": "Home Care" },
-      { "@type": "OfferCatalog", "name": "Personal Care" }
+      {
+        "@type": "OfferCatalog",
+        "name": "Rice & Atta",
+        "url": "https://ar-abi-traders-store.vercel.app/category/rice-atta/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Dal & Pulses",
+        "url": "https://ar-abi-traders-store.vercel.app/category/dal-pulses/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Oils",
+        "url": "https://ar-abi-traders-store.vercel.app/category/oils/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Masala & Spices",
+        "url": "https://ar-abi-traders-store.vercel.app/category/masala-spices/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Snacks & Biscuits",
+        "url": "https://ar-abi-traders-store.vercel.app/category/snacks-biscuits/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Beverages",
+        "url": "https://ar-abi-traders-store.vercel.app/category/beverages/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Dairy & Ghee",
+        "url": "https://ar-abi-traders-store.vercel.app/category/dairy-ghee/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Home Care",
+        "url": "https://ar-abi-traders-store.vercel.app/category/home-care/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Personal Care",
+        "url": "https://ar-abi-traders-store.vercel.app/category/personal-care/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "General Store",
+        "url": "https://ar-abi-traders-store.vercel.app/category/general-store/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Chocolates & Candy",
+        "url": "https://ar-abi-traders-store.vercel.app/category/chocolates-candy/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Baby Care",
+        "url": "https://ar-abi-traders-store.vercel.app/category/baby-care/"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Stationery & General",
+        "url": "https://ar-abi-traders-store.vercel.app/category/stationery-general/"
+      }
     ]
   }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "A.R. Abi Traders",
+  "alternateName": "ஏ.ஆர். அபி டிரேடர்ஸ்",
+  "url": "https://ar-abi-traders-store.vercel.app/"
 }
 </script>
 <script type="application/ld+json">
@@ -82,31 +187,53 @@
     {
       "@type": "Question",
       "name": "Does A.R. Abi Traders deliver in Cuddalore?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes — we deliver the same day across Cuddalore, including Manjakuppam and nearby areas. Delivery is free on orders above ₹500, and a small ₹40 fee applies below that." }
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — we deliver the same day across Cuddalore, including Manjakuppam and nearby areas. Delivery is free on orders above ₹500, and a small ₹40 fee applies below that."
+      }
     },
     {
       "@type": "Question",
       "name": "What are your store timings?",
-      "acceptedAnswer": { "@type": "Answer", "text": "We're open Monday to Saturday, 9am to 10pm, and Sunday 9am to 2pm." }
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We're open Monday to Saturday, 9am to 10pm, and Sunday 9am to 2pm."
+      }
     },
     {
       "@type": "Question",
       "name": "Can I pay cash on delivery?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes — Cash on Delivery is available, along with UPI / GPay / PhonePe." }
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — Cash on Delivery is available, along with UPI / GPay / PhonePe."
+      }
     },
     {
       "@type": "Question",
       "name": "Where is the shop located?",
-      "acceptedAnswer": { "@type": "Answer", "text": "No.54/41C, Angalamman Koil Street, Manjakuppam, Cuddalore – 607001. Call us anytime at +91 95665 61558." }
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No.54/41C, Angalamman Koil Street, Manjakuppam, Cuddalore – 607001. Call us anytime at +91 95665 61558."
+      }
     },
     {
       "@type": "Question",
       "name": "Can I order in Tamil?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes — switch the language toggle to தமிழ் anywhere on the site, or just use the voice search button to search by speaking." }
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — switch the language toggle to தமிழ் anywhere on the site, or just use the voice search button to search by speaking."
+      }
     }
   ]
 }
 </script>
+<!--/ssr:head-->
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&family=Mukta+Malar:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/store.css">
 </head>
 <body class="store">
 <a class="skip-link" href="#allSection">Skip to products</a>
@@ -167,6 +294,7 @@
 <main id="main">
 <!-- ============ SHOP VIEW ============ -->
 <section id="view-shop" class="view active">
+<!--ssr:landing--><!--/ssr:landing-->
 
   <!-- Hero -->
   <div class="hx">
@@ -181,7 +309,7 @@
         <p class="hx-lede" id="heroLede">Quality products for your home and business at trusted prices.</p>
         <div class="hx-cta">
           <button class="hx-btn hx-btn-solid" id="btnShop">Shop groceries</button>
-          <a class="hx-btn hx-btn-line" id="btnCall" href="https://ar-abi-traders-cuddalore.netlify.app/" target="_blank" rel="noopener">Bulk enquiry</a>
+          <a class="hx-btn hx-btn-line" id="btnCall" href="wholesale/">Bulk enquiry</a>
         </div>
         <div class="hx-trust">
           <div>
@@ -206,32 +334,55 @@ Cuddalore since 2024</small>
   </div>
 
   <!-- Categories -->
-  <section class="block wrap reveal" aria-labelledby="hCats">
+  <section class="block wrap reveal" id="catsBlock" aria-labelledby="hCats">
     <div class="head">
       <h2 id="hCats">Shop by Category</h2>
       <button class="more" id="moreCats"><span id="lblViewAllCats">View all categories</span> <span aria-hidden="true">→</span></button>
     </div>
-    <div class="catgrid" id="cats">
-      <div class="catcard skeleton"></div><div class="catcard skeleton"></div><div class="catcard skeleton"></div>
-      <div class="catcard skeleton"></div><div class="catcard skeleton"></div><div class="catcard skeleton"></div>
-      <div class="catcard skeleton"></div><div class="catcard skeleton"></div><div class="catcard skeleton"></div>
+    <div class="catgrid" id="cats"><!--ssr:cats-->
+<a class="catcard" href="category/rice-atta/"><span class="cc-img" style="background:#FBF0D6"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M7.5 8h9l1 4-1.2 8a2 2 0 0 1-2 1.8h-4.6a2 2 0 0 1-2-1.8L6.5 12z"/><path d="M7.5 8L8.5 4h7l1 4"/></svg></span><img src="assets/img/categories/rice-atta.jpg" alt="" loading="lazy"></span><b>Rice &amp; Atta</b><small>55 items</small></a>
+<a class="catcard" href="category/dal-pulses/"><span class="cc-img" style="background:#F3EBDD"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M4 11h16a8 8 0 0 1-16 0z"/><circle cx="9" cy="8.6" r=".6" fill="currentColor" stroke="none"/><circle cx="12" cy="7.2" r=".6" fill="currentColor" stroke="none"/><circle cx="15" cy="8.6" r=".6" fill="currentColor" stroke="none"/></svg></span><img src="assets/img/categories/dal-pulses.jpg" alt="" loading="lazy"></span><b>Dal &amp; Pulses</b><small>22 items</small></a>
+<a class="catcard" href="category/oils/"><span class="cc-img" style="background:#FFF6D9"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M12 3c3.2 4.2 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.8-6.8 6-11z"/></svg></span><img src="assets/img/categories/oils.jpg" alt="" loading="lazy"></span><b>Oils</b><small>24 items</small></a>
+<a class="catcard" href="category/masala-spices/"><span class="cc-img" style="background:#FDE7DE"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M5.5 6c4.5-2.2 11 .3 13 6.3-1 6.3-8.5 9.5-11.8 6.3-2.2-2.2-1.2-6.3.8-8.6"/><path d="M5.5 6c-1-2 0-3.2 1.3-3.2"/></svg></span><img src="assets/img/categories/masala-spices.jpg" alt="" loading="lazy"></span><b>Masala &amp; Spices</b><small>221 items</small></a>
+<a class="catcard" href="category/snacks-biscuits/"><span class="cc-img" style="background:#FBEEDA"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><circle cx="12" cy="12" r="8.2"/><circle cx="9.2" cy="10" r=".9" fill="currentColor" stroke="none"/><circle cx="14.4" cy="9.2" r=".9" fill="currentColor" stroke="none"/><circle cx="15.2" cy="14.2" r=".9" fill="currentColor" stroke="none"/><circle cx="10" cy="15" r=".9" fill="currentColor" stroke="none"/></svg></span><img src="assets/img/categories/snacks-biscuits.jpg" alt="" loading="lazy"></span><b>Snacks &amp; Biscuits</b><small>150 items</small></a>
+<a class="catcard" href="category/beverages/"><span class="cc-img" style="background:#FFF3D6"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M6.5 8h11l-1.1 10.5a2 2 0 0 1-2 1.5h-4.8a2 2 0 0 1-2-1.5z"/><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg></span></span><b>Beverages</b><small>185 items</small></a>
+<a class="catcard" href="category/dairy-ghee/"><span class="cc-img" style="background:#EAF4FF"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M9 3h6l1 3v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V6z"/><path d="M8 6.5h8"/><path d="M12 3v1.5"/></svg></span><img src="assets/img/categories/dairy-ghee.jpg" alt="" loading="lazy"></span><b>Dairy &amp; Ghee</b><small>47 items</small></a>
+<a class="catcard" href="category/home-care/"><span class="cc-img" style="background:#E6F5F0"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M9.5 7h3.5l1-2h2.3"/><path d="M9.5 7v2l-2 2v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-9l-2-2V7"/></svg></span><img src="assets/img/categories/home-care.jpg" alt="" loading="lazy"></span><b>Home Care</b><small>184 items</small></a>
+<a class="catcard" href="category/personal-care/"><span class="cc-img" style="background:#EFEAFB"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><rect x="8" y="8" width="8" height="13" rx="2"/><rect x="10" y="4" width="4" height="4" rx="1"/></svg></span><img src="assets/img/categories/personal-care.jpg" alt="" loading="lazy"></span><b>Personal Care</b><small>156 items</small></a>
+<a class="catcard" href="category/general-store/"><span class="cc-img" style="background:#EFF1EC"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M2 3h3l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L22 7H6"/></svg></span><img src="assets/img/categories/general-store.jpg" alt="" loading="lazy"></span><b>General Store</b><small>639 items</small></a>
+<a class="catcard" href="category/chocolates-candy/"><span class="cc-img" style="background:#F4E6DA"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><rect x="4" y="8" width="16" height="8" rx="1.6"/><path d="M9.3 8v8M14.7 8v8M4 12h16"/></svg></span><img src="assets/img/categories/chocolates-candy.jpg" alt="" loading="lazy"></span><b>Chocolates &amp; Candy</b><small>67 items</small></a>
+<a class="catcard" href="category/baby-care/"><span class="cc-img" style="background:#FFEAF0"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M10 3h4v3l1 1.2v12.3a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V7.2L10 6z"/><path d="M8.7 11h6.6"/></svg></span></span><b>Baby Care</b><small>18 items</small></a>
+<a class="catcard" href="category/stationery-general/"><span class="cc-img" style="background:#E9EEF6"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M4 20l.9-3.8L15.6 4.9l3.5 3.5L8.4 19.1z"/><path d="M13.9 6.6l3.5 3.5"/></svg></span><img src="assets/img/categories/stationery-general.jpg" alt="" loading="lazy"></span><b>Stationery &amp; General</b><small>35 items</small></a>
+<a class="catcard" href="category/tobacco-pan/"><span class="cc-img" style="background:#EDF3E2"><span class="cc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ico-svg"><path d="M5 19c8 0 14-6 14-14-8 0-14 6-14 14z"/><path d="M6.3 17.7C9 15 12 12 17 7"/></svg></span><img src="assets/img/categories/tobacco-pan.jpg" alt="" loading="lazy"></span><b>Tobacco &amp; Pan</b><small>20 items</small></a>
+<!--/ssr:cats-->
     </div>
   </section>
 
   <!-- Best sellers -->
-  <section class="block wrap reveal" aria-labelledby="hPopular">
+  <section class="block wrap reveal" id="popularBlock" aria-labelledby="hPopular">
     <div class="head">
       <div><h2 id="hPopular">Best Sellers</h2><div class="sub" id="hPopularSub">Popular products at great prices</div></div>
       <button class="more" data-view-all><span id="lblViewAll1">View all products</span> <span aria-hidden="true">→</span></button>
     </div>
-    <div class="grid" id="popular">
-      <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
-      <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
+    <div class="grid" id="popular"><!--ssr:popular-->
+<article class="card"><div class="thumb" style="background:#FBF0D6"><span class="badge">20% off</span></div><div class="body"><h3>Ragi Semiya Bag (20)</h3><span class="tam">ராகி செமியா (20)</span><span class="unit">Bag · Pack 20</span><span class="price"><span class="now">₹400</span><span class="was">₹500</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF6D9"><span class="badge">10% off</span></div><div class="body"><h3>MR Gold Groundnut Oil 1tr</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹180</span><span class="was">₹200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#F3EBDD"><span class="badge">50% off</span></div><div class="body"><h3>Vella Pattani</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹50</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FDE7DE"></div><div class="body"><h3>Nirai Pickle ₹80</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹80</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF3D6"><span class="badge">10% off</span></div><div class="body"><h3>7UP 2L</h3><span class="tam"></span><span class="unit">2 L</span><span class="price"><span class="now">₹90</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FBEEDA"><span class="badge">20% off</span></div><div class="body"><h3>Ellu Cake ₹10 (20)</h3><span class="tam">எள்ளு கேக் ₹10 (20)</span><span class="unit">1 unit · Pack 20</span><span class="price"><span class="now">₹160</span><span class="was">₹200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EAF4FF"></div><div class="body"><h3>Doodh Milk ₹5</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#E6F5F0"><span class="badge">58% off</span></div><div class="body"><h3>Cookoo Coil Big (18)</h3><span class="tam"></span><span class="unit">1 unit · Pack 18</span><span class="price"><span class="now">₹840</span><span class="was">₹2,000</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFEAFB"><span class="badge">23% off</span></div><div class="body"><h3>Nycil ₹10 (25)</h3><span class="tam">நைசில் ₹10 (25+1)</span><span class="unit">1 unit · Pack 25</span><span class="price"><span class="now">₹230</span><span class="was">₹300</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FBF0D6"><span class="badge">60% off</span></div><div class="body"><h3>Atta Elite 2kg</h3><span class="tam"></span><span class="unit">2 kg</span><span class="price"><span class="now">₹100</span><span class="was">₹250</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF6D9"><span class="badge">29% off</span></div><div class="body"><h3>Dalda 50ml</h3><span class="tam"></span><span class="unit">50 ml</span><span class="price"><span class="now">₹85</span><span class="was">₹120</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#F3EBDD"><span class="badge">57% off</span></div><div class="body"><h3>Kadala Mavu</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹85</span><span class="was">₹200</span></span></div></article>
+<!--/ssr:popular-->
     </div>
   </section>
 
   <!-- Wholesale / Bulk enquiry -->
-  <section class="block wrap reveal" aria-labelledby="wbTitle">
+  <section class="block wrap reveal" id="wholesaleBlock" aria-labelledby="wbTitle">
     <div class="wholesale-banner">
       <div class="wb-photo"><img src="assets/img/wholesale-warehouse.jpg" alt="" loading="lazy" width="738" height="314"></div>
       <div class="wb-body">
@@ -247,7 +398,7 @@ Cuddalore since 2024</small>
         </ul>
       </div>
       <div class="wb-side">
-        <a class="btn btn-gold" id="wbCta" href="https://ar-abi-traders-cuddalore.netlify.app/" target="_blank" rel="noopener">Send a Bulk Enquiry</a>
+        <a class="btn btn-gold" id="wbCta" href="wholesale/">Send a Bulk Enquiry</a>
         <p id="wbNote">Rice, pulses, oil, masala, groceries & more — direct from trusted distributors</p>
       </div>
     </div>
@@ -259,9 +410,20 @@ Cuddalore since 2024</small>
       <div><h2 id="hOffers">Today's Offers</h2><div class="sub" id="hOffersSub">The best discounts on today's stock</div></div>
       <button class="more" data-view-all><span id="lblViewAll2">View all products</span> <span aria-hidden="true">→</span></button>
     </div>
-    <div class="grid" id="offers">
-      <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
-      <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
+    <div class="grid" id="offers"><!--ssr:offers-->
+<article class="card"><div class="thumb" style="background:#FBF0D6"><span class="badge">72% off</span></div><div class="body"><h3>Corn Flour 100g (10)</h3><span class="tam">கார்ன் மாவு 100கிராம் (10)</span><span class="unit">100 g · Pack 10</span><span class="price"><span class="now">₹85</span><span class="was">₹300</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF6D9"><span class="badge">29% off</span></div><div class="body"><h3>Dalda 50ml</h3><span class="tam"></span><span class="unit">50 ml</span><span class="price"><span class="now">₹85</span><span class="was">₹120</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#F3EBDD"><span class="badge">70% off</span></div><div class="body"><h3>Kadala Mavuu 200g</h3><span class="tam">கடலை மாவு 200கிராம்</span><span class="unit">200 g</span><span class="price"><span class="now">₹30</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FDE7DE"><span class="badge">70% off</span></div><div class="body"><h3>Parry Sugar 500g</h3><span class="tam">பாரி சர்க்கரை 500கிராம்</span><span class="unit">500 g</span><span class="price"><span class="now">₹30</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF3D6"><span class="badge">94% off</span></div><div class="body"><h3>Molding Brush (6)</h3><span class="tam"></span><span class="unit">1 unit · Pack 6</span><span class="price"><span class="now">₹70</span><span class="was">₹1,200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FBEEDA"><span class="badge">91% off</span></div><div class="body"><h3>Rusk Blue ₹10 (48)</h3><span class="tam"></span><span class="unit">1 unit · Pack 48</span><span class="price"><span class="now">₹44</span><span class="was">₹480</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EAF4FF"><span class="badge">91% off</span></div><div class="body"><h3>Milk Cream ₹10</h3><span class="tam">மில்க் கிரீம் ₹10</span><span class="unit">1 unit</span><span class="price"><span class="now">₹9.50</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#E6F5F0"><span class="badge">92% off</span></div><div class="body"><h3>Surf Liq Top ₹10 Case (120)</h3><span class="tam">சர்ஃப் லிக். டாப் ₹10 பெட்டி(120)</span><span class="unit">Case · Pack 120</span><span class="price"><span class="now">₹100</span><span class="was">₹1,200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFEAFB"><span class="badge">84% off</span></div><div class="body"><h3>Vatika ₹45 Kattu (6)</h3><span class="tam">வாடிகா ₹45 கட்டு(6)</span><span class="unit">Bundle · Pack 6</span><span class="price"><span class="now">₹42</span><span class="was">₹270</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FBF0D6"><span class="badge">61% off</span></div><div class="body"><h3>Chakki Atta kg</h3><span class="tam">சக்கி ஆட்டா 1கிலோ</span><span class="unit">per kg</span><span class="price"><span class="now">₹39</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF6D9"><span class="badge">29% off</span></div><div class="body"><h3>Palm Oil 1L PC</h3><span class="tam">பாமாயில் 1லி</span><span class="unit">1 L</span><span class="price"><span class="now">₹142</span><span class="was">₹200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#F3EBDD"><span class="badge">57% off</span></div><div class="body"><h3>Kadala Mavu</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹85</span><span class="was">₹200</span></span></div></article>
+<!--/ssr:offers-->
     </div>
   </section>
 
@@ -287,11 +449,32 @@ Cuddalore since 2024</small>
           <label class="sort-wrap"><span id="lblSort">Sort by</span><select class="select" id="sortSel"></select></label>
         </div>
         <div class="chips-m" id="mobileChips"></div>
-        <div class="grid" id="all">
-          <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
-          <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
-          <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
-          <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
+        <div class="grid" id="all"><!--ssr:all-->
+<article class="card"><div class="thumb" style="background:#FFF3D6"><span class="badge">10% off</span></div><div class="body"><h3>7UP 2L</h3><span class="tam"></span><span class="unit">2 L</span><span class="price"><span class="now">₹90</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFF1EC"><span class="badge">10% off</span></div><div class="body"><h3>Miranda 2L</h3><span class="tam"></span><span class="unit">2 L</span><span class="price"><span class="now">₹90</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#E9EEF6"><span class="badge">33% off</span></div><div class="body"><h3>Balloon ₹10 (12)</h3><span class="tam"></span><span class="unit">1 unit · Pack 12</span><span class="price"><span class="now">₹80</span><span class="was">₹120</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFF1EC"><span class="badge">21% off</span></div><div class="body"><h3>Gift Box ₹5 (24)</h3><span class="tam"></span><span class="unit">Box · Pack 24</span><span class="price"><span class="now">₹95</span><span class="was">₹120</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFF1EC"></div><div class="body"><h3>Gift Box ₹10 (12)</h3><span class="tam"></span><span class="unit">Box · Pack 12</span><span class="price"><span class="now">₹120</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FDE7DE"></div><div class="body"><h3>Nirai Pickle ₹80</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹80</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF3D6"><span class="badge">50% off</span></div><div class="body"><h3>Water 1L Sure</h3><span class="tam"></span><span class="unit">1 L</span><span class="price"><span class="now">₹100</span><span class="was">₹200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FBEEDA"><span class="badge">20% off</span></div><div class="body"><h3>Ellu Cake ₹10 (20)</h3><span class="tam">எள்ளு கேக் ₹10 (20)</span><span class="unit">1 unit · Pack 20</span><span class="price"><span class="now">₹160</span><span class="was">₹200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFF1EC"><span class="badge">47% off</span></div><div class="body"><h3>Kaarasaev kg</h3><span class="tam">காராசேவ்</span><span class="unit">per kg</span><span class="price"><span class="now">₹160</span><span class="was">₹300</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFF1EC"><span class="badge">45% off</span></div><div class="body"><h3>Sugar 100g</h3><span class="tam"></span><span class="unit">100 g</span><span class="price"><span class="now">₹6</span><span class="was">₹11</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFF1EC"><span class="badge">20% off</span></div><div class="body"><h3>Fish Kulambu ₹10</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹80</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FDE7DE"><span class="badge">35% off</span></div><div class="body"><h3>Kashmir Chilli ₹15</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹130</span><span class="was">₹200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#E6F5F0"><span class="badge">58% off</span></div><div class="body"><h3>Cookoo Coil Big (18)</h3><span class="tam"></span><span class="unit">1 unit · Pack 18</span><span class="price"><span class="now">₹840</span><span class="was">₹2,000</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FDE7DE"><span class="badge">13% off</span></div><div class="body"><h3>Per .Thool TT ₹2</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹35</span><span class="was">₹40</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF3D6"><span class="badge">50% off</span></div><div class="body"><h3>AVT Premium 1/2</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹150</span><span class="was">₹300</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF3D6"><span class="badge">48% off</span></div><div class="body"><h3>AVT Premium 1/2</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹155</span><span class="was">₹300</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF3D6"><span class="badge">94% off</span></div><div class="body"><h3>Molding Brush (6)</h3><span class="tam"></span><span class="unit">1 unit · Pack 6</span><span class="price"><span class="now">₹70</span><span class="was">₹1,200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FBEEDA"><span class="badge">10% off</span></div><div class="body"><h3>Panjavani Snacks ₹5 (12)</h3><span class="tam"></span><span class="unit">1 unit · Pack 12</span><span class="price"><span class="now">₹54</span><span class="was">₹60</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FFF3D6"><span class="badge">15% off</span></div><div class="body"><h3>Tea Cake ₹2</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹85</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FBEEDA"><span class="badge">91% off</span></div><div class="body"><h3>Rusk Blue ₹10 (48)</h3><span class="tam"></span><span class="unit">1 unit · Pack 48</span><span class="price"><span class="now">₹44</span><span class="was">₹480</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFF1EC"><span class="badge">15% off</span></div><div class="body"><h3>SF Aishwar 1L</h3><span class="tam">எஸ்.எப் ஐஸ்வர் 1லி</span><span class="unit">1 L</span><span class="price"><span class="now">₹170</span><span class="was">₹200</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#E6F5F0"><span class="badge">25% off</span></div><div class="body"><h3>Bindhu Balaji Vathi</h3><span class="tam"></span><span class="unit">1 unit</span><span class="price"><span class="now">₹45</span><span class="was">₹60</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#EFF1EC"><span class="badge">20% off</span></div><div class="body"><h3>Pithambari ₹10</h3><span class="tam">பீதாம்பரி ₹10 சரம்</span><span class="unit">1 unit</span><span class="price"><span class="now">₹80</span><span class="was">₹100</span></span></div></article>
+<article class="card"><div class="thumb" style="background:#FBF0D6"><span class="badge">20% off</span></div><div class="body"><h3>Ragi Semiya Bag (20)</h3><span class="tam">ராகி செமியா (20)</span><span class="unit">Bag · Pack 20</span><span class="price"><span class="now">₹400</span><span class="was">₹500</span></span></div></article>
+<!--/ssr:all-->
         </div>
         <div class="loadmore" id="loadMore" style="display:none">
           <button class="btn btn-ghost" id="btnLoadMore">Load more products</button>
@@ -301,7 +484,7 @@ Cuddalore since 2024</small>
   </section>
 
   <!-- FAQ -->
-  <section class="block wrap reveal" aria-labelledby="hFaq">
+  <section class="block wrap reveal" id="faqBlock" aria-labelledby="hFaq">
     <div class="head"><h2 id="hFaq">Frequently Asked Questions</h2></div>
     <div class="faq-list">
       <details class="faq-item"><summary id="faqQ1">Does A.R. Abi Traders deliver in Cuddalore?</summary><p id="faqA1">Yes — we deliver the same day across Cuddalore, including Manjakuppam and nearby areas. Delivery is free on orders above ₹500, and a small ₹40 fee applies below that.</p></details>
@@ -383,7 +566,7 @@ Cuddalore since 2024</small>
       <a href="#" data-home id="flHome">Home</a>
       <a href="#allSection" data-view-all id="flAll">All products</a>
       <a href="#" data-track id="flTrack">Track my order</a>
-      <a href="https://ar-abi-traders-cuddalore.netlify.app/" target="_blank" rel="noopener" id="flBulk">Bulk enquiry</a>
+      <a href="wholesale/" id="flBulk">Bulk enquiry</a>
     </div>
     <div>
       <h4 id="fContact">Customer care</h4>
@@ -401,6 +584,10 @@ Cuddalore since 2024</small>
       <p class="ftr-script">Good Food,<br>Happier Communities</p>
     </div>
   </div>
+  <!--ssr:footlinks--><div class="wrap ftr-seo">
+    <div><h4>Shop by category</h4><p><a href="category/rice-atta/">Rice &amp; Atta</a><a href="category/dal-pulses/">Dal &amp; Pulses</a><a href="category/oils/">Oils</a><a href="category/masala-spices/">Masala &amp; Spices</a><a href="category/snacks-biscuits/">Snacks &amp; Biscuits</a><a href="category/beverages/">Beverages</a><a href="category/dairy-ghee/">Dairy &amp; Ghee</a><a href="category/home-care/">Home Care</a><a href="category/personal-care/">Personal Care</a><a href="category/general-store/">General Store</a><a href="category/chocolates-candy/">Chocolates &amp; Candy</a><a href="category/baby-care/">Baby Care</a><a href="category/stationery-general/">Stationery &amp; General</a></p></div>
+    <div><h4>Grocery delivery in</h4><p><a href="delivery/manjakuppam/">Manjakuppam</a><a href="delivery/thirupapuliyur/">Thirupapuliyur</a><a href="delivery/semmandalam/">Semmandalam</a><a href="delivery/nellikuppam/">Nellikuppam</a><a href="delivery/panruti/">Panruti</a><a href="wholesale/">Wholesale &amp; bulk orders</a></p></div>
+  </div><!--/ssr:footlinks-->
   <div class="copy"><div class="wrap copy-in"><span>© <span id="yr"></span> A.R. Abi Traders. <span id="lblRights">All rights reserved.</span></span><span><span id="lblProud">A proud local business</span> · Cuddalore <span class="heart" aria-hidden="true">♥</span></span></div></div>
 </footer>
 
@@ -444,6 +631,7 @@ Cuddalore since 2024</small>
 </a>
 
 <script type="module" async src="assets/js/firebase-init.js"></script>
+<!--ssr:page--><!--/ssr:page-->
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/icons.js"></script>
 <script src="assets/js/art.js"></script>

@@ -1,15 +1,119 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" }
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/rice",
+      "destination": "/category/rice-atta/",
+      "permanent": true
+    },
+    {
+      "source": "/atta",
+      "destination": "/category/rice-atta/",
+      "permanent": true
+    },
+    {
+      "source": "/oil",
+      "destination": "/category/oils/",
+      "permanent": true
+    },
+    {
+      "source": "/oils",
+      "destination": "/category/oils/",
+      "permanent": true
+    },
+    {
+      "source": "/dal",
+      "destination": "/category/dal-pulses/",
+      "permanent": true
+    },
+    {
+      "source": "/pulses",
+      "destination": "/category/dal-pulses/",
+      "permanent": true
+    },
+    {
+      "source": "/spices",
+      "destination": "/category/masala-spices/",
+      "permanent": true
+    },
+    {
+      "source": "/masala",
+      "destination": "/category/masala-spices/",
+      "permanent": true
+    },
+    {
+      "source": "/category/spices",
+      "destination": "/category/masala-spices/",
+      "permanent": true
+    },
+    {
+      "source": "/category/rice",
+      "destination": "/category/rice-atta/",
+      "permanent": true
+    },
+    {
+      "source": "/category/oil",
+      "destination": "/category/oils/",
+      "permanent": true
+    },
+    {
+      "source": "/snacks",
+      "destination": "/category/snacks-biscuits/",
+      "permanent": true
+    },
+    {
+      "source": "/biscuits",
+      "destination": "/category/snacks-biscuits/",
+      "permanent": true
+    },
+    {
+      "source": "/beverages",
+      "destination": "/category/beverages/",
+      "permanent": true
+    },
+    {
+      "source": "/ghee",
+      "destination": "/category/dairy-ghee/",
+      "permanent": true
+    },
+    {
+      "source": "/bulk",
+      "destination": "/wholesale/",
+      "permanent": true
+    },
+    {
+      "source": "/bulk-enquiry",
+      "destination": "/wholesale/",
+      "permanent": true
+    },
+    {
+      "source": "/store",
+      "destination": "/",
+      "permanent": true
     }
   ]
 }
