@@ -214,7 +214,7 @@ function storeLd() {
   const ld = {
     "@context": "https://schema.org", "@type": "GroceryStore", "@id": STORE_ID,
     name: SITE.name, alternateName: SITE.nameTa,
-    image: [abs("assets/img/hero-bg.jpg"), abs("assets/img/shop-front.jpg")].filter(u => fs.existsSync(path.join(ROOTDIR, u.slice(SITE.url.length)))),
+    image: [abs("assets/img/logo.png"), abs("assets/img/hero-bg.jpg")].filter(u => fs.existsSync(path.join(ROOTDIR, u.slice(SITE.url.length)))),
     logo: abs("assets/img/logo.png"),
     url: SITE.url, telephone: SITE.phone, priceRange: "₹",
     address: { "@type": "PostalAddress", streetAddress: SITE.street, addressLocality: SITE.locality, addressRegion: SITE.region, postalCode: SITE.postal, addressCountry: "IN" },
